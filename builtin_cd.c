@@ -5,7 +5,6 @@ int builtin_cd(char **args)
 {
     char *path;
    
-    // الحالة 1: cd بدون وسيط -> نذهب إلى HOME
     if (!args[1])
     {
         path = getenv("HOME");
@@ -15,17 +14,14 @@ int builtin_cd(char **args)
             return 1;
         }
     }
-    // الحالة 2: أكثر من وسيط -> خطأ
     else if (args[2])
     {
         printf("cd: too many arguments\n");
         return 1;
     }
-    // الحالة 3: cd path -> ننتقل إلى المسار المحدد
     else
         path = args[1];
 
-    // محاولة الانتقال إلى المجلد الجديد
     if (chdir(path) != 0)
     {
         printf("error in cd");
