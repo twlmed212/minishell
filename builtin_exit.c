@@ -49,7 +49,7 @@ void builtin_exit(char **args)
 {
 	int	flag;
 
-	if (!args[1]) // لا توجد وسائط
+	if (!args[1])
 		exit(0);
 
 	flag = ft_exit_check(args);
@@ -62,7 +62,7 @@ void builtin_exit(char **args)
 	else if (flag == -2)
 	{
 		printf("%s", TMA_ERROR);
-		return ; // لا نخرج من الـ shell
+		return ;
 	}
 
 	exit(flag);
