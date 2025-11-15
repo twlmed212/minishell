@@ -1,20 +1,13 @@
 #include "../../include/minishell.h"
 
-void    execute_command(char *input, char **env){
+void    execute_command(char **args, char **env){
     pid_t pid;
-    char **args;
     char *cmd_path;
 
-    args = parse_command(input);
-    if (!args || !args[0])
-    {
-        free_array(args);
-        return;
-    }
     cmd_path = find_command_path(args[0]);
     if (!cmd_path)
     {
-        printf("minishell: %s: command not found\n", args[0]);
+        printf("minishell> %s: command not found\n", args[0]);
         free_array(args);
         return;
     }

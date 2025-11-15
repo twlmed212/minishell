@@ -12,16 +12,17 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-void    execute_command(char *input, char **env);
+void    execute_command(char **args, char **env);
 char    **parse_command(char *input);
 char    *find_command_path(char *cmd);
 void    free_array(char **arr);
 
 int     is_builtin(char *cmd);
-int     execute_builtin(char **args);
+int     execute_builtin(char **args, char **env);
 int     builtin_echo(char **args);
-int     builtin_pwd(char **args);
+int     builtin_pwd();
 int     builtin_env(char **args);
+int     builtin_exit(char **args);
 
 // LibFt Functions :
 

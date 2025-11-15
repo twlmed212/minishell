@@ -3,6 +3,8 @@
 int main(int ac, char **av, char **env)
 {
     char *input;
+    char **args;
+
     (void) av;
     (void) ac;
     
@@ -11,7 +13,7 @@ int main(int ac, char **av, char **env)
         input = readline("minishell> ");
         if (!input)
         {
-            printf("exit\n"); // readline retrn the NULL  if the the user ENTERD
+            printf("exit\n");
             break;
         }
         if (*input == '\0')
@@ -19,7 +21,17 @@ int main(int ac, char **av, char **env)
             free(input);
             continue;
         }
-        execute_command(input, env);
+        args = parse_command(input);
+        if (!args || !args[0])
+        {
+            free_array(args);
+            continue;
+        }
+        if (is_builtin(input)){
+            execute_builtin(args, env);
+        }else{
+            execute_command(args, env);
+        }
         add_history(input);
         free(input);
     }
