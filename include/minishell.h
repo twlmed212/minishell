@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/16 02:45:45 by mtawil            #+#    #+#             */
+/*   Updated: 2025/11/17 00:08:32 by mtawil           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 #define MINISHELL_H
 
@@ -12,17 +24,34 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-void    execute_command(char **args, char **env);
+// Structure to hold shell data
+typedef struct s_shell
+{
+    char    **env;      // Our own environment copy
+    int     last_exit;  // Last command exit status (for $?)
+}   t_shell;
+
+
+void execute_command(char *input, t_shell *shell);
 char    **parse_command(char *input);
-char    *find_command_path(char *cmd);
+char *find_command_path(char *cmd, t_shell *shell);
 void    free_array(char **arr);
 
 int     is_builtin(char *cmd);
-int     execute_builtin(char **args, char **env);
+int execute_builtin(char **args, t_shell *shell);
 int     builtin_echo(char **args);
 int     builtin_pwd();
-int     builtin_env(char **args);
+int builtin_env(char **args, t_shell *shell);
 int     builtin_exit(char **args);
+int builtin_cd(char **args);
+int     builtin_export(char **args, t_shell *shell);
+int     builtin_unset(char **args, t_shell *shell);
+int     builtin_exit(char **args);
+
+char    **copy_env(char **environ);
+char    *get_env_value(char *name, t_shell *shell);
+int     set_env_value(char *name, char *value, t_shell *shell);
+int     unset_env_value(char *name, t_shell *shell);
 
 // LibFt Functions :
 
