@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 02:45:27 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/16 05:30:15 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/17 00:12:35 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,6 @@ int main(int ac, char **av, char **env)
     
     (void) ac;
     (void) av;
-    // Initialize shell - copy environment
     shell.env = copy_env(env);
     if (!shell.env)
     {
