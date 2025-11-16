@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   path.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/16 02:46:19 by mtawil            #+#    #+#             */
+/*   Updated: 2025/11/16 02:46:20 by mtawil           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/minishell.h"
 
 
@@ -5,8 +17,7 @@ static int is_executable(char *path)
 {
     return (access(path, X_OK) == 0);
 }
-
-char    *find_command_path(char *cmd)
+char *find_command_path(char *cmd, t_shell *shell)
 {
     char    *path_env;
     char    **dirs;
@@ -21,7 +32,8 @@ char    *find_command_path(char *cmd)
         return (NULL);
     }
     
-    path_env = getenv("PATH");
+    // Get PATH from OUR environment
+    path_env = get_env_value("PATH", shell);
     if (!path_env)
         return (NULL);
     
