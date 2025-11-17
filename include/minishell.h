@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:45 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/17 00:08:32 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/17 01:45:08 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,11 +24,31 @@
 #include <readline/readline.h>
 #include <readline/history.h>
 
-// Structure to hold shell data
+typedef enum e_redir_type
+{
+    REDIR_IN,
+    REDIR_OUT,
+    REDIR_APPEND,
+    REDIR_HEREDOC
+}   t_redir_type;
+
+typedef struct s_redir
+{
+    t_redir_type    type;
+    char            *file;
+    struct s_redir  *next;
+}   t_redir;
+
+typedef struct s_cmd
+{
+    char        **args;
+    t_redir     *redirs;
+}   t_cmd;
+
 typedef struct s_shell
 {
-    char    **env;      // Our own environment copy
-    int     last_exit;  // Last command exit status (for $?)
+    char    **env;
+    int     last_exit;
 }   t_shell;
 
 
@@ -52,6 +72,17 @@ char    **copy_env(char **environ);
 char    *get_env_value(char *name, t_shell *shell);
 int     set_env_value(char *name, char *value, t_shell *shell);
 int     unset_env_value(char *name, t_shell *shell);
+
+int         find_redir(char **args);
+t_redir_type get_redir_type(char *op);
+t_cmd       *parse_cmd_with_redir(char **args);
+void        free_cmd(t_cmd *cmd);
+
+int     *save_std_fds(void);
+void    restore_std_fds(int *saved);
+int     execute_output_redir(t_redir *redir);
+int     execute_input_redir(t_redir *redir);
+int     execute_redirections(t_redir *redirs);
 
 // LibFt Functions :
 
