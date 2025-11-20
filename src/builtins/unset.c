@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:05 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/17 00:09:40 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/18 20:34:39 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ int unset_env_value(char *name, t_shell *shell)
     i = 0;
     while (shell->env[i])
     {
-        if (ft_strncmp(shell->env[i], name, len) == 0 
+        if (ft_strcmp(shell->env[i], name) == 0 
             && shell->env[i][len] == '=')
         {
             break;

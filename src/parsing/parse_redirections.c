@@ -5,17 +5,15 @@ int find_redir(char **args)
     int i;
     
     i = 0;
-    int len_arg;
     while (args[i])
     {
-        len_arg = ft_strlen(args[i]);
-        if (ft_strncmp(args[i], ">", len_arg) == 0)
+        if (ft_strcmp(args[i], ">") == 0)
             return (i);
-        if (ft_strncmp(args[i], ">>", len_arg) == 0)
+        if (ft_strcmp(args[i], ">>") == 0)
             return (i);
-        if (ft_strncmp(args[i], "<", len_arg) == 0)
+        if (ft_strcmp(args[i], "<") == 0)
             return (i);
-        if (ft_strncmp(args[i], "<<", len_arg) == 0)
+        if (ft_strcmp(args[i], "<<") == 0)
             return (i);
         i++;
     }
@@ -24,14 +22,13 @@ int find_redir(char **args)
 
 t_redir_type get_redir_type(char *op)
 {
-    int len_op = ft_strlen(op);
-    if (ft_strncmp(op, ">", len_op) == 0)
+    if (ft_strcmp(op, ">") == 0)
         return (REDIR_OUT);
-    if (ft_strncmp(op, ">>", len_op) == 0)
+    if (ft_strcmp(op, ">>") == 0)
         return (REDIR_APPEND);
-    if (ft_strncmp(op, "<", len_op) == 0)
+    if (ft_strcmp(op, "<") == 0)
         return (REDIR_IN);
-    if (ft_strncmp(op, "<<", len_op) == 0)
+    if (ft_strcmp(op, "<<") == 0)
         return (REDIR_HEREDOC);
     return (REDIR_OUT);
 }

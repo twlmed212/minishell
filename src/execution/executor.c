@@ -6,18 +6,21 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:07 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/17 16:56:38 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/20 02:37:15 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
 void execute_command(char *input, t_shell *shell)
 {
     pid_t   pid;
     char    **args;
+    char    **expanded_args;
     char    *cmd_path;
     t_cmd   *cmd;
     int     *saved_fds;
+    int     status;
     
     args = parse_command(input);
     if (!args || !args[0])
@@ -32,8 +35,14 @@ void execute_command(char *input, t_shell *shell)
         free_array(args);
         return;
     }
-
-    if (is_builtin(cmd->args[0]))
+    expanded_args = expand_args(cmd->args, shell);
+    if (!expanded_args)
+    {
+        free_cmd(cmd);
+        return;
+    }
+    
+    if (is_builtin(expanded_args[0]))
     {
         saved_fds = save_std_fds();
         
@@ -42,33 +51,39 @@ void execute_command(char *input, t_shell *shell)
             if (execute_redirections(cmd->redirs) == -1)
             {
                 restore_std_fds(saved_fds);
+                free_array(expanded_args);
                 free_cmd(cmd);
+                shell->last_exit = 1;
                 return;
             }
         }
         
-        execute_builtin(cmd->args, shell);
-        restore_std_fds(saved_fds);
+        shell->last_exit = execute_builtin(expanded_args, shell);
         
+        restore_std_fds(saved_fds);
+        free_array(expanded_args);
         free_cmd(cmd);
         return;
     }
     
-    cmd_path = find_command_path(cmd->args[0], shell);
+    cmd_path = find_command_path(expanded_args[0], shell);
     if (!cmd_path)
     {
-        printf("minishell: %s: command not found\n", cmd->args[0]);
+        printf("minishell: %s: command not found\n", expanded_args[0]);
+        free_array(expanded_args);
         free_cmd(cmd);
+        shell->last_exit = 127;
         return;
     }
     
     pid = fork();
-    
     if (pid == -1)
     {
         perror("fork");
         free(cmd_path);
+        free_array(expanded_args);
         free_cmd(cmd);
+        shell->last_exit = 1;
         return;
     }
     
@@ -80,17 +95,23 @@ void execute_command(char *input, t_shell *shell)
                 exit(1);
         }
         
-        if (execve(cmd_path, cmd->args, shell->env) == -1)
+        if (execve(cmd_path, expanded_args, shell->env) == -1)
         {
             perror("execve");
-            exit(1);
+            exit(126);
         }
     }
     else
     {
-        wait(NULL);
+        wait(&status);
+        
+        if (WIFEXITED(status))
+            shell->last_exit = WEXITSTATUS(status);
+        else
+            shell->last_exit = 1;
     }
     
     free(cmd_path);
+    free_array(expanded_args);
     free_cmd(cmd);
 }

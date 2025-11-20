@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:28 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/17 00:10:35 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/19 23:52:27 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,6 @@ int set_env_value(char *name, char *value, t_shell *shell)
     char    *new_var;
     char    *temp;
     int     i;
-    int     len;
     
     temp = ft_strjoin(name, "=");
     if (!temp)
@@ -78,12 +77,10 @@ int set_env_value(char *name, char *value, t_shell *shell)
     if (!new_var)
         return (1);
     
-    len = ft_strlen(name);
     i = 0;
     while (shell->env[i])
     {
-        if (ft_strncmp(shell->env[i], name, len) == 0 
-            && shell->env[i][len] == '=')
+        if (ft_strncmp(shell->env[i], name, ft_strlen(name)) == 0)
         {
             free(shell->env[i]);
             shell->env[i] = new_var;

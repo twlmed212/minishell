@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:45 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/17 01:45:08 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/19 19:48:18 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,9 +83,17 @@ void    restore_std_fds(int *saved);
 int     execute_output_redir(t_redir *redir);
 int     execute_input_redir(t_redir *redir);
 int     execute_redirections(t_redir *redirs);
+// Expansion functions
+char    *extract_var_name(char *str);
+char    *expand_variable(char *str, t_shell *shell, int *pos);
+char    *expand_string(char *str, t_shell *shell);
+char    **expand_args(char **args, t_shell *shell);
 
+
+char *read_heredoc(char *delimiter);
 // LibFt Functions :
 
+int    ft_strcmp(char *s1, char *s2);
 int		ft_atoi(const char *nptr);
 void	ft_bzero(void *s, int n);
 void	*ft_calloc(size_t nmemb, size_t size);

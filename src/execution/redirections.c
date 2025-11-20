@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:14 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/17 16:56:00 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/18 21:34:55 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,22 +69,48 @@ int execute_output_redir(t_redir *redir)
 int execute_input_redir(t_redir *redir)
 {
     int fd;
-    
-    fd = open(redir->file, O_RDONLY);
-    if (fd == -1)
+    char *filename;
+     if (redir->type == REDIR_HEREDOC)
     {
-        perror(redir->file);
-        return (-1);
-    }
-    
-    if (dup2(fd, STDIN_FILENO) == -1)
-    {
-        perror("dup2");
+        // Read heredoc and get temp filename
+        filename = read_heredoc(redir->file);  // redir->file = delimiter
+        if (!filename)
+            return (-1);
+        
+        // Open the temp file
+        fd = open(filename, O_RDONLY);
+        if (fd == -1)
+        {
+            perror(filename);
+            unlink(filename);  // Delete temp file
+            free(filename);
+            return (-1);
+        }
+        
+        // Redirect stdin to temp file
+        dup2(fd, 0);
         close(fd);
-        return (-1);
+        
+        // Delete temp file (file stays accessible until process ends!)
+        unlink(filename);
+        free(filename);
+    }else{
+        if ((fd = open(redir->file, O_RDONLY)) == -1)
+        {
+            perror(redir->file);
+            return (-1);
+        }
+        
+        if (dup2(fd, STDIN_FILENO) == -1)
+        {
+            perror("dup2");
+            close(fd);
+            return (-1);
+        }
+        
+        close(fd);
     }
     
-    close(fd);
     return (0);
 }
 
@@ -100,13 +126,11 @@ int execute_redirections(t_redir *redirs)
             if (execute_output_redir(current) == -1)
                 return (-1);
         }
-        else if (current->type == REDIR_IN)
+        else if (current->type == REDIR_IN || current->type == REDIR_HEREDOC)
         {
             if (execute_input_redir(current) == -1)
                 return (-1);
         }
-        // TODO: HEREDOC later
-        
         current = current->next;
     }
     

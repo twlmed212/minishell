@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:19 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/16 02:46:20 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/20 02:38:12 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ char *find_command_path(char *cmd, t_shell *shell)
         return (NULL);
     }
     
-    // Get PATH from OUR environment
     path_env = get_env_value("PATH", shell);
+
     if (!path_env)
         return (NULL);
     
