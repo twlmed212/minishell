@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 02:38:32 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/20 02:38:33 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/22 04:48:07 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,15 @@ int is_var_char(char c)
         return (1);
     return (0);
 }
-
 char *extract_var_name(char *str)
 {
     int i;
     int len;
     
     if (str[0] != '$')
+        return (NULL);
+    
+    if (str[1] == '\0')
         return (NULL);
     
     if (str[1] == '?')

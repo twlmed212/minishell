@@ -6,13 +6,13 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:05 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/18 20:34:39 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/22 06:15:26 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int builtin_unset(char **args, t_shell *shell)
+int builtin_unset(char **args, t_env_and_exit *shell)
 {
     int i;
     
@@ -29,7 +29,7 @@ int builtin_unset(char **args, t_shell *shell)
     return (0);
 }
 
-int unset_env_value(char *name, t_shell *shell)
+int unset_env_value(char *name, t_env_and_exit *shell)
 {
     int     i;
     int     j;
@@ -42,7 +42,7 @@ int unset_env_value(char *name, t_shell *shell)
     i = 0;
     while (shell->env[i])
     {
-        if (ft_strcmp(shell->env[i], name) == 0 
+        if (ft_strncmp(shell->env[i], name, len) == 0 
             && shell->env[i][len] == '=')
         {
             break;
