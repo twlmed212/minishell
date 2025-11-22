@@ -6,15 +6,16 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 02:38:26 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/20 02:38:27 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/22 06:10:14 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-char **expand_args(char **args, t_shell *shell)
+char **expand_args(char **args, t_env_and_exit *shell)
 {
     char **expanded;
+    char *temp;
     int i;
     int count;
     
@@ -32,7 +33,8 @@ char **expand_args(char **args, t_shell *shell)
     i = 0;
     while (args[i])
     {
-        expanded[i] = expand_string(args[i], shell);
+        temp = expand_string(args[i], shell);
+        expanded[i] = temp;
         i++;
     }
     expanded[i] = NULL;

@@ -6,18 +6,18 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 02:38:22 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/20 02:38:23 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/22 06:09:38 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
-
-char *expand_string(char *str, t_shell *shell)
+char *expand_string(char *str, t_env_and_exit *shell)
 {
     char *result;
     char *temp;
     char *var_value;
     char *before_var;
+    char *no_quotes;
     int i;
     int start;
     
@@ -27,7 +27,7 @@ char *expand_string(char *str, t_shell *shell)
     
     while (str[i])
     {
-        if (str[i] == '$')
+        if (str[i] == '$' && should_expand(str, i))
         {
             if (i > start)
             {
@@ -59,5 +59,8 @@ char *expand_string(char *str, t_shell *shell)
         result = temp;
     }
     
-    return (result);
+    no_quotes = remove_quotes(result);
+    free(result);
+    
+    return (no_quotes);
 }

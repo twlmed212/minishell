@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:45 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/19 19:48:18 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/22 04:50:12 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,11 @@
 #include <fcntl.h>
 #include <readline/readline.h>
 #include <readline/history.h>
+
+// ============= SIGNAL HANDLING =============
+// THE ONLY GLOBAL VARIABLE (for signal number)
+
+// ============= DATA STRUCTURES =============
 
 typedef enum e_redir_type
 {
@@ -45,33 +50,55 @@ typedef struct s_cmd
     t_redir     *redirs;
 }   t_cmd;
 
-typedef struct s_shell
+typedef struct s_env_exit
 {
     char    **env;
     int     last_exit;
-}   t_shell;
+}   t_env_and_exit;
+
+// ============= Pipe functions =============
+char    ***split_all_pipes(char **args);
+void    free_all_pipes(char ***cmds);
+void    execute_pipeline(char ***cmds, t_env_and_exit *shell);
+int     count_pipes(char **args);
+int     has_pipe(char **args);
+int     find_pipe(char **args);
+void    execute_pipe(char **cmd1, char **cmd2, t_env_and_exit *shell);
 
 
-void execute_command(char *input, t_shell *shell);
+// ============= Quote handling =============
+int     is_quote(char c);
+char    *remove_quotes(char *str);
+int     should_expand(char *str, int pos);
+
+// ============= EXECUTION =============
+
+void execute_command(char *input, t_env_and_exit *shell);
 char    **parse_command(char *input);
-char *find_command_path(char *cmd, t_shell *shell);
+char *find_command_path(char *cmd, t_env_and_exit *shell);
 void    free_array(char **arr);
 
+// ============= BUILT-INS =============
+
 int     is_builtin(char *cmd);
-int execute_builtin(char **args, t_shell *shell);
+int execute_builtin(char **args, t_env_and_exit *shell);
 int     builtin_echo(char **args);
 int     builtin_pwd();
-int builtin_env(char **args, t_shell *shell);
+int builtin_env(char **args, t_env_and_exit *shell);
 int     builtin_exit(char **args);
 int builtin_cd(char **args);
-int     builtin_export(char **args, t_shell *shell);
-int     builtin_unset(char **args, t_shell *shell);
+int     builtin_export(char **args, t_env_and_exit *shell);
+int     builtin_unset(char **args, t_env_and_exit *shell);
 int     builtin_exit(char **args);
 
+// ============= ENVIRONMENT =============
+
 char    **copy_env(char **environ);
-char    *get_env_value(char *name, t_shell *shell);
-int     set_env_value(char *name, char *value, t_shell *shell);
-int     unset_env_value(char *name, t_shell *shell);
+char    *get_env_value(char *name, t_env_and_exit *shell);
+int     set_env_value(char *name, char *value, t_env_and_exit *shell);
+int     unset_env_value(char *name, t_env_and_exit *shell);
+
+// ============= REDIRECTIONS =============
 
 int         find_redir(char **args);
 t_redir_type get_redir_type(char *op);
@@ -83,15 +110,19 @@ void    restore_std_fds(int *saved);
 int     execute_output_redir(t_redir *redir);
 int     execute_input_redir(t_redir *redir);
 int     execute_redirections(t_redir *redirs);
-// Expansion functions
-char    *extract_var_name(char *str);
-char    *expand_variable(char *str, t_shell *shell, int *pos);
-char    *expand_string(char *str, t_shell *shell);
-char    **expand_args(char **args, t_shell *shell);
 
+// ============= EXPANSION =============
+
+char    *extract_var_name(char *str);
+char    *expand_variable(char *str, t_env_and_exit *shell, int *pos);
+char    *expand_string(char *str, t_env_and_exit *shell);
+char    **expand_args(char **args, t_env_and_exit *shell);
+
+// ============= HEREDOC =============
 
 char *read_heredoc(char *delimiter);
-// LibFt Functions :
+
+// ============= LIBFT FUNCTIONS =============
 
 int    ft_strcmp(char *s1, char *s2);
 int		ft_atoi(const char *nptr);

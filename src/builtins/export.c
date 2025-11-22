@@ -6,17 +6,18 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:01 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/17 00:11:58 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/22 04:50:12 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int builtin_export(char **args, t_shell *shell)
+int builtin_export(char **args, t_env_and_exit *shell)
 {
     char    *equal_sign;
     char    *name;
     char    *value;
+    char    *expanded_value;
     int     i;
     
     if (!args[1])
@@ -51,9 +52,20 @@ int builtin_export(char **args, t_shell *shell)
             return (1);
         }
         
-        set_env_value(name, value, shell);
-        free(name);
+        // EXPAND variables in value (handles quotes correctly!)
+        expanded_value = expand_string(value, shell);
         free(value);
+        
+        if (!expanded_value)
+        {
+            free(name);
+            return (1);
+        }
+        
+        set_env_value(name, expanded_value, shell);
+        
+        free(name);
+        free(expanded_value);
         i++;
     }
     

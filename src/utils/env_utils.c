@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:28 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/19 23:52:27 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/22 04:50:12 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ char **copy_env(char **envp)
     return (new_env);
 }
 
-char *get_env_value(char *name, t_shell *shell)
+char *get_env_value(char *name, t_env_and_exit *shell)
 {
     int     i;
     int     len;
@@ -63,7 +63,7 @@ char *get_env_value(char *name, t_shell *shell)
     return (NULL);
 }
 
-int set_env_value(char *name, char *value, t_shell *shell)
+int set_env_value(char *name, char *value, t_env_and_exit *shell)
 {
     char    *new_var;
     char    *temp;

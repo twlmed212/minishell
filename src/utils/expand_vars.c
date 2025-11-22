@@ -6,13 +6,13 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 02:38:30 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/20 02:38:31 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/22 05:01:29 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-char *expand_variable(char *str, t_shell *shell, int *pos)
+char *expand_variable(char *str, t_env_and_exit *shell, int *pos)
 {
     char *var_name;
     char *value;
@@ -20,7 +20,10 @@ char *expand_variable(char *str, t_shell *shell, int *pos)
     
     var_name = extract_var_name(str + *pos);
     if (!var_name)
+    {
+        (*pos)++;
         return (ft_strdup("$"));
+    }
     
     if (ft_strcmp(var_name, "?") == 0)
     {

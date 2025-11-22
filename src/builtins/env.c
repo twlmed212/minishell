@@ -6,13 +6,13 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:56 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/17 00:09:13 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/22 04:50:12 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int builtin_env(char **args, t_shell *shell)
+int builtin_env(char **args, t_env_and_exit *shell)
 {
     int i;
     
