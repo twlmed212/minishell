@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/16 02:45:59 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/22 06:58:41 by mtawil           ###   ########.fr       */
+/*   Created: 2024/11/14 12:41:06 by mtawil            #+#    #+#             */
+/*   Updated: 2024/11/18 02:08:27 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "libft.h"
 
-int	builtin_exit(char **args)
+char	*ft_strchr(const char *s, int c)
 {
-	int exit_code;
-
-	printf("exit\n");
-
-	if (!args[1])
-		exit(0);
-
-	exit_code = ft_atoi(args[1]);
-	free_array(args);
-	exit(exit_code);
-
-	return (0);
+	c = (char)c;
+	while (*s != '\0')
+	{
+		if (*s == (char)c)
+		{
+			return ((char *)s);
+		}
+		s++;
+	}
+	if (c == 0)
+		return ((char *)s);
+	return (NULL);
 }

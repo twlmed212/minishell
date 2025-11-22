@@ -1,26 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_memchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: mtawil <mtawil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/16 02:46:03 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/16 02:46:04 by mtawil           ###   ########.fr       */
+/*   Created: 2024/11/14 15:32:22 by mtawil            #+#    #+#             */
+/*   Updated: 2024/11/17 14:48:04 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "libft.h"
 
-int	builtin_pwd(void)
+void	*ft_memchr(const void *s, int c, size_t n)
 {
-	char *path = getcwd(NULL, 0);
-	if (!path)
+	unsigned char	*temp;
+	size_t			i;
+
+	i = 0;
+	temp = (unsigned char *)s;
+	while (i < n)
 	{
-		perror("pwd");
-		return (1);
+		if (*temp == (unsigned char)c)
+		{
+			return (temp);
+		}
+		i++;
+		temp++;
 	}
-	printf("%s\n", path);
-	free(path);
-	return (0);
+	return (NULL);
 }

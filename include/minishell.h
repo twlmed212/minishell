@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:45 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/22 04:50:12 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/22 06:57:57 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ void    free_array(char **arr);
 // ============= BUILT-INS =============
 
 int     is_builtin(char *cmd);
-int execute_builtin(char **args, t_env_and_exit *shell);
+int run_builtin(char **args, t_env_and_exit *shell);
 int     builtin_echo(char **args);
 int     builtin_pwd();
 int builtin_env(char **args, t_env_and_exit *shell);

@@ -12,156 +12,156 @@
 
 #include "../../include/minishell.h"
 
-void execute_pipeline(char ***cmds, t_env_and_exit *shell)
+void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 {
-    int     num_cmds;
-    int     i;
-    int     **pipes;
-    pid_t   *pids;
-    char    **expanded;
-    char    *path;
-    int     status;
-    t_cmd   *cmd;
-    
-    num_cmds = 0;
-    while (cmds[num_cmds])
-        num_cmds++;
-    
-    if (num_cmds == 0)
-        return;
-    
-    pipes = malloc(sizeof(int *) * (num_cmds - 1));
-    if (!pipes)
-        return;
-    
-    i = 0;
-    while (i < num_cmds - 1)
-    {
-        pipes[i] = malloc(sizeof(int) * 2);
-        if (!pipes[i] || pipe(pipes[i]) == -1)
-        {
-            perror("pipe");
-            while (--i >= 0)
-                free(pipes[i]);
-            free(pipes);
-            return;
-        }
-        i++;
-    }
-    
-    pids = malloc(sizeof(pid_t) * num_cmds);
-    if (!pids)
-    {
-        i = 0;
-        while (i < num_cmds - 1)
-        {
-            close(pipes[i][0]);
-            close(pipes[i][1]);
-            free(pipes[i]);
-            i++;
-        }
-        free(pipes);
-        return;
-    }
-    
-    i = 0;
-    while (i < num_cmds)
-    {
-        cmd = parse_cmd_with_redir(cmds[i]);
-        if (!cmd)
-        {
-            i++;
-            continue;
-        }
-        
-        expanded = expand_args(cmd->args, shell);
-        if (!expanded)
-        {
-            free_cmd(cmd);
-            i++;
-            continue;
-        }
-        
-        path = find_command_path(expanded[0], shell);
-        if (!path)
-        {
-            printf("minishell: %s: command not found\n", expanded[0]);
-            free_array(expanded);
-            free_cmd(cmd);
-            i++;
-            continue;
-        }
-        
-        pids[i] = fork();
-        if (pids[i] == -1)
-        {
-            perror("fork");
-            free(path);
-            free_array(expanded);
-            free_cmd(cmd);
-            break;
-        }
-        
-        if (pids[i] == 0)
-        {
-            if (i > 0)
-                dup2(pipes[i - 1][0], STDIN_FILENO);
-            
-            if (i < num_cmds - 1)
-                dup2(pipes[i][1], STDOUT_FILENO);
-            
-            int j = 0;
-            while (j < num_cmds - 1)
-            {
-                close(pipes[j][0]);
-                close(pipes[j][1]);
-                j++;
-            }
-            
-            if (cmd->redirs)
-            {
-                if (execute_redirections(cmd->redirs) == -1)
-                    exit(1);
-            }
-            
-            execve(path, expanded, shell->env);
-            perror("execve");
-            exit(1);
-        }
-        
-        free(path);
-        free_array(expanded);
-        free_cmd(cmd);
-        i++;
-    }
-    
-    i = 0;
-    while (i < num_cmds - 1)
-    {
-        close(pipes[i][0]);
-        close(pipes[i][1]);
-        i++;
-    }
-    
-    i = 0;
-    while (i < num_cmds)
-    {
-        if (i == num_cmds - 1)
-            waitpid(pids[i], &status, 0);
-        else
-            waitpid(pids[i], NULL, 0);
-        i++;
-    }
-    
-    if (WIFEXITED(status))
-        shell->last_exit = WEXITSTATUS(status);
-    
-    i = 0;
-    while (i < num_cmds - 1)
-    {
-        free(pipes[i]);
-        i++;
-    }
-    free(pipes);
-    free(pids);
+	int num_cmds;
+	int i;
+	int **pipes;
+	pid_t *pids;
+	char **expanded;
+	char *path;
+	int status;
+	t_cmd *cmd;
+
+	num_cmds = 0;
+	while (cmds[num_cmds])
+		num_cmds++;
+
+	if (num_cmds == 0)
+		return ;
+
+	pipes = malloc(sizeof(int *) * (num_cmds - 1));
+	if (!pipes)
+		return ;
+
+	i = 0;
+	while (i < num_cmds - 1)
+	{
+		pipes[i] = malloc(sizeof(int) * 2);
+		if (!pipes[i] || pipe(pipes[i]) == -1)
+		{
+			perror("pipe");
+			while (--i >= 0)
+				free(pipes[i]);
+			free(pipes);
+			return ;
+		}
+		i++;
+	}
+
+	pids = malloc(sizeof(pid_t) * num_cmds);
+	if (!pids)
+	{
+		i = 0;
+		while (i < num_cmds - 1)
+		{
+			close(pipes[i][0]);
+			close(pipes[i][1]);
+			free(pipes[i]);
+			i++;
+		}
+		free(pipes);
+		return ;
+	}
+
+	i = 0;
+	while (i < num_cmds)
+	{
+		cmd = parse_cmd_with_redir(cmds[i]);
+		if (!cmd)
+		{
+			i++;
+			continue ;
+		}
+
+		expanded = expand_args(cmd->args, shell);
+		if (!expanded)
+		{
+			free_cmd(cmd);
+			i++;
+			continue ;
+		}
+
+		path = find_command_path(expanded[0], shell);
+		if (!path)
+		{
+			printf("minishell: %s: command not found\n", expanded[0]);
+			free_array(expanded);
+			free_cmd(cmd);
+			i++;
+			continue ;
+		}
+
+		pids[i] = fork();
+		if (pids[i] == -1)
+		{
+			perror("fork");
+			free(path);
+			free_array(expanded);
+			free_cmd(cmd);
+			break ;
+		}
+
+		if (pids[i] == 0)
+		{
+			if (i > 0)
+				dup2(pipes[i - 1][0], STDIN_FILENO);
+
+			if (i < num_cmds - 1)
+				dup2(pipes[i][1], STDOUT_FILENO);
+
+			int j = 0;
+			while (j < num_cmds - 1)
+			{
+				close(pipes[j][0]);
+				close(pipes[j][1]);
+				j++;
+			}
+
+			if (cmd->redirs)
+			{
+				if (execute_redirections(cmd->redirs) == -1)
+					exit(1);
+			}
+
+			execve(path, expanded, shell->env);
+			perror("execve");
+			exit(1);
+		}
+
+		free(path);
+		free_array(expanded);
+		free_cmd(cmd);
+		i++;
+	}
+
+	i = 0;
+	while (i < num_cmds - 1)
+	{
+		close(pipes[i][0]);
+		close(pipes[i][1]);
+		i++;
+	}
+
+	i = 0;
+	while (i < num_cmds)
+	{
+		if (i == num_cmds - 1)
+			waitpid(pids[i], &status, 0);
+		else
+			waitpid(pids[i], NULL, 0);
+		i++;
+	}
+
+	if (WIFEXITED(status))
+		shell->last_exit = WEXITSTATUS(status);
+
+	i = 0;
+	while (i < num_cmds - 1)
+	{
+		free(pipes[i]);
+		i++;
+	}
+	free(pipes);
+	free(pids);
 }

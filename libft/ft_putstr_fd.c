@@ -1,29 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   ft_putstr_fd.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: mtawil <mtawil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/16 02:45:59 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/22 06:58:41 by mtawil           ###   ########.fr       */
+/*   Created: 2024/11/16 16:01:22 by mtawil            #+#    #+#             */
+/*   Updated: 2024/11/18 17:10:55 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "libft.h"
 
-int	builtin_exit(char **args)
+void	ft_putstr_fd(char *s, int fd)
 {
-	int exit_code;
+	int	i;
 
-	printf("exit\n");
-
-	if (!args[1])
-		exit(0);
-
-	exit_code = ft_atoi(args[1]);
-	free_array(args);
-	exit(exit_code);
-
-	return (0);
+	i = 0;
+	while (s[i])
+	{
+		write(fd, &s[i], 1);
+		i++;
+	}
 }

@@ -1,29 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   ft_isalpha.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: mtawil <mtawil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/16 02:45:59 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/22 06:58:41 by mtawil           ###   ########.fr       */
+/*   Created: 2024/10/24 23:32:50 by mtawil            #+#    #+#             */
+/*   Updated: 2024/11/17 11:19:12 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "libft.h"
 
-int	builtin_exit(char **args)
+int	ft_isalpha(int c)
 {
-	int exit_code;
-
-	printf("exit\n");
-
-	if (!args[1])
-		exit(0);
-
-	exit_code = ft_atoi(args[1]);
-	free_array(args);
-	exit(exit_code);
-
+	if ((c >= 97 && c <= 122) || (c >= 65 && c <= 90))
+	{
+		return (1);
+	}
 	return (0);
 }

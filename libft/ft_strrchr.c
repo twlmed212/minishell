@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
+/*   By: mtawil <mtawil@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/16 02:45:56 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/22 06:58:34 by mtawil           ###   ########.fr       */
+/*   Created: 2024/11/14 15:10:34 by mtawil            #+#    #+#             */
+/*   Updated: 2024/11/18 18:48:49 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "libft.h"
 
-int	builtin_env(char **args, t_env_and_exit *shell)
+char	*ft_strrchr(const char *s, int c)
 {
-	int i;
+	const char	*last_occurrence;
 
-	(void)args;
-
-	i = 0;
-	while (shell->env[i])
+	last_occurrence = NULL;
+	while (*s)
 	{
-		printf("%s\n", shell->env[i]);
-		i++;
+		if (*s == (char)c)
+			last_occurrence = s;
+		s++;
 	}
-
-	return (0);
+	if ((char)c == 0)
+		return ((char *)s);
+	return ((char *)last_occurrence);
 }

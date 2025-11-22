@@ -1,29 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/16 02:45:59 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/22 06:58:41 by mtawil           ###   ########.fr       */
+/*   Created: 2024/11/15 10:33:09 by mtawil            #+#    #+#             */
+/*   Updated: 2024/11/18 02:26:20 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "libft.h"
 
-int	builtin_exit(char **args)
+void	*ft_calloc(size_t nmemb, size_t size)
 {
-	int exit_code;
+	void	*x;
+	size_t	i;
 
-	printf("exit\n");
-
-	if (!args[1])
-		exit(0);
-
-	exit_code = ft_atoi(args[1]);
-	free_array(args);
-	exit(exit_code);
-
-	return (0);
+	i = 0;
+	x = (char *)malloc(nmemb * size);
+	if (x == NULL)
+		return (NULL);
+	while (i < nmemb * size)
+	{
+		((char *)x)[i] = 0;
+		i++;
+	}
+	return (x);
 }

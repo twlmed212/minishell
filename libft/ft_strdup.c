@@ -1,29 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/16 02:45:59 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/22 06:58:41 by mtawil           ###   ########.fr       */
+/*   Created: 2024/11/15 16:34:02 by mtawil            #+#    #+#             */
+/*   Updated: 2024/11/18 15:35:32 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "libft.h"
 
-int	builtin_exit(char **args)
+char	*ft_strdup(const char *s)
 {
-	int exit_code;
+	char	*copy;
+	int		i;
 
-	printf("exit\n");
-
-	if (!args[1])
-		exit(0);
-
-	exit_code = ft_atoi(args[1]);
-	free_array(args);
-	exit(exit_code);
-
-	return (0);
+	i = 0;
+	copy = malloc((ft_strlen(s) + 1) * sizeof(char));
+	if (copy == NULL)
+		return (NULL);
+	while (s[i])
+	{
+		copy[i] = s[i];
+		i++;
+	}
+	copy[i] = '\0';
+	return (copy);
 }
