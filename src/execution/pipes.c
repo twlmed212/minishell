@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:10 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/23 17:58:58 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/24 00:18:40 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,17 +18,17 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 	int i;
 	int **pipes;
 	pid_t *pids;
-	char **expanded;
 	char *path;
 	int status;
 	t_cmd *cmd;
 
 	num_cmds = 0;
-	while (cmds[num_cmds])// [["ls", "la"],["cat"]]
+	while (cmds[num_cmds])
 		num_cmds++;
 
 	if (num_cmds == 0)
 		return ;
+
 	pipes = malloc(sizeof(int *) * (num_cmds - 1));
 	if (!pipes)
 		return ;
@@ -73,18 +73,11 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 			continue ;
 		}
 
-		expanded = expand_args(cmd->args, shell);
-		if (!expanded)
-		{
-			free_cmd(cmd);
-			i++;
-			continue ;
-		}
-		path = find_command_path(expanded[0], shell);
+
+		path = find_command_path(cmd->args[0], shell);
 		if (!path)
 		{
-			printf("minishell> %s: command not found\n", expanded[0]);
-			free_array(expanded);
+			printf("minishell> %s: command not found\n", cmd->args[0]);
 			free_cmd(cmd);
 			i++;
 			continue ;
@@ -95,13 +88,13 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 		{
 			perror("fork");
 			free(path);
-			free_array(expanded);
 			free_cmd(cmd);
 			break ;
 		}
 
 		if (pids[i] == 0)
 		{
+		    reset_signals();
 			if (i > 0)
 				dup2(pipes[i - 1][0], STDIN_FILENO);
 
@@ -122,16 +115,12 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 					exit(1);
 			}
 
-			execve(path, expanded, shell->env);
+			execve(path, cmd->args, shell->env);
 			perror("minishell: ");
-			free(path);
-			free_array(expanded);
-			free_cmd(cmd);
 			exit(1);
 		}
 
 		free(path);
-		free_array(expanded);
 		free_cmd(cmd);
 		i++;
 	}
@@ -147,15 +136,9 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 	i = 0;
 	while (i < num_cmds)
 	{
-		if (i == num_cmds - 1)
-			waitpid(pids[i], &status, 0);
-		else
-			waitpid(pids[i], NULL, 0);
+		waitpid(pids[i], &status, 0);
 		i++;
 	}
-
-	if (WIFEXITED(status))
-		shell->last_exit = WEXITSTATUS(status);
 
 	i = 0;
 	while (i < num_cmds - 1)
