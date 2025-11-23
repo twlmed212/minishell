@@ -1,7 +1,7 @@
 NAME = minishell
 
-SRC = ./src/ft_fnc/ft_strcmp.c ./src/signals/signals.c ./src/utils/expand_str.c ./src/utils/get_var_values.c \
-	./src/utils/expand_args.c ./src/utils/env_utils.c ./src/utils/expand_vars.c ./src/builtins/builtins.c ./src/builtins/exit.c \
+SRC = ./src/ft_fnc/ft_strcmp.c ./src/signals/signals.c \
+	 ./src/utils/env_utils.c  ./src/builtins/builtins.c ./src/builtins/exit.c \
 	./src/builtins/env.c ./src/builtins/pwd.c ./src/builtins/export.c ./src/builtins/cd.c ./src/builtins/echo.c \
 	./src/main.c ./src/execution/executor.c ./src/execution/pipes.c ./src/execution/redirections.c ./src/execution/heredoc.c \
 	./src/parsing/parse_redirections.c ./src/parsing/parse_pipe.c ./src/parsing/quotes.c ./src/parsing/path.c \
