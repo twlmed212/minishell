@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 02:45:27 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/22 06:51:27 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/23 04:59:10 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,11 @@ int	main(int ac, char **av, char **env)
 			free(input);
 			continue ;
 		}
-		execute_command(input, &shell);
+		if (check_unclosed_quotes(input) == -1){
+            printf("error: unclosed quotes\n"); //? stderr
+		}else{
+			execute_command(input, &shell);
+		}
 		add_history(input);
 		free(input);
 	}

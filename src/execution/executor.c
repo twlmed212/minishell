@@ -6,12 +6,36 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:07 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/22 08:07:32 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/23 05:47:00 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
+char **tokens_to_array(t_tokens *tokens, int size)
+{
+	char **args;
+	int i = 0;
+	t_tokens *current = tokens;
+
+	args = malloc(sizeof(char *) * (size + 1));
+	if (!args)
+		return NULL;
+
+	while (current)
+	{
+		args[i] = ft_strdup(current->value);
+		if (!args[i])
+		{
+			free_array(args);
+			return NULL;
+		}
+		i++;
+		current = current->next;
+	}
+	args[i] = NULL;
+	return args;
+}
 void	execute_command(char *command, t_env_and_exit *shell)
 {
 	pid_t pid;
@@ -21,9 +45,15 @@ void	execute_command(char *command, t_env_and_exit *shell)
 	t_cmd *cmd;
 	int *saved_fds;
 	int status;
-
+	int size = 0;
 	printf(" command: %s\n", command);
-	args = parse_command(command);
+	// args = parse_command(command);
+	t_tokens *tokens = tokenize(command, &size);
+	if (check_simple_command(tokens) == 0)
+		return ;
+	args = tokens_to_array(tokens, size);
+	if (!args)
+		return ;
 	int i = 0;
 	while (args && args[i])
 	{
@@ -90,7 +120,7 @@ void	execute_command(char *command, t_env_and_exit *shell)
 	cmd_path = find_command_path(expanded_args[0], shell);
 	if (!cmd_path)
 	{
-		printf("minishell: %s: command not found\n", expanded_args[0]);
+		printf("minishell> %s: command not found\n", expanded_args[0]);
 		free_array(expanded_args);
 		free_cmd(cmd);
 		shell->last_exit = 127;
@@ -118,7 +148,7 @@ void	execute_command(char *command, t_env_and_exit *shell)
 
 		if (execve(cmd_path, expanded_args, shell->env) == -1)
 		{
-			perror("execve");
+			perror("minishell: ");
 			exit(126);
 		}
 	}

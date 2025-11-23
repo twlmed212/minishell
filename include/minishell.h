@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:45 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/22 06:57:57 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/23 05:48:53 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@
 #include <fcntl.h>
 #include <readline/readline.h>
 #include <readline/history.h>
-
+#include "../libft/libft.h"
 // ============= SIGNAL HANDLING =============
 // THE ONLY GLOBAL VARIABLE (for signal number)
 
@@ -34,7 +34,9 @@ typedef enum e_redir_type
     REDIR_IN,
     REDIR_OUT,
     REDIR_APPEND,
-    REDIR_HEREDOC
+    REDIR_HEREDOC,
+    TOKEN_WORD,
+    TOKEN_PIPE
 }   t_redir_type;
 
 typedef struct s_redir
@@ -56,6 +58,25 @@ typedef struct s_env_exit
     int     last_exit;
 }   t_env_and_exit;
 
+typedef struct s_fd 
+{
+	int	fd_in;
+	int	fd_out;
+}	t_fd;
+
+
+typedef struct s_tokens {
+    char *value;
+    int  flag;
+    t_redir_type type;
+    struct s_tokens *next;
+} t_tokens;
+// ============ TOKENIZER Moudnib =============
+t_tokens *tokenize(const char *line, int *size);
+int check_unclosed_quotes(const char *line);
+int check_simple_command(t_tokens *tokens);
+char *ft_strndup(const char *s, size_t n);
+int ft_isspace(char c);
 // ============= Pipe functions =============
 char    ***split_all_pipes(char **args);
 void    free_all_pipes(char ***cmds);
@@ -120,44 +141,7 @@ char    **expand_args(char **args, t_env_and_exit *shell);
 
 // ============= HEREDOC =============
 
-char *read_heredoc(char *delimiter);
-
-// ============= LIBFT FUNCTIONS =============
-
-int    ft_strcmp(char *s1, char *s2);
-int		ft_atoi(const char *nptr);
-void	ft_bzero(void *s, int n);
-void	*ft_calloc(size_t nmemb, size_t size);
-int		ft_isalnum(int d);
-int		ft_isalpha(int c);
-int		ft_isascii(int c);
-int		ft_isdigit(int d);
-int		ft_isprint(int c);
-char	*ft_itoa(int n);
-void	*ft_memchr(const void *s, int c, size_t n);
-int		ft_memcmp(const void *s1, const void *s2, size_t n);
-void	*ft_memcpy(void *dest_str, const void *src_str, size_t n);
-void	*ft_memmove(void *dst, const void *src, size_t len);
-void	*ft_memset(void *a, int c, int len);
-void	ft_putchar_fd(char c, int fd);
-void	ft_putendl_fd(char *s, int fd);
-void	ft_putnbr_fd(int n, int fd);
-void	ft_putstr_fd(char *s, int fd);
-char	**ft_split(char const *s, char c);
-char	*ft_strchr(const char *s, int c);
-char	*ft_strdup(const char *s);
-void	ft_striteri(char *s, void (*f)(unsigned int, char *));
-char	*ft_strjoin(char const *s1, char const *s2);
-size_t	ft_strlcat(char *dst, const char *src, size_t size);
-size_t	ft_strlcpy(char *dst, const char *src, size_t size);
-size_t	ft_strlen(const char *s);
-char	*ft_strmapi(char const *s, char (*f)(unsigned int, char));
-int		ft_strncmp(const char *s1, const char *s2, size_t n);
-char	*ft_strnstr(const char *big, const char *little, size_t len);
-char	*ft_strrchr(const char *s, int c);
-char	*ft_strtrim(char const *s1, char const *set);
-char	*ft_substr(char const *s, unsigned int start, size_t len);
-int		ft_tolower(int c);
-int		ft_toupper(int c);
+int read_heredoc(char *delimiter);
+int	ft_strcmp(char *s1, char *s2);
 
 #endif

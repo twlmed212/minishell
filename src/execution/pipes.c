@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:10 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/22 06:14:15 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/22 21:48:15 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,7 +85,7 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 		path = find_command_path(expanded[0], shell);
 		if (!path)
 		{
-			printf("minishell: %s: command not found\n", expanded[0]);
+			printf("minishell> %s: command not found\n", expanded[0]);
 			free_array(expanded);
 			free_cmd(cmd);
 			i++;
@@ -125,7 +125,7 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 			}
 
 			execve(path, expanded, shell->env);
-			perror("execve");
+			perror("minishell: ");
 			exit(1);
 		}
 

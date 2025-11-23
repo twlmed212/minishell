@@ -5,7 +5,7 @@ SRC = ./src/ft_fnc/ft_strcmp.c ./src/signals/signals.c ./src/utils/expand_str.c 
 	./src/builtins/env.c ./src/builtins/pwd.c ./src/builtins/export.c ./src/builtins/cd.c ./src/builtins/echo.c \
 	./src/main.c ./src/execution/executor.c ./src/execution/pipes.c ./src/execution/redirections.c ./src/execution/heredoc.c \
 	./src/parsing/parse_redirections.c ./src/parsing/parse_pipe.c ./src/parsing/quotes.c ./src/parsing/path.c \
-	./src/builtins/unset.c ./src/parsing/parser.c
+	./src/builtins/unset.c ./src/parsing/parser.c 	./src/parsing/token.c ./src/parsing/syntax.c
 
 OBJ = ${SRC:.c=.o}
 

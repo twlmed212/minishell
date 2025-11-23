@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:22 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/22 07:47:05 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/22 21:48:31 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,4 +67,27 @@ int	should_expand(char *str, int pos)
 		return (0);
 
 	return (1);
+}
+
+
+int check_unclosed_quotes(const char *line){
+
+    int i = 0;
+    char c;
+    while (line[i])
+    {
+        if (line[i] == '\'' || line[i] == '\"')
+        {
+            c = line[i];
+            i++;
+            while (line[i] != c && line[i])
+                i++;
+            if (!line[i])
+                return (-1);
+            i++;
+        }
+        else
+            i++;
+    }
+    return (1);
 }
