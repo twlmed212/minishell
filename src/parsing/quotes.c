@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:22 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/22 21:48:31 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/23 17:42:24 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ char	*remove_quotes(char *str)
 		if (!quote)
 			return (ft_substr(str, 1, len - 2));
 	}
+	
 	return (ft_strdup(str));
 }
 

@@ -6,11 +6,27 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:07 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/23 14:13:30 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/23 16:53:57 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+static void    free_tokens(t_tokens *head)
+{
+    t_tokens *tmp;
+
+    while (head)
+    {
+        tmp = head->next;
+
+        if (head->value)
+            free(head->value);
+
+        free(head);
+        head = tmp;
+    }
+}
 
 char **tokens_to_array(t_tokens *tokens, int size)
 {
@@ -26,14 +42,12 @@ char **tokens_to_array(t_tokens *tokens, int size)
 	{
 		args[i] = ft_strdup(current->value);
 		if (!args[i])
-		{
-			free_array(args);
 			return NULL;
-		}
 		i++;
 		current = current->next;
 	}
 	args[i] = NULL;
+	free_tokens(tokens);
 	return args;
 }
 void	execute_command(char *command, t_env_and_exit *shell)

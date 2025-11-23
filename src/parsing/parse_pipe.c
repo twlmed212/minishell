@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 03:24:37 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/23 14:13:05 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/23 14:58:16 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ char	***split_all_pipes(char **args)
 
 	int i, j, k;
 	num_cmds = count_pipes(args) + 1;
-	result = malloc(sizeof(char **) * (num_cmds + 1));
+	result = malloc(sizeof(char **) * (num_cmds + 1));// [["ls", "la"],["cat"]]
 	if (!result)
 		return (NULL);
 	i = 0;

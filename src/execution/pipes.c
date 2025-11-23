@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:10 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/22 21:48:15 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/23 17:58:58 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,11 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 	t_cmd *cmd;
 
 	num_cmds = 0;
-	while (cmds[num_cmds])
+	while (cmds[num_cmds])// [["ls", "la"],["cat"]]
 		num_cmds++;
 
 	if (num_cmds == 0)
 		return ;
-
 	pipes = malloc(sizeof(int *) * (num_cmds - 1));
 	if (!pipes)
 		return ;
@@ -81,7 +80,6 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 			i++;
 			continue ;
 		}
-
 		path = find_command_path(expanded[0], shell);
 		if (!path)
 		{
@@ -126,6 +124,9 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 
 			execve(path, expanded, shell->env);
 			perror("minishell: ");
+			free(path);
+			free_array(expanded);
+			free_cmd(cmd);
 			exit(1);
 		}
 
