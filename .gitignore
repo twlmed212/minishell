@@ -1,3 +1,6 @@
 test*
 .*
 a.out
+*.o
+minishell
+.a
