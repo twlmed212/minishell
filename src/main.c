@@ -6,12 +6,12 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 02:45:27 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/25 01:19:12 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/25 15:17:27 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-int rl_clear_history(void);
+
 int main(int ac, char **av, char **env)
 {
     char *input;

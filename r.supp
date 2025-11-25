@@ -1,0 +1,42 @@
+{
+   leak readline
+   Memcheck:Leak
+   match-leak-kinds: definite,possible,reachable,indirect
+   ...
+   fun:readline
+}
+{
+   leak add_history
+   Memcheck:Leak
+   match-leak-kinds: definite,possible,reachable,indirect
+   ...
+   fun:add_history
+}
+{
+   leak readline_internal
+   Memcheck:Leak
+   match-leak-kinds: definite,possible,reachable,indirect
+   ...
+   fun:readline_internal_setup
+}
+{
+   leak readline_terminal
+   Memcheck:Leak
+   match-leak-kinds: definite,possible,reachable,indirect
+   ...
+   fun:_rl_init_terminal_io
+}
+{
+   leak history_expand
+   Memcheck:Leak
+   match-leak-kinds: definite,possible,reachable,indirect
+   ...
+   fun:history_expand
+}
+{
+   leak rl_init
+   Memcheck:Leak
+   match-leak-kinds: definite,possible,reachable,indirect
+   ...
+   fun:rl_initialize
+}

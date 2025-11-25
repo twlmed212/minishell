@@ -6,13 +6,12 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:59 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/25 01:18:39 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/25 15:17:19 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int rl_clear_history(void);
 
 static int	ft_help(char **args, int i, int sign)
 {
