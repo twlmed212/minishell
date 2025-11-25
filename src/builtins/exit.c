@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:59 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/25 15:17:19 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/25 15:45:50 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,36 +61,35 @@ static int	ft_exit_check(char **args)
 void builtin_exit(char **args, t_env_and_exit *shell)
 {
     int flag;
-    rl_clear_history();
-
+    
     printf("exit\n");
     
-	if (!args[1])
-	{
-        // Free environment before exit
-        if (shell && shell->env)
-            free_array(shell->env);
-        // Note: args will be freed by caller
-        exit(0);
-    }
-
-    flag = ft_exit_check(args);
-
-    if (flag == -1)
+    if (!args[1])
+        flag = 0;
+    else
     {
-        printf("minishell: %s: numeric argument required\n", args[1]);
-        flag = 2;
-    }
-    else if (flag == -2)
-    {
-        printf("exit: too many arguments\n");
-        return;
+        flag = ft_exit_check(args);
+
+        if (flag == -1)
+        {
+            printf("minishell: %s: numeric argument required\n", args[1]);
+            flag = 2;
+        }
+        else if (flag == -2)
+        {
+            printf("exit: too many arguments\n");
+            // Don't exit - just free and return
+            free_array(args);
+            return;
+        }
     }
 
-    // Free before exit!
-    free_array(args);
+    // Free everything before calling exit()
+    free_array(args);            // Free the args array and its strings
     if (shell && shell->env)
-        free_array(shell->env);
+        free_array(shell->env);  // Free environment
     
-    exit(flag);
+    rl_clear_history();          // Clear readline history
+    
+    exit(flag);                  // Now exit
 }

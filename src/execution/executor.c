@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:07 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/25 01:18:17 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/25 15:45:40 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ void free_token_structs(t_tokens *head)
 	while (head)
     {
         tmp = head->next;
+        if (head->value)
+            free(head->value);
         free(head);
         head = tmp;
     }
@@ -37,14 +39,21 @@ char **tokens_to_array(t_tokens *tokens, int size)
     
     while (current)
     {
-        
-        args[i] = current->value;
+        args[i] = ft_strdup(current->value);
+        if (!args[i])
+        {
+            while (--i >= 0)
+                free(args[i]);
+            free(args);
+            return NULL;
+        }
         i++;
         current = current->next;
     }
     args[i] = NULL;
     return args;
 }
+
 void execute_command(char *command, t_env_and_exit *shell)
 {
     pid_t pid;
@@ -63,15 +72,7 @@ void execute_command(char *command, t_env_and_exit *shell)
     
     if (check_simple_command(tokens) == 0)
     {
-        t_tokens *tmp;
-        while (tokens)
-        {
-            tmp = tokens->next;
-            if (tokens->value)
-                free(tokens->value);
-            free(tokens);
-            tokens = tmp;
-        }
+        free_token_structs(tokens);
         return;
     }
     
@@ -100,6 +101,24 @@ void execute_command(char *command, t_env_and_exit *shell)
 
     if (is_builtin(cmd->args[0]))
     {
+        // Special handling for exit command
+        if (ft_strcmp(cmd->args[0], "exit") == 0)
+        {
+            // builtin_exit will call exit() and never return
+            // So we need to free everything BEFORE calling it
+            // But we can't free cmd->args because exit needs to read them
+            
+            // Instead, pass the original args (which exit can safely read)
+            // and free cmd here
+            free_cmd(cmd);
+            
+            // Now call exit with the original args array
+            // builtin_exit will free args and shell->env before calling exit()
+            builtin_exit(args, shell);
+            
+            // Never reaches here
+        }
+        
         saved_fds = save_std_fds();
 
         if (cmd->redirs)
