@@ -6,12 +6,13 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:59 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/24 16:04:07 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/25 01:18:39 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
+int rl_clear_history(void);
 
 static int	ft_help(char **args, int i, int sign)
 {
@@ -61,6 +62,7 @@ static int	ft_exit_check(char **args)
 void builtin_exit(char **args, t_env_and_exit *shell)
 {
     int flag;
+    rl_clear_history();
 
     printf("exit\n");
     
@@ -88,8 +90,8 @@ void builtin_exit(char **args, t_env_and_exit *shell)
 
     // Free before exit!
     free_array(args);
-    if (g_shell && g_shell->env)
-        free_array(g_shell->env);
+    if (shell && shell->env)
+        free_array(shell->env);
     
     exit(flag);
 }

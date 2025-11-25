@@ -1,0 +1,18 @@
+version: '3.8'
+
+services:
+  minishell:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: minishell_container
+    # Run in interactive mode with TTY
+    stdin_open: true
+    tty: true
+    # Mount the project directory for development
+    volumes:
+      - .:/minishell
+    # Override entrypoint for development mode
+    # This allows you to work on the code and rebuild
+    entrypoint: /bin/bash
+    working_dir: /minishell

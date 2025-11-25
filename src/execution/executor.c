@@ -6,62 +6,45 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:07 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/24 14:41:11 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/25 01:18:17 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void free_tokens(t_tokens *head)
+
+void free_token_structs(t_tokens *head)
 {
     t_tokens *tmp;
 
-    while (head)
+	while (head)
     {
         tmp = head->next;
-        if (head->value)
-            free(head->value);
         free(head);
         head = tmp;
     }
 }
-
 
 char **tokens_to_array(t_tokens *tokens, int size)
 {
     char **args;
     int i = 0;
     t_tokens *current = tokens;
-
+    
     args = malloc(sizeof(char *) * (size + 1));
     if (!args)
-    {
-        free_tokens(tokens);  // Free tokens on error!
         return NULL;
-    }
-
+    
     while (current)
     {
-        args[i] = ft_strdup(current->value);
-        if (!args[i])
-        {
-            // Free what we allocated so far
-            while (--i >= 0)
-                free(args[i]);
-            free(args);
-            free_tokens(tokens);
-            return NULL;
-        }
+        
+        args[i] = current->value;
         i++;
         current = current->next;
     }
     args[i] = NULL;
-    
-    free_tokens(tokens);  // Free tokens after conversion!
     return args;
 }
-
-
 void execute_command(char *command, t_env_and_exit *shell)
 {
     pid_t pid;
@@ -72,6 +55,7 @@ void execute_command(char *command, t_env_and_exit *shell)
     int status;
     int size = 0;
     
+    
     t_tokens *tokens = tokenize(command, &size);
     
     if (!tokens)
@@ -79,11 +63,22 @@ void execute_command(char *command, t_env_and_exit *shell)
     
     if (check_simple_command(tokens) == 0)
     {
-        free_tokens(tokens);  // Free here!
+        t_tokens *tmp;
+        while (tokens)
+        {
+            tmp = tokens->next;
+            if (tokens->value)
+                free(tokens->value);
+            free(tokens);
+            tokens = tmp;
+        }
         return;
     }
     
     args = tokens_to_array(tokens, size);
+    
+    free_token_structs(tokens);
+    
     if (!args || !args[0])
     {
         free_array(args);
@@ -92,7 +87,7 @@ void execute_command(char *command, t_env_and_exit *shell)
 
     if (has_pipe(args, shell))
     {
-        free_array(args);  // Free after pipe!
+        free_array(args);
         return;
     }
 
@@ -113,7 +108,7 @@ void execute_command(char *command, t_env_and_exit *shell)
             {
                 restore_std_fds(saved_fds);
                 free_cmd(cmd);
-                free_array(args);  // Add this!
+                free_array(args);
                 return;
             }
         }
@@ -122,7 +117,7 @@ void execute_command(char *command, t_env_and_exit *shell)
 
         restore_std_fds(saved_fds);
         free_cmd(cmd);
-        free_array(args);  // Add this!
+        free_array(args);
         return;
     }
 
@@ -131,17 +126,16 @@ void execute_command(char *command, t_env_and_exit *shell)
     {
         printf("minishell: %s: command not found\n", cmd->args[0]);
         free_cmd(cmd);
-        free_array(args);  // Add this!
+        free_array(args);
         return;
     }
-
     pid = fork();
     if (pid == -1)
     {
         perror("fork");
         free(cmd_path);
         free_cmd(cmd);
-        free_array(args);  // Add this!
+        free_array(args);
         return;
     }
 
@@ -153,7 +147,6 @@ void execute_command(char *command, t_env_and_exit *shell)
             if (execute_redirections(cmd->redirs) == -1)
                 exit(1);
         }
-
         if (execve(cmd_path, cmd->args, shell->env) == -1)
         {
             perror("minishell");
@@ -161,9 +154,26 @@ void execute_command(char *command, t_env_and_exit *shell)
         }
     }
     else
-        wait(&status);
+    {
+        pid_t result;
+    
+		result = waitpid(pid, &status, 0);
+		
+		if (result > 0)
+		{
+			if (WIFSIGNALED(status))
+			{
+				int sig = WTERMSIG(status);
+				if (sig == SIGINT)
+				{
+					write(1, "\n", 1);
+					waitpid(pid, NULL, WNOHANG);
+				}
+			}
+		}
+    }
 
     free(cmd_path);
     free_cmd(cmd);
-    free_array(args);  // Add this!
+    free_array(args);
 }

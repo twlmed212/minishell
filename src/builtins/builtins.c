@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:49 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/23 21:44:47 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/24 19:07:07 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	run_builtin(char **args, t_env_and_exit *shell)
 		return (builtin_pwd());
 	}
 	if (ft_strcmp(args[0], "exit") == 0)
-		 builtin_exit(args);
+		 builtin_exit(args, shell);
 	if (ft_strcmp(args[0], "env") == 0)
 		return (builtin_env(args, shell));
 	if (ft_strcmp(args[0], "cd") == 0)

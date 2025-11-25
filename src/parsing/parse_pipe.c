@@ -42,7 +42,7 @@ int	has_pipe(char **args, t_env_and_exit *shell)
 			free_all_pipes(pipe_cmds);
 		}
 
-		free_array(args);
+//		free_array(args);
 	}
 	return (flag > 0);
 }

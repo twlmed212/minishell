@@ -6,12 +6,12 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 02:45:27 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/24 14:41:30 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/25 01:19:12 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minishell.h"
-
+int rl_clear_history(void);
 int main(int ac, char **av, char **env)
 {
     char *input;
@@ -32,6 +32,7 @@ int main(int ac, char **av, char **env)
     while (1)
     {
         g_signal = 0;
+        
         input = readline("minishell> ");
         
         if (!input)
@@ -47,7 +48,7 @@ int main(int ac, char **av, char **env)
             continue;
         }
         
-        if (input[0] == '\0')
+        if (!input[0])
         {
             free(input);
             continue;
@@ -56,19 +57,17 @@ int main(int ac, char **av, char **env)
         if (check_unclosed_quotes(input) == -1)
         {
             printf("error: unclosed quotes\n");
-            free(input);  // Add this!
-            continue;  // Add this!
+            free(input);
+            continue;
         }
-        else
-        {
-            execute_command(input, &shell);
-        }
+        
+        execute_command(input, &shell);
         
         add_history(input);
         free(input);
     }
     
     free_array(shell.env);
-    rl_clear_history();  // Add this to free readline history!
+    rl_clear_history();
     return (0);
 }
