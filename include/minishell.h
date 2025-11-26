@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:45 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/25 22:08:34 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/26 17:03:13 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,12 +54,14 @@ typedef struct s_redir
 typedef struct s_cmd
 {
     char        **args;
+    int         *saved_fds;
     t_redir     *redirs;
 }   t_cmd;
 
 typedef struct s_env_exit
 {
     char    **env;
+    int     last_exit;
 }   t_env_and_exit;
 
 typedef struct s_fd 
@@ -111,8 +113,8 @@ void    free_array(char **arr);
 // ============= BUILT-INS =============
 
 int     is_builtin(char *cmd);
-int run_builtin(char **args, t_env_and_exit *shell);
-int     builtin_echo(char **args);
+int	run_builtin(char **args, t_env_and_exit *shell);
+int	builtin_echo(char **args);
 int     builtin_pwd();
 int builtin_env(char **args, t_env_and_exit *shell);
 void builtin_exit(char **args, t_env_and_exit *shell);

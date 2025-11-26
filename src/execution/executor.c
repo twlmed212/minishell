@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:07 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/25 22:08:06 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/26 17:48:42 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,18 @@ void execute_command(char *command, t_env_and_exit *shell)
     
     args = tokens_to_array(tokens, size);
     
+    int i = 0;
+    while(args[i]){
+        if (ft_strncmp(args[i], "$?", 2) == 0)
+        {
+           char *tmp = ft_itoa(shell->last_exit);// 127
+           char *res = ft_strjoin(tmp, args[i]+2);
+           free(args[i]);
+           args[i] = res;
+           free(tmp);
+        }
+        i++;
+    }
     free_token_structs(tokens);
     
     if (!args || !args[0])
@@ -116,11 +128,11 @@ void execute_command(char *command, t_env_and_exit *shell)
                 restore_std_fds(saved_fds);
                 free_cmd(cmd);
                 free_array(args);
-                return;
+                shell->last_exit = 1;
             }
         }
 
-        run_builtin(cmd->args, shell);
+        shell->last_exit = run_builtin(cmd->args, shell);
 
         restore_std_fds(saved_fds);
         free_cmd(cmd);
@@ -131,9 +143,19 @@ void execute_command(char *command, t_env_and_exit *shell)
     cmd_path = find_command_path(cmd->args[0], shell);
     if (!cmd_path)
     {
-        printf("minishell: %s: command not found\n", cmd->args[0]);
+        if (!get_env_value("PATH", shell)){
+            ft_perror("minishell: ");
+            ft_perror(cmd->args[0]);
+            ft_perror(": No such file or directory\n");
+        }else if (ft_strcmp(cmd->args[0], "sudo") == 0)
+            ft_perror("minishell: /usr/bin/sudo: Permission denied\n");
+        else{
+            ft_perror(cmd->args[0]);
+            ft_perror(": command not found\n");
+        }
         free_cmd(cmd);
         free_array(args);
+        shell->last_exit = 127;
         return;
     }
     pid = fork();
@@ -143,6 +165,7 @@ void execute_command(char *command, t_env_and_exit *shell)
         free(cmd_path);
         free_cmd(cmd);
         free_array(args);
+        shell->last_exit = 1;
         return;
     }
 
@@ -173,6 +196,11 @@ void execute_command(char *command, t_env_and_exit *shell)
         // Restore interactive signal handling
         init_signals();
         
+        if (WIFEXITED(status))
+			shell->last_exit = WEXITSTATUS(status);
+		else
+			shell->last_exit = 1;
+            
         if (result > 0)
         {
             if (WIFSIGNALED(status))
@@ -180,7 +208,6 @@ void execute_command(char *command, t_env_and_exit *shell)
                 int sig = WTERMSIG(status);
                 if (sig == SIGINT)
                 {
-                    // Child was interrupted - just print newline
                     write(1, "\n", 1);
                 }
             }

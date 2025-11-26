@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 02:45:27 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/25 22:09:22 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/26 16:12:34 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ int main(int ac, char **av, char **env)
     }
     
     init_signals();
-
+    shell.last_exit = 0;
+    
     while (1)
     {
         g_signal = 0;

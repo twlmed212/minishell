@@ -125,7 +125,6 @@ void free_cmd(t_cmd *cmd)
     // The strings are owned by the original args array
     if (cmd->args)
         free(cmd->args);
-    
     // Free redirections (these ARE duplicated)
     redir = cmd->redirs;
     while (redir)

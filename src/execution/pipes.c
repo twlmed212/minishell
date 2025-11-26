@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:10 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/24 14:42:47 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/26 16:40:25 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,8 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
         path = find_command_path(cmd->args[0], shell);
         if (!path)
         {
-            printf("minishell: %s: command not found\n", cmd->args[0]);
+            ft_perror(cmd->args[0]);
+            ft_perror(": command not found\n");
             free_cmd(cmd);
             i++;
             continue;
