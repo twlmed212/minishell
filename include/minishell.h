@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:45 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/24 14:44:15 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/25 22:08:34 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ extern volatile sig_atomic_t g_signal;
 // ============ Signal handlers  =============
 void    init_signals(void);
 void    reset_signals(void);
+void init_signals_child_exec(void);
 // ============ TOKENIZER Moudnib =============
 t_tokens *tokenize(const char *line, int *size);
 int check_unclosed_quotes(const char *line);

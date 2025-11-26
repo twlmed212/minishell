@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:07 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/25 15:45:40 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/25 22:08:06 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,22 +101,10 @@ void execute_command(char *command, t_env_and_exit *shell)
 
     if (is_builtin(cmd->args[0]))
     {
-        // Special handling for exit command
         if (ft_strcmp(cmd->args[0], "exit") == 0)
         {
-            // builtin_exit will call exit() and never return
-            // So we need to free everything BEFORE calling it
-            // But we can't free cmd->args because exit needs to read them
-            
-            // Instead, pass the original args (which exit can safely read)
-            // and free cmd here
             free_cmd(cmd);
-            
-            // Now call exit with the original args array
-            // builtin_exit will free args and shell->env before calling exit()
             builtin_exit(args, shell);
-            
-            // Never reaches here
         }
         
         saved_fds = save_std_fds();
@@ -175,21 +163,28 @@ void execute_command(char *command, t_env_and_exit *shell)
     else
     {
         pid_t result;
-    
-		result = waitpid(pid, &status, 0);
-		
-		if (result > 0)
-		{
-			if (WIFSIGNALED(status))
-			{
-				int sig = WTERMSIG(status);
-				if (sig == SIGINT)
-				{
-					write(1, "\n", 1);
-					waitpid(pid, NULL, WNOHANG);
-				}
-			}
-		}
+        
+        // Switch to "child execution" signal mode
+        // Parent will ignore SIGINT while child runs
+        init_signals_child_exec();
+        
+        result = waitpid(pid, &status, 0);
+        
+        // Restore interactive signal handling
+        init_signals();
+        
+        if (result > 0)
+        {
+            if (WIFSIGNALED(status))
+            {
+                int sig = WTERMSIG(status);
+                if (sig == SIGINT)
+                {
+                    // Child was interrupted - just print newline
+                    write(1, "\n", 1);
+                }
+            }
+        }
     }
 
     free(cmd_path);
