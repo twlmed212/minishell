@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:07 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/26 17:48:42 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/27 15:58:59 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,21 @@ void free_token_structs(t_tokens *head)
         head = tmp;
     }
 }
-
-char **tokens_to_array(t_tokens *tokens, int size)
+static void expand_exit_code(char **args, int exit_code){
+    int i = 0;
+    while(args[i]){
+        if (ft_strncmp(args[i], "$?", 2) == 0)
+        {
+           char *tmp = ft_itoa(exit_code);// 127
+           char *res = ft_strjoin(tmp, args[i]+2);
+           free(args[i]);
+           args[i] = res;
+           free(tmp);
+        }
+        i++;
+    }
+}
+char **tokens_to_array(t_tokens *tokens, int size, int exit_code)
 {
     char **args;
     int i = 0;
@@ -51,9 +64,68 @@ char **tokens_to_array(t_tokens *tokens, int size)
         current = current->next;
     }
     args[i] = NULL;
+    expand_exit_code(args, exit_code);
     return args;
 }
 
+
+static void	handle_redir_only(t_cmd *cmd, char **args)
+{
+	int	*saved_fds;
+
+	saved_fds = save_std_fds();
+	if (cmd->redirs)
+		execute_redirections(cmd->redirs);
+	restore_std_fds(saved_fds);
+	free_cmd(cmd);
+	free_array(args);
+}
+
+
+// check the input looking for folder, 
+static int look_for_directories(char *args)
+{
+    struct stat metadata;
+    if (args[0] == '/')
+       return (-1);
+	
+	if (stat(args, &metadata) == 0) {
+		if (S_ISDIR(metadata.st_mode)) {
+			return (1);
+		} else if (S_ISREG(metadata.st_mode)) {
+			return (2);
+		}
+	}
+    if (args[ft_strlen(args) - 1 ] == '/')
+    {
+        return (-1);
+    }
+	return (0);
+}
+// /x - x/
+static int parse_cmd_dirs(char **args)
+{
+    if (access(args[0], X_OK) == 0)
+        return (0);
+    if (args[0][0] != '/' && args[0][ft_strlen(args[0]) - 1] != '/')
+        return (0);
+    
+    int stat = look_for_directories(args[0]);
+    if (stat == 0)
+        return (0);
+    ft_perror("minishell: ");
+    ft_perror(args[0]);
+    if ((ft_strcmp(args[0], "/") == 0) || (ft_strcmp(args[0], "//") == 0) || (ft_strcmp(args[0], "/.") == 0))
+        stat = 1;
+    if (stat == -1)
+        return (ft_perror(": No such file or directory\n"), -1); 
+    else if (stat == 1)
+        return (ft_perror(": Is a directory\n"), -1);
+    else if (stat == 2)
+        return (ft_perror(": Not a directory\n"), -1);
+    
+    return (0);
+}
 void execute_command(char *command, t_env_and_exit *shell)
 {
     pid_t pid;
@@ -69,35 +141,26 @@ void execute_command(char *command, t_env_and_exit *shell)
     
     if (!tokens)
         return;
-    
+        
     if (check_simple_command(tokens) == 0)
     {
         free_token_structs(tokens);
         return;
     }
+    args = tokens_to_array(tokens, size, shell->last_exit);
     
-    args = tokens_to_array(tokens, size);
-    
-    int i = 0;
-    while(args[i]){
-        if (ft_strncmp(args[i], "$?", 2) == 0)
-        {
-           char *tmp = ft_itoa(shell->last_exit);// 127
-           char *res = ft_strjoin(tmp, args[i]+2);
-           free(args[i]);
-           args[i] = res;
-           free(tmp);
-        }
-        i++;
-    }
     free_token_structs(tokens);
-    
     if (!args || !args[0])
     {
         free_array(args);
         return;
     }
-
+    
+    if (parse_cmd_dirs(args) == -1)
+    {
+        free_array(args);
+        return;
+    }
     if (has_pipe(args, shell))
     {
         free_array(args);
@@ -111,6 +174,12 @@ void execute_command(char *command, t_env_and_exit *shell)
         return;
     }
 
+    if (!cmd->args[0])
+	{
+		handle_redir_only(cmd, args);
+		return ;
+	}
+    // Handling Arrow in begining, with either file name or Derictory
     if (is_builtin(cmd->args[0]))
     {
         if (ft_strcmp(cmd->args[0], "exit") == 0)
@@ -139,16 +208,15 @@ void execute_command(char *command, t_env_and_exit *shell)
         free_array(args);
         return;
     }
-
     cmd_path = find_command_path(cmd->args[0], shell);
     if (!cmd_path)
     {
+        ft_perror("minishell: ");
         if (!get_env_value("PATH", shell)){
-            ft_perror("minishell: ");
             ft_perror(cmd->args[0]);
             ft_perror(": No such file or directory\n");
         }else if (ft_strcmp(cmd->args[0], "sudo") == 0)
-            ft_perror("minishell: /usr/bin/sudo: Permission denied\n");
+            ft_perror("/usr/bin/sudo: Permission denied\n");
         else{
             ft_perror(cmd->args[0]);
             ft_perror(": command not found\n");

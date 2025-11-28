@@ -1,33 +1,75 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   syntax.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/16 02:46:25 by mtawil            #+#    #+#             */
+/*   Updated: 2025/11/27 15:02:34 by mtawil           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../include/minishell.h"
 
-int check_simple_command(t_tokens *tokens) {
-    t_tokens *last = tokens;
+static int	check_first_token(t_tokens *tokens)
+{
+	if (!tokens)
+	{
+		printf("Empty command.\n");
+		return (0);
+	}
+	if (tokens->type == TOKEN_PIPE)
+	{
+		ft_perror("minishell: syntax error near unexpected token `|'\n");
+		return (0);
+	}else if(ft_strcmp(tokens->value, ":") == 0 || ft_strcmp(tokens->value, "!") == 0)
+        return (0);
+	return (1);
+}
 
-    if (!tokens) {
-        printf("Empty command.\n");
-        return 0; //? exit-status
-    }
-    if (tokens->type == TOKEN_PIPE) {
-        printf("Syntax error: command cannot start with '|'\n");
-        return 0;
-    }
-    int i = 0;
-    while (tokens) {
-        
-        if ((tokens->type >= 0 && tokens->type <= 3) && i == 0)
-        {
-            write(2, "-bash: syntax error near unexpected token ", 42);
-            write(2, tokens->value, 1);
-            write(2, "\n", 1);
-            return (0);
-        }
-        last = tokens;
-        tokens = tokens->next;
-        i++;
-    }
-    if (last && last->type == TOKEN_PIPE) {
-        printf("Syntax error: command cannot end with '|'\n");
-        return 0;
-    }
-    return 1;
+static int	check_pipe_or_redir(t_tokens *current)
+{
+	if (current->type == TOKEN_PIPE)
+	{
+		if (!current->next)
+		{
+			ft_perror("minishell: syntax error near unexpected token `|'\n");
+			return (0);
+		}
+	}
+	if (current->type >= REDIR_IN && current->type <= REDIR_HEREDOC)
+	{
+		if (!current->next || current->next->type != TOKEN_WORD)
+		{
+            if (ft_strlen(current->value) == 2)
+            {
+                char *tmp = ft_substr(current->value, 0, 2);
+                ft_perror("minishell: syntax error near unexpected token '");
+                ft_perror(tmp);
+                ft_perror("'\n");
+                free(tmp);
+            }else
+                ft_perror("minishell: syntax error near unexpected token `newline'\n");
+			return (0);
+		}
+	}
+	return (1);
+}
+
+int	check_simple_command(t_tokens *tokens)
+{
+	t_tokens	*current;
+
+	if (!check_first_token(tokens))
+		return (0);
+	current = tokens;
+	while (current)
+	{
+		if (!check_pipe_or_redir(current))
+			return (0);
+		
+		current = current->next;
+	}
+	return (1);
 }

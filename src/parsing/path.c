@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:19 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/22 04:50:12 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/27 13:44:31 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,7 @@ char	*find_command_path(char *cmd, t_env_and_exit *shell)
 	i = 0;
 	while (dirs[i])
 	{
+
 		temp = ft_strjoin(dirs[i], "/");
 		if (!temp)
 		{

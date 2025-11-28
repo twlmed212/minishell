@@ -3,7 +3,9 @@
 t_tokens *create_token(char *str, int fla) {
     t_tokens *new = malloc(sizeof(t_tokens));
     if (!new) return NULL;
-    new->value = str;
+    char *tmp = remove_quotes(str);
+    new->value = tmp;
+    free(str);
     new->flag  = fla;
     new->next = NULL;
     return new;
@@ -72,7 +74,6 @@ char *get_quoted_token(const char *line, int *i, int *fla) {
     return token;
 }
 
-
 char *get_word_token(const char *line, int *i) {
     int start = *i;
     char c;
@@ -138,9 +139,6 @@ t_tokens *tokenize(const char *line, int *size) {
             break;
         fla = 0;
 
-        // if (line[i] == '"' || line[i] == '\''){
-        //     token = get_quoted_token(line, &i ,&fla);
-
         if (is_operator_start(line[i]))
             token = get_operator_token(line, &i);
         else
@@ -154,4 +152,3 @@ t_tokens *tokenize(const char *line, int *size) {
                     
     return tokens;
 }
-
