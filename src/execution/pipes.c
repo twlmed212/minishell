@@ -93,7 +93,7 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 		}
 
 		// Handle case where we have only redirections (like "<< EOF |")
-		if (!cmd->args[0])
+		if (cmd->args && !cmd->args[0])
 		{
 			char *default_cmd = get_default_command(cmd);
 			if (default_cmd)
@@ -123,9 +123,11 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
             // is builtind Double Lines 
             // convert into function
             // TODO
-            int *saved_fds;
+			printf("here\n");
+			int *saved_fds;
             if (is_builtin(cmd->args[0]))
             {
+			printf("builtin\n");
                 
                 saved_fds = save_std_fds();
 

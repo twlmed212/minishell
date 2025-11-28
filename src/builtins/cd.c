@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:52 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/27 17:41:11 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/28 21:38:37 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int builtin_cd(char **args)
     if (chdir(path) != 0)
     {
         ft_perror("minishell: ");
-        ft_perror(args[1]);
+        ft_perror(path);
         ft_perror(" : No such file or directory\n");
         return 1;
     }

@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:25 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/27 15:02:34 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/28 21:09:35 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,14 +42,14 @@ static int	check_pipe_or_redir(t_tokens *current)
 	{
 		if (!current->next || current->next->type != TOKEN_WORD)
 		{
-            if (ft_strlen(current->value) == 2)
+            if (ft_strlen(current->value) == 2 && current->type != REDIR_HEREDOC)
             {
                 char *tmp = ft_substr(current->value, 0, 2);
                 ft_perror("minishell: syntax error near unexpected token '");
                 ft_perror(tmp);
                 ft_perror("'\n");
                 free(tmp);
-            }else
+            }else if (current->type != REDIR_HEREDOC && (current->next)->type != TOKEN_WORD)
                 ft_perror("minishell: syntax error near unexpected token `newline'\n");
 			return (0);
 		}

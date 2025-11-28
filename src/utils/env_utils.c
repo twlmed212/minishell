@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:28 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/22 04:50:12 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/28 20:36:15 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,11 @@ int	set_env_value(char *name, char *value, t_env_and_exit *shell)
 	char	**new_env;
 	int		count;
 
-	temp = ft_strjoin(name, "=");
+	if (value[0])
+		temp = ft_strjoin(name, "=");
+	else
+		temp = ft_strjoin(name, "");
+	
 	if (!temp)
 		return (1);
 	new_var = ft_strjoin(temp, value);

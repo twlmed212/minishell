@@ -4,6 +4,8 @@ t_tokens *create_token(char *str, int fla) {
     t_tokens *new = malloc(sizeof(t_tokens));
     if (!new) return NULL;
     char *tmp = remove_quotes(str);
+    if (!tmp)
+        return (NULL);
     new->value = tmp;
     free(str);
     new->flag  = fla;
@@ -82,10 +84,13 @@ char *get_word_token(const char *line, int *i) {
         {
             c = line[*i];
             (*i)++;
-            while(line[*i] != c)
+            while(line[*i] && line[*i] != c)
+                (*i)++;
+            if (line[*i] == c)
                 (*i)++;
         }
-        (*i)++;
+        else
+            (*i)++;
     }
     return ft_strndup(line + start, *i - start);
 }
@@ -143,7 +148,8 @@ t_tokens *tokenize(const char *line, int *size) {
             token = get_operator_token(line, &i);
         else
             token = get_word_token(line, &i);
-        
+        if (!token)
+            break;
         add_token(&tokens, create_token(token, fla));
         (*size)++;
     }
