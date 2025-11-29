@@ -6,10 +6,9 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 15:34:17 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/29 01:45:36 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/29 14:38:48 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "../../include/minishell.h"
 
@@ -67,9 +66,10 @@ char	*read_heredoc(char *delimiter)
 		input = readline("> ");
 		
 		// CRITICAL FIX: Handle Ctrl+D (NULL input)
+		// Ctrl+D should just end THIS heredoc, not be treated as an error
 		if (!input)
 		{
-			write(1, "\n", 1);
+			// Don't print newline here - bash doesn't
 			break ;
 		}
 		

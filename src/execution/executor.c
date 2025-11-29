@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:07 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/29 01:51:09 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/29 14:44:48 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,6 +68,34 @@ char **tokens_to_array(t_tokens *tokens, int size, int exit_code)
     return args;
 }
 
+// CRITICAL FIX: Preprocess heredocs in args array for non-pipeline commands
+static int preprocess_heredocs(char **args)
+{
+	int i;
+	char *temp_file;
+	
+	i = 0;
+	while (args[i])
+	{
+		if (ft_strcmp(args[i], "<<") == 0 && args[i + 1])
+		{
+			// Read the heredoc NOW, before any execution
+			temp_file = read_heredoc(args[i + 1]);
+			if (!temp_file)
+			{
+				// Heredoc was interrupted (Ctrl+D)
+				return (-1);
+			}
+			
+			// Replace the delimiter with the temp filename
+			// Note: args[i + 1] points to a malloc'd string from tokens_to_array
+			free(args[i + 1]);
+			args[i + 1] = temp_file;
+		}
+		i++;
+	}
+	return (0);
+}
 
 static void	handle_redir_only(t_cmd *cmd, char **args)
 {
@@ -169,6 +197,13 @@ void execute_command(char *command, t_env_and_exit *shell)
         free_array(args);
         return;
     }
+
+	// CRITICAL FIX: Preprocess ALL heredocs BEFORE parsing command
+	if (preprocess_heredocs(args) == -1)
+	{
+		free_array(args);
+		return;
+	}
 
     cmd = parse_cmd_with_redir(args);
     if (!cmd)

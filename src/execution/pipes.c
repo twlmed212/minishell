@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:10 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/29 02:29:27 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/29 14:44:46 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,12 @@ static int process_all_heredocs(char ***cmds, int num_cmds)
 				// Read heredoc
 				temp_file = read_heredoc(cmds[i][j + 1]);
 				if (!temp_file)
+				{
+					// Ctrl+D was pressed - heredoc interrupted
+					// This is not necessarily an error, just creates empty file
+					// But for now, treat as error to match bash behavior
 					return (-1);
+				}
 				
 				// CRITICAL: Just replace the pointer, DON'T free!
 				// The original string is owned by args array
@@ -70,6 +75,7 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 	char *path;
 	t_cmd *cmd;
 	int should_free_args;
+	int is_builtin_cmd;
 
 	num_cmds = 0;
 	while (cmds[num_cmds])
@@ -120,6 +126,7 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 	while (i < num_cmds)
 	{
 		should_free_args = 0;
+		is_builtin_cmd = 0;
 		cmd = parse_cmd_with_redir(cmds[i]);
 		if (!cmd)
 		{
@@ -160,42 +167,30 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 		}
 		else
 		{
-			int *saved_fds;
+			// CRITICAL FIX: Check if it's a builtin
 			if (is_builtin(cmd->args[0]))
 			{
-				saved_fds = save_std_fds();
-
-				if (cmd->redirs)
-				{
-					if (execute_redirections(cmd->redirs) == -1)
-					{
-						restore_std_fds(saved_fds);
-						free_cmd(cmd);
-						shell->last_exit = 1;
-					}
-				}
-
-				shell->last_exit = run_builtin(cmd->args, shell);
-
-				restore_std_fds(saved_fds);
-				free_cmd(cmd);
-				i++;
-				continue;
+				// For builtins in pipes, we need to fork so they run in the pipeline
+				path = NULL;  // Signal that this is a builtin
+				is_builtin_cmd = 1;
 			}
-			path = find_command_path(cmd->args[0], shell);
-			if (!path)
+			else
 			{
-				ft_perror("minishell: ");
-				ft_perror(cmd->args[0]);
-				ft_perror(": command not found\n");
-				free_cmd(cmd);
-				pids[i] = fork();
-				if (pids[i] == 0)
+				path = find_command_path(cmd->args[0], shell);
+				if (!path)
 				{
-					exit(127);
+					ft_perror("minishell: ");
+					ft_perror(cmd->args[0]);
+					ft_perror(": command not found\n");
+					free_cmd(cmd);
+					pids[i] = fork();
+					if (pids[i] == 0)
+					{
+						exit(127);
+					}
+					i++;
+					continue;
 				}
-				i++;
-				continue;
 			}
 		}
 
@@ -203,7 +198,8 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 		if (pids[i] == -1)
 		{
 			perror("fork");
-			free(path);
+			if (path)
+				free(path);
 			if (should_free_args && cmd->args)
 			{
 				free_array(cmd->args);
@@ -247,12 +243,20 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 					exit(1);
 			}
 
+			// CRITICAL FIX: Handle builtins in child process
+			if (is_builtin_cmd)
+			{
+				int exit_code = run_builtin(cmd->args, shell);
+				exit(exit_code);
+			}
+
 			execve(path, cmd->args, shell->env);
 			perror("minishell");
 			exit(1);
 		}
 
-		free(path);
+		if (path)
+			free(path);
 		if (should_free_args && cmd->args)
 		{
 			free_array(cmd->args);
