@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:07 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/29 15:11:27 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/30 14:03:08 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,7 +167,7 @@ void execute_command(char *command, t_env_and_exit *shell)
     int status;
     int size = 0;
     
-    
+    // parsing
     t_tokens *tokens = tokenize(command, &size);
     
     if (!tokens)
@@ -192,17 +192,17 @@ void execute_command(char *command, t_env_and_exit *shell)
         free_array(args);
         return;
     }
+    //piping
     if (has_pipe(args, shell))
     {
         free_array(args);
         return;
     }
 
-	// CRITICAL FIX: Preprocess ALL heredocs BEFORE parsing command
+	// PreProcess All Herdocs
 	if (preprocess_heredocs(args) == -1)
 	{
 		free_array(args);
-		// Set exit status to 130 if Ctrl+C was pressed
 		if (g_signal == SIGINT)
 		{
 			shell->last_exit = 130;
@@ -214,7 +214,7 @@ void execute_command(char *command, t_env_and_exit *shell)
 		}
 		return;
 	}
-
+    // Parse Command with its own Redirection
     cmd = parse_cmd_with_redir(args);
     if (!cmd)
     {
@@ -227,7 +227,8 @@ void execute_command(char *command, t_env_and_exit *shell)
 		handle_redir_only(cmd, args);
 		return ;
 	}
-    // Handling Arrow in begining, with either file name or Derictory
+    
+    
     if (is_builtin(cmd->args[0]))
     {
         if (ft_strcmp(cmd->args[0], "exit") == 0)

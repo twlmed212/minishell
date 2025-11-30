@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:45 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/30 11:30:39 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/30 13:56:47 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,13 @@
 #ifndef TMA_ERROR
 # define TMA_ERROR "1"
 #endif
+
+typedef struct s_quotes{
+    char    *result;
+    int     i;
+    int     j;
+    char    quote;    
+} t_quotes;
 
 typedef enum e_redir_type
 {
@@ -102,7 +109,6 @@ void    execute_pipe(char **cmd1, char **cmd2, t_env_and_exit *shell);
 
 
 // ============= Quote handling =============
-int     is_quote(char c);
 char    *remove_quotes(char *str);
 
 // ============= EXECUTION =============

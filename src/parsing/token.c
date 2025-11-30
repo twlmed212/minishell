@@ -104,10 +104,8 @@ char *get_word_token(const char *line, int *i) {
         {
             c = line[*i];
             (*i)++;
-            // CRITICAL FIX: Check for NULL before comparing
             while(line[*i] && line[*i] != c)
                 (*i)++;
-            // Only increment if we found the closing quote
             if (line[*i] == c)
                 (*i)++;
         }
