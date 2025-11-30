@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:45 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/30 13:56:47 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/30 14:43:19 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,20 @@ typedef struct s_tokens {
 } t_tokens;
 
 extern volatile sig_atomic_t g_signal;
+
+// ============ EXECUTOR HELPER FUN ========
+int	execute_builtin_cmd(t_cmd *cmd, char **args, t_env_and_exit *shell);
+void	expand_exit_code(char **args, int exit_code);
+char	**parse_and_validate(char *command, t_env_and_exit *shell, int *size);
+void	print_cmd_error(char *cmd, t_env_and_exit *shell);
+void	free_token_structs(t_tokens *head);
+int	cleanup_on_error(char **args, int i);
+int	handle_heredoc_failure(char **args, t_env_and_exit *shell);
+int	handle_dir_error(int stat, char **args, t_env_and_exit *shell);
+int	look_for_directories(char *args);
+int	preprocess_heredocs(char **args);
+void	handle_redir_only(t_cmd *cmd, char **args);
+
 // ============ Signal handlers  =============
 void    init_signals(void);
 void    reset_signals(void);

@@ -1,30 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   executor_exit_expand.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/16 02:45:56 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/30 15:02:01 by mtawil           ###   ########.fr       */
+/*   Created: 2025/11/30 14:19:49 by mtawil            #+#    #+#             */
+/*   Updated: 2025/11/30 14:38:22 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	builtin_env(char **args, t_env_and_exit *shell)
+void	expand_exit_code(char **args, int exit_code)
 {
-	int i;
-
-	(void)args;
+	int		i;
+	char	*tmp;
+	char	*res;
 
 	i = 0;
-	while (shell->env[i])
+	while (args[i])
 	{
-		if (ft_strchr(shell->env[i], '=') != NULL)
-			printf("%s\n", shell->env[i]);
+		if (ft_strncmp(args[i], "$?", 2) == 0)
+		{
+			tmp = ft_itoa(exit_code);
+			res = ft_strjoin(tmp, args[i] + 2);
+			free(args[i]);
+			args[i] = res;
+			free(tmp);
+		}
 		i++;
 	}
-
-	return (0);
 }

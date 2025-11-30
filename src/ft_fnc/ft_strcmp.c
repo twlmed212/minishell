@@ -6,21 +6,21 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 06:12:44 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/23 15:03:42 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/11/30 14:42:46 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-    int	ft_strcmp(char *s1, char *s2)
+int	ft_strcmp(char *s1, char *s2)
+{
+    while (*s1 && *s1 == *s2)
     {
-        while (*s1 && *s1 == *s2)
-        {
-            s1++;
-            s2++;
-        }
-        return ((unsigned char)*s1 - (unsigned char)*s2);
+        s1++;
+        s2++;
     }
+    return ((unsigned char)*s1 - (unsigned char)*s2);
+}
 
 int ft_isspace(char c)
 {
