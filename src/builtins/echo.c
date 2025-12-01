@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:54 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/29 14:13:42 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/01 03:20:49 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ int	builtin_echo(char **args)
 			i = 2;
 		}
 	}
-	
 	while (args[i])
 	{
 		printf("%s", args[i]);
@@ -37,9 +36,7 @@ int	builtin_echo(char **args)
 			printf(" ");
 		i++;
 	}
-
 	if (newline)
 		printf("\n");
-
 	return (0);
 }

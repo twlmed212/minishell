@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:59 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/25 18:59:08 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/01 03:22:40 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,13 +63,11 @@ void builtin_exit(char **args, t_env_and_exit *shell)
     int flag;
     
     printf("exit\n");
-    
     if (!args[1])
         flag = 0;
     else
     {
         flag = ft_exit_check(args);
-
         if (flag == -1)
         {
             printf("minishell: %s: numeric argument required\n", args[1]);
@@ -78,18 +76,13 @@ void builtin_exit(char **args, t_env_and_exit *shell)
         else if (flag == -2)
         {
             printf("exit: too many arguments\n");
-            // Don't exit - just free and return
             free_array(args);
             return;
         }
     }
-
-    // Free everything before calling exit()
-    free_array(args);            // Free the args array and its strings
+    free_array(args);
     if (shell && shell->env)
-        free_array(shell->env);  // Free environment
-    
-    rl_clear_history();          // Clear readline history
-    
-    exit(flag);                  // Now exit
+        free_array(shell->env);
+    rl_clear_history();
+    exit(flag);
 }

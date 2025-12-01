@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:28 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/30 11:42:36 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/01 04:20:13 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,11 @@ char	*get_env_value(char *name, t_env_and_exit *shell)
 	return (NULL);
 }
 
-// our plan is to devide set_env_value into small
-// functions less than 25 lines each ok
 static char	*update_the_value(char *temp, char *value, t_env_and_exit *shell,
 		char *name)
 {
 	char	*new_var;
 	int		i;
-
 	new_var = ft_strjoin(temp, value);
 	if (value && value[0] != '\0')
 		free(temp);
@@ -125,6 +122,8 @@ int	set_env_value(char *name, char *value, t_env_and_exit *shell)
 	shell->err = 0;
 	if (value && value[0] != '\0')
 		temp = ft_strjoin(name, "=");
+	else
+		temp = ft_strdup(name);
 	if (!temp)
 		return (1);
 	new_var = update_the_value(temp, value, shell, name);
