@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 15:34:17 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/29 15:31:19 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/01 15:20:35 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,12 +35,34 @@ static char *generate_unique_tempfile(void)
 		free(temp1);
 		return (NULL);
 	}
-	
 	filename = ft_strjoin(temp1, num_str);
 	free(temp1);
 	free(num_str);
-	
 	return (filename);
+}
+static int write_to_file(char *input, char *delimiter, int fd)
+{
+	if (!input)
+		return (1);
+	if (ft_strcmp(input, delimiter) == 0)
+	{
+		free(input);
+		return (1);
+	}
+	write(fd, input, ft_strlen(input));
+	write(fd, "\n", 1);
+	free(input);
+	return (0);
+}
+static int prepare_file(char **filename, int *fd)
+{
+	*filename = generate_unique_tempfile();
+	if (!*filename)
+		return (1);
+	*fd = open(*filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (*fd == -1)
+		return (perror("heredoc"), free(*filename), 1);
+	return (0);
 }
 
 char	*read_heredoc(char *delimiter)
@@ -49,27 +71,13 @@ char	*read_heredoc(char *delimiter)
 	char	*filename;
 	int		fd;
 
-	filename = generate_unique_tempfile();
-	if (!filename)
+	if (prepare_file( &filename, &fd))
 		return (NULL);
-	
-	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd == -1)
-	{
-		perror("heredoc");
-		free(filename);
-		return (NULL);
-	}
-	
 	while (1)
 	{
 		input = readline("> ");
-		
-		// CRITICAL FIX: Check if Ctrl+C was pressed
-		// Even though readline doesn't return immediately, we check after each return
 		if (g_signal == SIGINT)
 		{
-			// Ctrl+C pressed - cleanup and return NULL
 			if (input)
 				free(input);
 			close(fd);
@@ -78,26 +86,10 @@ char	*read_heredoc(char *delimiter)
 			g_signal = 0;
 			return (NULL);
 		}
-		
-		// Handle Ctrl+D (NULL input)
-		if (!input)
-		{
+		if (write_to_file(input, delimiter, fd))
 			break ;
-		}
 		
-		// Check if we got the delimiter
-		if (ft_strcmp(input, delimiter) == 0)
-		{
-			free(input);
-			break ;
-		}
-		
-		// Write the line to temp file
-		write(fd, input, ft_strlen(input));
-		write(fd, "\n", 1);
-		free(input);
 	}
-	
 	close(fd);
 	return (filename);
 }

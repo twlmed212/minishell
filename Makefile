@@ -7,7 +7,7 @@ SRC = ./src/ft_fnc/ft_strcmp.c ./src/ft_fnc/ft_perror.c ./src/signals/signals.c 
 	./src/parsing/parse_redirections.c ./src/parsing/parse_pipe.c ./src/parsing/quotes.c ./src/parsing/path.c \
 	./src/builtins/unset.c ./src/parsing/parser.c 	./src/parsing/token.c ./src/parsing/syntax.c \
 	./src/utils/executor_utils.c ./src/utils/executor_builtin.c ./src/utils/executor_exit_expand.c \
-	./src/utils/executor_utils_pars.c
+	./src/utils/executor_utils_pars.c ./src/utils/export_utils.c
 
 
 OBJ = ${SRC:.c=.o}

@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:05 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/22 06:15:26 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/01 14:45:01 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,46 +26,52 @@ int	builtin_unset(char **args, t_env_and_exit *shell)
 	}
 	return (0);
 }
-
-int	unset_env_value(char *name, t_env_and_exit *shell)
+int get_position(char *name, t_env_and_exit *shell)
 {
 	int i;
-	int j;
 	int len;
-	char **new_env;
-	int count;
-
-	len = ft_strlen(name);
-
+	
 	i = 0;
+	len = ft_strlen(name);
 	while (shell->env[i])
 	{
-		if (ft_strncmp(shell->env[i], name, len) == 0
-			&& shell->env[i][len] == '=')
+		if ((ft_strncmp(shell->env[i], name, len) == 0)
+			&& (shell->env[i][len] == '=' || shell->env[i][len] == '\0'))
 		{
-			break ;
+			return (i);
 		}
 		i++;
 	}
 
 	if (!shell->env[i])
 		return (0);
+	return (0);
+}
+static int alloc_new_env(t_env_and_exit *shell, char ***new_env)
+{
+	int new_size;
 
-	count = 0;
-	while (shell->env[count])
-		count++;
+	new_size = 0;
+	while (shell->env[new_size])
+		new_size++;
 
-	new_env = malloc(sizeof(char *) * count);
-	if (!new_env)
+	*new_env = malloc(sizeof(char *) * new_size);
+	if (!*new_env)
 		return (1);
-
+	return (0);
+}
+static void fill_new_env(t_env_and_exit *shell, char ***new_env, int pos)
+{
+	int j;
+	int k;
+	
 	j = 0;
-	int k = 0;
+	k = 0;
 	while (shell->env[j])
 	{
-		if (j != i)
+		if (j != pos)
 		{
-			new_env[k] = shell->env[j];
+			(*new_env)[k] = shell->env[j];
 			k++;
 		}
 		else
@@ -74,10 +80,23 @@ int	unset_env_value(char *name, t_env_and_exit *shell)
 		}
 		j++;
 	}
-	new_env[k] = NULL;
+	(*new_env)[k] = NULL;
 
 	free(shell->env);
-	shell->env = new_env;
+	shell->env = *new_env;
+}
+int	unset_env_value(char *name, t_env_and_exit *shell)
+{
+	int pos;
+	char **new_env;
+	int err;
 
+	new_env = NULL;
+	pos = get_position(name, shell);
+	err = alloc_new_env(shell, &new_env);
+	if (err)
+		return (1);
+
+	fill_new_env(shell, &new_env, pos);
 	return (0);
 }

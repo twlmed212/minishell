@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:28 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/01 04:20:13 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/01 13:37:14 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,8 +64,7 @@ static char	*update_the_value(char *temp, char *value, t_env_and_exit *shell,
 	char	*new_var;
 	int		i;
 	new_var = ft_strjoin(temp, value);
-	if (value && value[0] != '\0')
-		free(temp);
+	free(temp);
 	if (!new_var)
 	{
 		shell->err = 1;
@@ -74,8 +73,9 @@ static char	*update_the_value(char *temp, char *value, t_env_and_exit *shell,
 	i = 0;
 	while (shell->env[i])
 	{
-		if (ft_strncmp(shell->env[i], name, ft_strlen(name)) == 0
-			&& shell->env[i][ft_strlen(name)] == '=')
+		if ((ft_strncmp(shell->env[i], name, ft_strlen(name)) == 0)
+			&& (shell->env[i][ft_strlen(name)] == '=' 
+			|| shell->env[i][ft_strlen(name)] == '\0' ))
 		{
 			free(shell->env[i]);
 			shell->env[i] = new_var;
@@ -119,7 +119,6 @@ int	set_env_value(char *name, char *value, t_env_and_exit *shell)
 	char	*temp;
 	char	**new_env;
 
-	shell->err = 0;
 	if (value && value[0] != '\0')
 		temp = ft_strjoin(name, "=");
 	else
@@ -128,7 +127,7 @@ int	set_env_value(char *name, char *value, t_env_and_exit *shell)
 		return (1);
 	new_var = update_the_value(temp, value, shell, name);
 	if (!new_var)
-		return (shell->err);
+		return (0);
 	new_env = re_create_env(shell, new_var);
 	if (!new_env)
 	{

@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:45 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/30 14:43:19 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/01 14:26:42 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -143,7 +143,11 @@ void builtin_exit(char **args, t_env_and_exit *shell);
 int builtin_cd(char **args);
 int     builtin_export(char **args, t_env_and_exit *shell);
 int     builtin_unset(char **args, t_env_and_exit *shell);
-
+// ====== export helpers =====
+int print_env_sorted(t_env_and_exit *shell);
+char *get_name(char *arg,  t_env_and_exit *shell, int *ret, int *i);
+char *get_value(char *arg, char *name, int *ret, int *i);
+int is_var_valid(char c, int is_first);
 // ============= ENVIRONMENT =============
 
 char    **copy_env(char **environ);

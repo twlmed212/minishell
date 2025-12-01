@@ -6,13 +6,12 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:10 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/29 15:11:38 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/01 15:27:52 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-// Helper function to use cat when there's only redirection
 static char *get_default_command(t_cmd *cmd)
 {
 	if (!cmd->args[0] && cmd->redirs)
@@ -28,10 +27,10 @@ static char *get_default_command(t_cmd *cmd)
 	return NULL;
 }
 
-// CRITICAL FIX: Replace heredoc delimiters with temp filenames IN THE ORIGINAL ARRAY
 static int process_all_heredocs(char ***cmds, int num_cmds)
 {
-	int i, j;
+	int i;
+	int j;
 	char *temp_file;
 	
 	i = 0;
@@ -42,20 +41,10 @@ static int process_all_heredocs(char ***cmds, int num_cmds)
 		{
 			if (ft_strcmp(cmds[i][j], "<<") == 0 && cmds[i][j + 1])
 			{
-				// Read heredoc
 				temp_file = read_heredoc(cmds[i][j + 1]);
 				if (!temp_file)
-				{
-					// Ctrl+D or Ctrl+C was pressed - heredoc interrupted
 					return (-1);
-				}
-				
-				// CRITICAL: Just replace the pointer, DON'T free!
-				// The original string is owned by args array
 				cmds[i][j + 1] = temp_file;
-				
-				// DON'T change "<<" to "<"
-				// Leave it as is, execute_input_redir will handle it
 			}
 			j++;
 		}
