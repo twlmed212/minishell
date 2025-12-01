@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 14:18:11 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/30 14:40:34 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/01 20:39:40 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,8 +53,7 @@ static int	parse_cmd_dirs(char **args, t_env_and_exit *shell)
 	return (handle_dir_error(stat, args, shell));
 }
 
-char	**parse_and_validate(char *command, t_env_and_exit *shell,
-		int *size)
+char	**parse_and_validate(char *command, t_env_and_exit *shell, int *size)
 {
 	t_tokens	*tokens;
 	char		**args;

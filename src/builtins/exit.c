@@ -6,13 +6,14 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:59 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/01 03:22:40 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/01 20:39:51 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void rl_clear_history(void);
+void		rl_clear_history(void);
+
 static int	ft_help(char **args, int i, int sign)
 {
 	int	j;
@@ -58,31 +59,31 @@ static int	ft_exit_check(char **args)
 	return (ft_help(args, i, sign));
 }
 
-void builtin_exit(char **args, t_env_and_exit *shell)
+void	builtin_exit(char **args, t_env_and_exit *shell)
 {
-    int flag;
-    
-    printf("exit\n");
-    if (!args[1])
-        flag = 0;
-    else
-    {
-        flag = ft_exit_check(args);
-        if (flag == -1)
-        {
-            printf("minishell: %s: numeric argument required\n", args[1]);
-            flag = 2;
-        }
-        else if (flag == -2)
-        {
-            printf("exit: too many arguments\n");
-            free_array(args);
-            return;
-        }
-    }
-    free_array(args);
-    if (shell && shell->env)
-        free_array(shell->env);
-    rl_clear_history();
-    exit(flag);
+	int	flag;
+
+	printf("exit\n");
+	if (!args[1])
+		flag = 0;
+	else
+	{
+		flag = ft_exit_check(args);
+		if (flag == -1)
+		{
+			printf("minishell: %s: numeric argument required\n", args[1]);
+			flag = 2;
+		}
+		else if (flag == -2)
+		{
+			printf("exit: too many arguments\n");
+			free_array(args);
+			return ;
+		}
+	}
+	free_array(args);
+	if (shell && shell->env)
+		free_array(shell->env);
+	rl_clear_history();
+	exit(flag);
 }

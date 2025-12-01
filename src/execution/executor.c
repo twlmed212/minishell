@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:07 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/30 14:38:20 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/01 20:47:46 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,8 +28,7 @@ static void	handle_child_process(t_cmd *cmd, char *cmd_path,
 	}
 }
 
-static void	handle_parent_process(pid_t pid, int *status,
-		t_env_and_exit *shell)
+static void	handle_parent_process(pid_t pid, int *status, t_env_and_exit *shell)
 {
 	pid_t	result;
 
@@ -96,7 +95,8 @@ void	execute_command(char *command, t_env_and_exit *shell)
 	if (!cmd_path)
 	{
 		print_cmd_error(cmd->args[0], shell);
-		return (free_cmd(cmd), free_array(args), (void)(shell->last_exit = 127));
+		return (free_cmd(cmd), free_array(args),
+			(void)(shell->last_exit = 127));
 	}
 	execute_external_cmd(cmd, args, cmd_path, shell);
 }

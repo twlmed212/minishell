@@ -14,24 +14,28 @@
 
 int	ft_strcmp(char *s1, char *s2)
 {
-    while (*s1 && *s1 == *s2)
-    {
-        s1++;
-        s2++;
-    }
-    return ((unsigned char)*s1 - (unsigned char)*s2);
+	while (*s1 && *s1 == *s2)
+	{
+		s1++;
+		s2++;
+	}
+	return ((unsigned char)*s1 - (unsigned char)*s2);
 }
 
-int ft_isspace(char c)
+int	ft_isspace(char c)
 {
-    return (c == ' ' || c == '\t' || c == '\n'
-         || c == '\v' || c == '\f' || c == '\r');
+	return (c == ' ' || c == '\t' || c == '\n' || c == '\v' || c == '\f'
+		|| c == '\r');
 }
 
-char *ft_strndup(const char *s, size_t n) {
-    char *new = malloc(n + 1);
-    if (!new) return NULL;
-    ft_memcpy(new, s, n);
-    new[n] = '\0';
-    return new;
+char	*ft_strndup(const char *s, size_t n)
+{
+	char	*new;
+
+	new = malloc(n + 1);
+	if (!new)
+		return (NULL);
+	ft_memcpy(new, s, n);
+	new[n] = '\0';
+	return (new);
 }

@@ -6,33 +6,18 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:10 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/01 17:22:13 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/01 20:48:55 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-// static char *get_default_command(t_cmd *cmd)
-// {
-// 	if (!cmd->args[0] && cmd->redirs)
-// 	{
-// 		char **new_args = malloc(sizeof(char *) * 2);
-// 		if (!new_args)
-// 			return NULL;
-// 		new_args[0] = ft_strdup("cat");
-// 		new_args[1] = NULL;
-// 		cmd->args = new_args;
-// 		return ft_strdup("cat");
-// 	}
-// 	return NULL;
-// }
-
-static int process_all_heredocs(char ***cmds, int num_cmds)
+static int	process_all_heredocs(char ***cmds, int num_cmds)
 {
-	int i;
-	int j;
-	char *temp_file;
-	
+	int		i;
+	int		j;
+	char	*temp_file;
+
 	i = 0;
 	while (i < num_cmds)
 	{
@@ -52,26 +37,26 @@ static int process_all_heredocs(char ***cmds, int num_cmds)
 	}
 	return (0);
 }
-int count_cmds(char ****cmds)
+
+int	count_cmds(char ****cmds)
 {
-	int num_cmds;
+	int	num_cmds;
+
 	num_cmds = 0;
 	while ((*cmds)[num_cmds])
 		num_cmds++;
 	return (num_cmds);
 }
 
-
-int **create_pipes(int num_cmds)
+int	**create_pipes(int num_cmds)
 {
-	int **pipes;
-	int i;
+	int	**pipes;
+	int	i;
 
 	i = 0;
 	pipes = malloc(sizeof(int *) * (num_cmds - 1));
 	if (!pipes)
-		return NULL;
-
+		return (NULL);
 	i = 0;
 	while (i < num_cmds - 1)
 	{
@@ -82,16 +67,17 @@ int **create_pipes(int num_cmds)
 			while (--i >= 0)
 				free(pipes[i]);
 			free(pipes);
-			return NULL;
+			return (NULL);
 		}
 		i++;
 	}
 	return (pipes);
 }
-pid_t *alloc_pids(int num_cmds, int **pipes)
+
+pid_t	*alloc_pids(int num_cmds, int **pipes)
 {
-	pid_t *pids;
-	int i ;
+	pid_t	*pids;
+	int		i;
 
 	pids = malloc(sizeof(pid_t) * num_cmds);
 	if (!pids)
@@ -112,23 +98,24 @@ pid_t *alloc_pids(int num_cmds, int **pipes)
 
 void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 {
-	int num_cmds;
-	int i;
-	int **pipes;
-	pid_t *pids;
-	char *path;
-	t_cmd *cmd;
-	int should_free_args;
-	int is_builtin_cmd;
+	int		num_cmds;
+	int		i;
+	int		**pipes;
+	pid_t	*pids;
+	char	*path;
+	t_cmd	*cmd;
+	int		should_free_args;
+	int		is_builtin_cmd;
+	int		j;
+	int		j;
+	int		exit_code;
+	int		status;
 
 	num_cmds = count_cmds(&cmds);
 	if (num_cmds == 0)
 		return ;
-
-	// CRITICAL FIX: Process ALL heredocs FIRST, modifying the cmds array
 	if (process_all_heredocs(cmds, num_cmds) == -1)
 	{
-		// Set exit status to 130 if Ctrl+C was pressed
 		if (g_signal == SIGINT)
 		{
 			shell->last_exit = 130;
@@ -138,17 +125,14 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 		{
 			shell->last_exit = 1;
 		}
-		return;
+		return ;
 	}
-
 	pipes = create_pipes(num_cmds);
 	if (!pipes)
 		return ;
-
 	pids = alloc_pids(num_cmds, pipes);
 	if (!pids)
 		return ;
-		
 	i = 0;
 	while (i < num_cmds)
 	{
@@ -158,47 +142,19 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 		if (!cmd)
 		{
 			i++;
-			continue;
+			continue ;
 		}
-        if (cmd->args && !cmd->args[0])
-        {
-            free_cmd(cmd);
-            i++;
-            continue;
-        }
-		// if (cmd->args && !cmd->args[0])
-		// {
-		// 	printf("here\n");
-		// 	char *default_cmd = get_default_command(cmd);
-		// 	if (default_cmd)
-		// 	{
-		// 		path = default_cmd;
-		// 		should_free_args = 1;
-		// 	}
-		// 	else
-		// 	{
-		// 		ft_perror("minishell: syntax error near pipe\n");
-		// 		free_cmd(cmd);
-		// 		int j = 0;
-		// 		while (j < num_cmds - 1)
-		// 		{
-		// 			close(pipes[j][0]);
-		// 			close(pipes[j][1]);
-		// 			free(pipes[j]);
-		// 			j++;
-		// 		}
-		// 		free(pipes);
-		// 		free(pids);
-		// 		return;
-		// 	}
-		// }
+		if (cmd->args && !cmd->args[0])
+		{
+			free_cmd(cmd);
+			i++;
+			continue ;
+		}
 		else
 		{
-			// CRITICAL FIX: Check if it's a builtin
 			if (is_builtin(cmd->args[0]))
 			{
-				// For builtins in pipes, we need to fork so they run in the pipeline
-				path = NULL;  // Signal that this is a builtin
+				path = NULL;
 				is_builtin_cmd = 1;
 			}
 			else
@@ -216,11 +172,10 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 						exit(127);
 					}
 					i++;
-					continue;
+					continue ;
 				}
 			}
 		}
-
 		pids[i] = fork();
 		if (pids[i] == -1)
 		{
@@ -233,7 +188,7 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 				cmd->args = NULL;
 			}
 			free_cmd(cmd);
-			int j = 0;
+			j = 0;
 			while (j < num_cmds - 1)
 			{
 				close(pipes[j][0]);
@@ -243,45 +198,36 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 			}
 			free(pipes);
 			free(pids);
-			return;
+			return ;
 		}
-
 		if (pids[i] == 0)
 		{
 			reset_signals();
-			
 			if (i > 0)
 				dup2(pipes[i - 1][0], STDIN_FILENO);
-
 			if (i < num_cmds - 1)
 				dup2(pipes[i][1], STDOUT_FILENO);
-
-			int j = 0;
+			j = 0;
 			while (j < num_cmds - 1)
 			{
 				close(pipes[j][0]);
 				close(pipes[j][1]);
 				j++;
 			}
-
 			if (cmd->redirs)
 			{
 				if (execute_redirections(cmd->redirs) == -1)
 					exit(1);
 			}
-
-			// CRITICAL FIX: Handle builtins in child process
 			if (is_builtin_cmd)
 			{
-				int exit_code = run_builtin(cmd->args, shell);
+				exit_code = run_builtin(cmd->args, shell);
 				exit(exit_code);
 			}
-
 			execve(path, cmd->args, shell->env);
 			perror("minishell");
 			exit(1);
 		}
-
 		if (path)
 			free(path);
 		if (should_free_args && cmd->args)
@@ -292,7 +238,6 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 		free_cmd(cmd);
 		i++;
 	}
-
 	i = 0;
 	while (i < num_cmds - 1)
 	{
@@ -301,9 +246,7 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 		free(pipes[i]);
 		i++;
 	}
-
 	i = 0;
-	int status;
 	while (i < num_cmds)
 	{
 		waitpid(pids[i], &status, 0);
@@ -311,10 +254,8 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 			shell->last_exit = WEXITSTATUS(status);
 		else
 			shell->last_exit = 1;
-		
 		i++;
 	}
-
 	free(pipes);
 	free(pids);
 }

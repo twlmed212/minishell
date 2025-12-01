@@ -14,17 +14,17 @@
 
 int	builtin_echo(char **args)
 {
-	int i;
-	int newline;
+	int	i;
+	int	newline;
 
 	newline = 1;
 	i = 1;
-
 	if (args[1] && (ft_strncmp(args[1], "-n", 2) == 0))
 	{
-		while(args[1][++i] == 'n')
+		while (args[1][++i] == 'n')
 			i++;
-		if (args[1][i] == '\0'){
+		if (args[1][i] == '\0')
+		{
 			newline = 0;
 			i = 2;
 		}

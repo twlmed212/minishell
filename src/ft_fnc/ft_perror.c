@@ -6,13 +6,13 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 13:53:23 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/24 14:09:28 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/01 20:35:51 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void ft_perror(char *str)
+void	ft_perror(char *str)
 {
-    write(2, str, ft_strlen(str));
+	write(2, str, ft_strlen(str));
 }

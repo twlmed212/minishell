@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/22 03:24:37 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/29 01:56:30 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/01 23:20:05 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,19 +30,18 @@ int	count_pipes(char **args)
 
 int	has_pipe(char **args, t_env_and_exit *shell)
 {
-	int flag;
+	int		flag;
+	char	***pipe_cmds;
+
 	flag = count_pipes(args);
 	if (flag > 0)
 	{
-		char ***pipe_cmds = split_all_pipes(args);
-
+		pipe_cmds = split_all_pipes(args);
 		if (pipe_cmds)
 		{
 			execute_pipeline(pipe_cmds, shell);
 			free_all_pipes(pipe_cmds);
 		}
-
-//		free_array(args);
 	}
 	return (flag > 0);
 }
@@ -66,10 +65,12 @@ char	***split_all_pipes(char **args)
 	char	***result;
 	int		num_cmds;
 	int		start;
+	int		i;
+	int		j;
+	int		k;
 
-	int i, j, k;
 	num_cmds = count_pipes(args) + 1;
-	result = malloc(sizeof(char **) * (num_cmds + 1));// [["ls", "la"],["cat"]]
+	result = malloc(sizeof(char **) * (num_cmds + 1));
 	if (!result)
 		return (NULL);
 	i = 0;
@@ -111,33 +112,20 @@ void	free_all_pipes(char ***cmds)
 
 	if (!cmds)
 		return ;
-	
 	i = 0;
 	while (cmds[i])
 	{
-		// CRITICAL FIX: Free heredoc temp filenames before freeing the array
 		j = 0;
 		while (cmds[i][j])
 		{
-			// Check if this is a heredoc temp file that we allocated
 			if (ft_strncmp(cmds[i][j], "/tmp/.heredoc_temp_", 19) == 0)
 			{
-				free(cmds[i][j]);  // Free the temp filename string
+				free(cmds[i][j]);
 			}
-			// Note: We DON'T free other strings because they're owned by args[]
 			j++;
 		}
-		
-		free(cmds[i]);  // Free the char* array
+		free(cmds[i]);
 		i++;
 	}
-	free(cmds);  // Free the char** array
+	free(cmds);
 }
-
-
-
-
-
-
-
-

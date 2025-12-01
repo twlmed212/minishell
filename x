@@ -1,0 +1,12 @@
+Dockerfile
+Makefile
+ca
+docker-compose.yml
+docker.sh
+include
+libft
+minishell
+r.supp
+run.sh
+src
+x

@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:14 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/29 01:56:01 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/01 20:44:22 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,16 +69,13 @@ int	execute_input_redir(t_redir *redir)
 	should_unlink = 0;
 	if (redir->type == REDIR_HEREDOC)
 	{
-		// CRITICAL FIX: Check if this is already a processed heredoc temp file
 		if (ft_strncmp(redir->file, "/tmp/.heredoc_temp_", 19) == 0)
 		{
-			// Already processed in parent! Just use the filename
 			filename = redir->file;
-			should_unlink = 1;  // We should unlink after use
+			should_unlink = 1;
 		}
 		else
 		{
-			// Not yet processed, read heredoc now (non-pipeline case)
 			filename = read_heredoc(redir->file);
 			if (!filename)
 			{
@@ -87,7 +84,6 @@ int	execute_input_redir(t_redir *redir)
 			}
 			should_unlink = 1;
 		}
-		
 		fd = open(filename, O_RDONLY);
 		if (fd == -1)
 		{
@@ -99,7 +95,6 @@ int	execute_input_redir(t_redir *redir)
 			}
 			return (-1);
 		}
-		
 		if (dup2(fd, STDIN_FILENO) == -1)
 		{
 			perror("dup2");
@@ -111,19 +106,15 @@ int	execute_input_redir(t_redir *redir)
 			}
 			return (-1);
 		}
-		
 		close(fd);
-		
-		// Clean up temp file
 		if (should_unlink)
 		{
 			unlink(filename);
-			// Only free if we allocated it (not if it's redir->file)
 			if (filename != redir->file)
 				free(filename);
 		}
 	}
-	else  // REDIR_IN - normal file redirect
+	else
 	{
 		fd = open(redir->file, O_RDONLY);
 		if (fd == -1)
@@ -144,7 +135,7 @@ int	execute_input_redir(t_redir *redir)
 
 int	execute_redirections(t_redir *redirs)
 {
-	t_redir *current;
+	t_redir	*current;
 
 	current = redirs;
 	while (current)
@@ -161,6 +152,5 @@ int	execute_redirections(t_redir *redirs)
 		}
 		current = current->next;
 	}
-
 	return (0);
 }

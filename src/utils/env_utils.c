@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:28 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/01 13:37:14 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/01 23:25:33 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,6 +63,7 @@ static char	*update_the_value(char *temp, char *value, t_env_and_exit *shell,
 {
 	char	*new_var;
 	int		i;
+
 	new_var = ft_strjoin(temp, value);
 	free(temp);
 	if (!new_var)
@@ -74,8 +75,8 @@ static char	*update_the_value(char *temp, char *value, t_env_and_exit *shell,
 	while (shell->env[i])
 	{
 		if ((ft_strncmp(shell->env[i], name, ft_strlen(name)) == 0)
-			&& (shell->env[i][ft_strlen(name)] == '=' 
-			|| shell->env[i][ft_strlen(name)] == '\0' ))
+			&& (shell->env[i][ft_strlen(name)] == '='
+			|| shell->env[i][ft_strlen(name)] == '\0'))
 		{
 			free(shell->env[i]);
 			shell->env[i] = new_var;

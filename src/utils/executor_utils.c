@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 14:15:00 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/30 14:41:15 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/01 20:39:08 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,6 @@ int	look_for_directories(char *args)
 		return (-1);
 	return (0);
 }
-
 
 int	preprocess_heredocs(char **args)
 {

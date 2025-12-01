@@ -14,10 +14,9 @@
 
 int	builtin_env(char **args, t_env_and_exit *shell)
 {
-	int i;
+	int	i;
 
 	(void)args;
-
 	i = 0;
 	while (shell->env[i])
 	{
@@ -25,6 +24,5 @@ int	builtin_env(char **args, t_env_and_exit *shell)
 			printf("%s\n", shell->env[i]);
 		i++;
 	}
-
 	return (0);
 }

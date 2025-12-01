@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:05 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/01 14:45:01 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/01 20:47:12 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,12 @@ int	builtin_unset(char **args, t_env_and_exit *shell)
 	}
 	return (0);
 }
-int get_position(char *name, t_env_and_exit *shell)
+
+int	get_position(char *name, t_env_and_exit *shell)
 {
-	int i;
-	int len;
-	
+	int	i;
+	int	len;
+
 	i = 0;
 	len = ft_strlen(name);
 	while (shell->env[i])
@@ -42,29 +43,29 @@ int get_position(char *name, t_env_and_exit *shell)
 		}
 		i++;
 	}
-
 	if (!shell->env[i])
 		return (0);
 	return (0);
 }
-static int alloc_new_env(t_env_and_exit *shell, char ***new_env)
+
+static int	alloc_new_env(t_env_and_exit *shell, char ***new_env)
 {
-	int new_size;
+	int	new_size;
 
 	new_size = 0;
 	while (shell->env[new_size])
 		new_size++;
-
 	*new_env = malloc(sizeof(char *) * new_size);
 	if (!*new_env)
 		return (1);
 	return (0);
 }
-static void fill_new_env(t_env_and_exit *shell, char ***new_env, int pos)
+
+static void	fill_new_env(t_env_and_exit *shell, char ***new_env, int pos)
 {
-	int j;
-	int k;
-	
+	int	j;
+	int	k;
+
 	j = 0;
 	k = 0;
 	while (shell->env[j])
@@ -81,22 +82,21 @@ static void fill_new_env(t_env_and_exit *shell, char ***new_env, int pos)
 		j++;
 	}
 	(*new_env)[k] = NULL;
-
 	free(shell->env);
 	shell->env = *new_env;
 }
+
 int	unset_env_value(char *name, t_env_and_exit *shell)
 {
-	int pos;
-	char **new_env;
-	int err;
+	int		pos;
+	char	**new_env;
+	int		err;
 
 	new_env = NULL;
 	pos = get_position(name, shell);
 	err = alloc_new_env(shell, &new_env);
 	if (err)
 		return (1);
-
 	fill_new_env(shell, &new_env, pos);
 	return (0);
 }
