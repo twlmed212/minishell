@@ -6,26 +6,26 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:10 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/01 15:27:52 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/01 17:22:13 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static char *get_default_command(t_cmd *cmd)
-{
-	if (!cmd->args[0] && cmd->redirs)
-	{
-		char **new_args = malloc(sizeof(char *) * 2);
-		if (!new_args)
-			return NULL;
-		new_args[0] = ft_strdup("cat");
-		new_args[1] = NULL;
-		cmd->args = new_args;
-		return ft_strdup("cat");
-	}
-	return NULL;
-}
+// static char *get_default_command(t_cmd *cmd)
+// {
+// 	if (!cmd->args[0] && cmd->redirs)
+// 	{
+// 		char **new_args = malloc(sizeof(char *) * 2);
+// 		if (!new_args)
+// 			return NULL;
+// 		new_args[0] = ft_strdup("cat");
+// 		new_args[1] = NULL;
+// 		cmd->args = new_args;
+// 		return ft_strdup("cat");
+// 	}
+// 	return NULL;
+// }
 
 static int process_all_heredocs(char ***cmds, int num_cmds)
 {
@@ -52,6 +52,63 @@ static int process_all_heredocs(char ***cmds, int num_cmds)
 	}
 	return (0);
 }
+int count_cmds(char ****cmds)
+{
+	int num_cmds;
+	num_cmds = 0;
+	while ((*cmds)[num_cmds])
+		num_cmds++;
+	return (num_cmds);
+}
+
+
+int **create_pipes(int num_cmds)
+{
+	int **pipes;
+	int i;
+
+	i = 0;
+	pipes = malloc(sizeof(int *) * (num_cmds - 1));
+	if (!pipes)
+		return NULL;
+
+	i = 0;
+	while (i < num_cmds - 1)
+	{
+		pipes[i] = malloc(sizeof(int) * 2);
+		if (!pipes[i] || pipe(pipes[i]) == -1)
+		{
+			perror("pipe");
+			while (--i >= 0)
+				free(pipes[i]);
+			free(pipes);
+			return NULL;
+		}
+		i++;
+	}
+	return (pipes);
+}
+pid_t *alloc_pids(int num_cmds, int **pipes)
+{
+	pid_t *pids;
+	int i ;
+
+	pids = malloc(sizeof(pid_t) * num_cmds);
+	if (!pids)
+	{
+		i = 0;
+		while (i < num_cmds - 1)
+		{
+			close(pipes[i][0]);
+			close(pipes[i][1]);
+			free(pipes[i]);
+			i++;
+		}
+		free(pipes);
+		return (NULL);
+	}
+	return (pids);
+}
 
 void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 {
@@ -64,10 +121,7 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 	int should_free_args;
 	int is_builtin_cmd;
 
-	num_cmds = 0;
-	while (cmds[num_cmds])
-		num_cmds++;
-
+	num_cmds = count_cmds(&cmds);
 	if (num_cmds == 0)
 		return ;
 
@@ -87,40 +141,14 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 		return;
 	}
 
-	pipes = malloc(sizeof(int *) * (num_cmds - 1));
+	pipes = create_pipes(num_cmds);
 	if (!pipes)
 		return ;
 
-	i = 0;
-	while (i < num_cmds - 1)
-	{
-		pipes[i] = malloc(sizeof(int) * 2);
-		if (!pipes[i] || pipe(pipes[i]) == -1)
-		{
-			perror("pipe");
-			while (--i >= 0)
-				free(pipes[i]);
-			free(pipes);
-			return ;
-		}
-		i++;
-	}
-
-	pids = malloc(sizeof(pid_t) * num_cmds);
+	pids = alloc_pids(num_cmds, pipes);
 	if (!pids)
-	{
-		i = 0;
-		while (i < num_cmds - 1)
-		{
-			close(pipes[i][0]);
-			close(pipes[i][1]);
-			free(pipes[i]);
-			i++;
-		}
-		free(pipes);
 		return ;
-	}
-
+		
 	i = 0;
 	while (i < num_cmds)
 	{
@@ -138,32 +166,32 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
             i++;
             continue;
         }
-		// Handle case where we have only redirections (like "<< EOF |")
-		if (cmd->args && !cmd->args[0])
-		{
-			char *default_cmd = get_default_command(cmd);
-			if (default_cmd)
-			{
-				path = default_cmd;
-				should_free_args = 1;
-			}
-			else
-			{
-				ft_perror("minishell: syntax error near pipe\n");
-				free_cmd(cmd);
-				int j = 0;
-				while (j < num_cmds - 1)
-				{
-					close(pipes[j][0]);
-					close(pipes[j][1]);
-					free(pipes[j]);
-					j++;
-				}
-				free(pipes);
-				free(pids);
-				return;
-			}
-		}
+		// if (cmd->args && !cmd->args[0])
+		// {
+		// 	printf("here\n");
+		// 	char *default_cmd = get_default_command(cmd);
+		// 	if (default_cmd)
+		// 	{
+		// 		path = default_cmd;
+		// 		should_free_args = 1;
+		// 	}
+		// 	else
+		// 	{
+		// 		ft_perror("minishell: syntax error near pipe\n");
+		// 		free_cmd(cmd);
+		// 		int j = 0;
+		// 		while (j < num_cmds - 1)
+		// 		{
+		// 			close(pipes[j][0]);
+		// 			close(pipes[j][1]);
+		// 			free(pipes[j]);
+		// 			j++;
+		// 		}
+		// 		free(pipes);
+		// 		free(pids);
+		// 		return;
+		// 	}
+		// }
 		else
 		{
 			// CRITICAL FIX: Check if it's a builtin

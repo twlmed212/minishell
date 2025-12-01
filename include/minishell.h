@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:45 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/01 14:26:42 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/01 17:13:31 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,9 @@ int ft_isspace(char c);
 // ============= Pipe functions =============
 char    ***split_all_pipes(char **args);
 void    free_all_pipes(char ***cmds);
-void    execute_pipeline(char ***cmds, t_env_and_exit *shell);
+void execute_pipeline(char ***cmds, t_env_and_exit *shell);
+void xxx(char *path, int should_free_args, t_cmd *cmd, int num_cmds, int **pipes, pid_t *pids);
+void x(int i, int **pipes, int num_cmds, t_cmd *cmd, int is_builtin_cmd, t_env_and_exit *shell, char *path);
 int     count_pipes(char **args);
 int     has_pipe(char **args, t_env_and_exit *shell);
 int     find_pipe(char **args);
