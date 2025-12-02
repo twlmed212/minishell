@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 15:34:17 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/01 20:44:40 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/02 18:31:21 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,6 +72,7 @@ char	*read_heredoc(char *delimiter)
 
 	if (prepare_file(&filename, &fd))
 		return (NULL);
+	init_herdoc_signals();
 	while (1)
 	{
 		input = readline("> ");

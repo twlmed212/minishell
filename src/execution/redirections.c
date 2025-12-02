@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:14 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/02 14:37:48 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/03 00:04:58 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ int	execute_input_redir(t_redir *redir)
 		else
 		{
 			filename = read_heredoc(redir->file);
+			reset_signals();
 			if (!filename)
 			{
 				ft_perror("minishell: heredoc: interrupted\n");

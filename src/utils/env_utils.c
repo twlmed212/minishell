@@ -76,7 +76,7 @@ static char	*update_the_value(char *temp, char *value, t_env_and_exit *shell,
 	{
 		if ((ft_strncmp(shell->env[i], name, ft_strlen(name)) == 0)
 			&& (shell->env[i][ft_strlen(name)] == '='
-			|| shell->env[i][ft_strlen(name)] == '\0'))
+				|| shell->env[i][ft_strlen(name)] == '\0'))
 		{
 			free(shell->env[i]);
 			shell->env[i] = new_var;

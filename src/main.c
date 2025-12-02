@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 02:45:27 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/30 11:13:37 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/02 18:28:58 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static int	read_input(char **input, t_env_and_exit *shell)
 	g_signal = 0;
 	if (!*input)
 	{
-		ft_perror("exit");
+		ft_perror("exit\n");
 		return (-1);
 	}
 	if (g_signal == SIGINT)

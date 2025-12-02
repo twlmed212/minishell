@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:24 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/01 18:48:15 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/02 18:05:36 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,26 @@ static void	sigint_handler(int signum)
 	rl_on_new_line();
 	rl_replace_line("", 0);
 	rl_redisplay();
+}
+
+static void	heredoc_sigint_handler(int signum)
+{
+	char	c;
+
+	(void)signum;
+	g_signal = SIGINT;
+	c = '\n';
+	ioctl(STDIN_FILENO, TIOCSTI, &c);
+}
+
+void	init_herdoc_signals(void)
+{
+	struct sigaction	sa_int;
+
+	sa_int.sa_handler = heredoc_sigint_handler;
+	sigemptyset(&sa_int.sa_mask);
+	sa_int.sa_flags = 0;
+	sigaction(SIGINT, &sa_int, NULL);
 }
 
 void	init_signals(void)

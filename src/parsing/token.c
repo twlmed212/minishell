@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 20:45:36 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/01 23:20:25 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/02 18:29:38 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ char	*get_operator_token(const char *line, int *i)
 {
 	char	*token;
 
-	if ((line[*i] == '>' && line[*i + 1] == '>')
+	if ((line[*i] == '>' && line[*i + 1] == '>') 
 		|| (line[*i] == '<' && line[*i + 1] == '<'))
 	{
 		token = ft_strndup(line + *i, 2);

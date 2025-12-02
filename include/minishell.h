@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:45 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/01 23:25:12 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/02 18:25:41 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <ctype.h>
 # include <fcntl.h>
 # include <readline/history.h>
+#include <sys/ioctl.h>
 # include <readline/readline.h>
 # include <signal.h>
 # include <stdio.h>
@@ -90,6 +91,8 @@ typedef struct s_tokens
 
 extern volatile sig_atomic_t	g_signal;
 
+void							init_herdoc_signals(void);
+void							free_cmd(t_cmd *cmd);
 // ============ EXECUTOR HELPER FUN ========
 int								execute_builtin_cmd(t_cmd *cmd, char **args,
 									t_env_and_exit *shell);

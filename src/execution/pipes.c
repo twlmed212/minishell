@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:10 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/02 13:20:23 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/02 18:10:34 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ static int	process_all_heredocs(char ***cmds, int num_cmds)
 			if (ft_strcmp(cmds[i][j], "<<") == 0 && cmds[i][j + 1])
 			{
 				temp_file = read_heredoc(cmds[i][j + 1]);
+				reset_signals();
 				if (!temp_file)
 					return (-1);
 				cmds[i][j + 1] = temp_file;
