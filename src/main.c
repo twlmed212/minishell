@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 02:45:27 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/04 18:18:58 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/05 12:17:08 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,12 +14,14 @@
 
 void		rl_clear_history(void);
 
-void get_and_set_value(t_env_and_exit *original, int code)
+t_env_and_exit *get_and_set_value(t_env_and_exit *original, int code)
 {
 	static t_env_and_exit *current;
 	if (original)
 		current = original;
-	current->last_exit = code;
+	if (code)
+		current->last_exit = code;
+	return (current);
 }
 static void	init_env_and_signals(t_env_and_exit *shell, char **env)
 {

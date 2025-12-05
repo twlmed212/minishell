@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 18:08:39 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/04 16:10:16 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/05 12:07:31 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static void	child_process(t_cmd *cmd, char *path, t_pipeline_data *data)
 	close_all_pipes(data->pipes, data->num_cmds);
 	if (cmd->redirs)
 	{
-		if (execute_redirections(cmd->redirs, data->shell) == -1)
+		if (execute_redirections(cmd->redirs) == -1)
 			exit(1);
 	}
 	if (data->is_builtin)

@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 15:34:17 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/04 18:41:54 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/05 12:04:42 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,10 @@ void herdoc_child(char *fn, char *del)
 			if (input)
 				free(input);
 			g_signal = 0;
-			return (close(fd), unlink(fn), free(fn), NULL);
+			close(fd);
+			unlink(fn);
+			free(fn);
+			break;
 		}
 		if (write_to_file(input, del, fd))
 			break ;
@@ -114,19 +117,18 @@ void herdoc_parent(pid_t pid, char *fn)
 	if (status == 130 || status == 1)
 	{
 		if (status == 130)
-			shell->last_exit = 130;
+			get_and_set_value(NULL, 130);
 		else
-			shell->last_exit = 30;
+			get_and_set_value(NULL, 1);
 		unlink(fn);
-		return (NULL);
+		return;
 	}
-	shell->last_exit = 0;
-	return (fn);
+	get_and_set_value(NULL, 0);
+	return ;
 }
 
-char	*read_heredoc(char *delimiter, t_env_and_exit *shell)
+char	*read_heredoc(char *delimiter)
 {
-	char	*input;
 	char	*filename;
 	pid_t	pid;
 	int		fd;

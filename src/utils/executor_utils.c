@@ -6,16 +6,15 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 14:15:00 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/04 18:35:13 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/05 12:10:40 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	handle_heredoc_failure(char **args, t_env_and_exit *shell)
+int	handle_heredoc_failure(char **args)
 {
 	free_array(args);
-	(void)shell;
 	return (-1);
 }
 
@@ -53,7 +52,7 @@ int	look_for_directories(char *args)
 	return (0);
 }
 
-int	preprocess_heredocs(char **args, t_env_and_exit *shell)
+int	preprocess_heredocs(char **args)
 {
 	int		i;
 	char	*temp_file;
@@ -63,7 +62,7 @@ int	preprocess_heredocs(char **args, t_env_and_exit *shell)
 	{
 		if (ft_strcmp(args[i], "<<") == 0 && args[i + 1])
 		{
-			temp_file = read_heredoc(args[i + 1], shell);
+			temp_file = read_heredoc(args[i + 1]);
 			init_signals();
 			if (!temp_file)
 				return (-1);
@@ -75,13 +74,13 @@ int	preprocess_heredocs(char **args, t_env_and_exit *shell)
 	return (0);
 }
 
-void	handle_redir_only(t_cmd *cmd, char **args, t_env_and_exit *shell)
+void	handle_redir_only(t_cmd *cmd, char **args)
 {
 	int	*saved_fds;
 
 	saved_fds = save_std_fds();
 	if (cmd->redirs)
-		execute_redirections(cmd->redirs, shell);
+		execute_redirections(cmd->redirs);
 	restore_std_fds(saved_fds);
 	free_cmd(cmd);
 	free_array(args);

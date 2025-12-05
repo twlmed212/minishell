@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:07 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/04 16:53:19 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/05 12:12:55 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static void	handle_child_process(t_cmd *cmd, char *cmd_path,
 	reset_signals();
 	if (cmd->redirs)
 	{
-		if (execute_redirections(cmd->redirs, shell) == -1)
+		if (execute_redirections(cmd->redirs) == -1)
 			exit(1);
 	}
 	if (execve(cmd_path, cmd->args, shell->env) == -1)
@@ -82,13 +82,13 @@ void	execute_command(char *command, t_env_and_exit *shell)
 	args = parse_and_validate(command, shell, &size);
 	if (!args)
 		return ;
-	if (preprocess_heredocs(args, shell) == -1)
-		return ((void)handle_heredoc_failure(args, shell));
+	if (preprocess_heredocs(args) == -1)
+		return ((void)handle_heredoc_failure(args));
 	cmd = parse_cmd_with_redir(args);
 	if (!cmd)
 		return (free_array(args));
 	if (!cmd->args[0])
-		return (handle_redir_only(cmd, args, shell));
+		return (handle_redir_only(cmd, args));
 	if (is_builtin(cmd->args[0]))
 		return ((void)execute_builtin_cmd(cmd, args, shell));
 	cmd_path = find_command_path(cmd->args[0], shell);

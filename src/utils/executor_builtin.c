@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 14:21:59 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/04 16:51:45 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/05 12:07:40 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	execute_builtin_cmd(t_cmd *cmd, char **args, t_env_and_exit *shell)
 	saved_fds = save_std_fds();
 	if (cmd->redirs)
 	{
-		if (execute_redirections(cmd->redirs, shell) == -1)
+		if (execute_redirections(cmd->redirs) == -1)
 		{
 			restore_std_fds(saved_fds);
 			free_cmd(cmd);

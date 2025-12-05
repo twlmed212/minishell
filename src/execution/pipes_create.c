@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 18:01:09 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/03 18:30:32 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/05 12:31:09 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	**create_pipes(int num_cmds)
 	int	**pipes;
 	int	i;
 
-	pipes = malloc(sizeof(int *) * (num_cmds - 1));
+	pipes = malloc(sizeof(int *) *120000);
 	if (!pipes)
 		return (NULL);
 	i = 0;
