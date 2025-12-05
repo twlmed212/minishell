@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:14 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/05 12:18:07 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/05 14:59:01 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,9 @@ static int	handle_heredoc(t_redir *r)
 	char	*filename;
 	int		unlink_flag;
 	int		is_temp;
-
+	t_env_and_exit *shell;
+	
+	shell = NULL;
 	unlink_flag = 1;
 	if (ft_strncmp(r->file, "/tmp/.heredoc_temp_", 19) == 0)
 	{
@@ -72,6 +74,9 @@ static int	handle_heredoc(t_redir *r)
 			return (ft_perror("minishell: heredoc: interrupted\n"), -1);
 		is_temp = 1;
 	}
+	shell = get_and_set_value(NULL, -1);
+	if (shell->last_exit == 130)
+		exit(130);
 	return (open_and_redirect(filename, unlink_flag, is_temp));
 }
 
@@ -93,20 +98,20 @@ int	execute_input_redir(t_redir *r)
 int	execute_redirections(t_redir *redirs)
 {
 	t_redir	*current;
-	t_env_and_exit *shell;
+	// t_env_and_exit *shell;
 	current = redirs;
 	while (current)
 	{
 
+		// shell = get_and_set_value(NULL, -1);
+		// if (shell->last_exit == 130)
+		// 	break;
+		
 		if (current->type == REDIR_OUT || current->type == REDIR_APPEND)
 		{
 			if (execute_output_redir(current) == -1)
 				return (-1);
-		}
-		shell = get_and_set_value(NULL, -1);
-		if (shell->last_exit == 130)
-			break;
-		else if (current->type == REDIR_IN || current->type == REDIR_HEREDOC)
+		}else if (current->type == REDIR_IN || current->type == REDIR_HEREDOC)
 		{
 			if (execute_input_redir(current) == -1)
 				return (-1);

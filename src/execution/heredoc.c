@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 15:34:17 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/05 12:04:42 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/05 15:35:35 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,9 @@ void herdoc_child(char *fn, char *del)
 	if (fd == -1)
 	{
 		perror("open");
-		//free data
+		close(fd);
+		unlink(fn);
+		free(fn);
 		exit(1);
 	}
 	while (1)
@@ -93,7 +95,6 @@ void herdoc_child(char *fn, char *del)
 			if (input)
 				free(input);
 			g_signal = 0;
-			close(fd);
 			unlink(fn);
 			free(fn);
 			break;
@@ -101,6 +102,7 @@ void herdoc_child(char *fn, char *del)
 		if (write_to_file(input, del, fd))
 			break ;
 	}
+
 	close(fd);
 	exit(0);
 }

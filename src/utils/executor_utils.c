@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 14:15:00 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/05 12:10:40 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/05 15:21:38 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,11 @@ int	preprocess_heredocs(char **args)
 {
 	int		i;
 	char	*temp_file;
-
+	t_env_and_exit *shell;
+	
+	shell = NULL;
 	i = 0;
+	shell = get_and_set_value(NULL, -1);
 	while (args[i])
 	{
 		if (ft_strcmp(args[i], "<<") == 0 && args[i + 1])
@@ -65,9 +68,14 @@ int	preprocess_heredocs(char **args)
 			temp_file = read_heredoc(args[i + 1]);
 			init_signals();
 			if (!temp_file)
+			{
+				ft_perror("Error returend from read_heredoc");
 				return (-1);
+			}
 			free(args[i + 1]);
 			args[i + 1] = temp_file;
+			if (shell->last_exit == 130)
+				return (-1);
 		}
 		i++;
 	}

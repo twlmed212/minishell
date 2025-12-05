@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:10 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/04 16:51:45 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/05 15:13:48 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,20 +45,24 @@ int	prepare_command(char **cmd_args, t_env_and_exit *shell,
 	return (builtin_flag);
 }
 
-static void	wait_all_children(pid_t *pids, int num_cmds,
-		t_env_and_exit *shell)
+static void	wait_all_children(pid_t *pids, int num_cmds)
 {
 	int	i;
+	int	wstatus;
 	int	status;
-
 	i = 0;
 	while (i < num_cmds)
 	{
 		waitpid(pids[i], &status, 0);
-		if (WIFEXITED(status))
-			shell->last_exit = WEXITSTATUS(status);
-		else
-			shell->last_exit = 1;
+		status = WEXITSTATUS(wstatus);
+		if (status == 130 || status == 1)
+		{
+			if (status == 130)
+				get_and_set_value(NULL, 130);
+			else
+				get_and_set_value(NULL, 1);
+			return;
+		}
 		i++;
 	}
 }
@@ -77,7 +81,7 @@ void	execute_pipeline(char ***cmds, t_env_and_exit *shell)
 		data.i++;
 	}
 	close_all_pipes(data.pipes, data.num_cmds);
-	wait_all_children(data.pids, data.num_cmds, shell);
+	wait_all_children(data.pids, data.num_cmds);
 	free_pipes_array(data.pipes, data.num_cmds);
 	free(data.pids);
 }
