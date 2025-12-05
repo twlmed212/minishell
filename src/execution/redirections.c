@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:14 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/05 14:59:01 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/05 17:45:22 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ static int	handle_heredoc(t_redir *r)
 	}
 	shell = get_and_set_value(NULL, -1);
 	if (shell->last_exit == 130)
-		exit(130);
+		return (-1);
 	return (open_and_redirect(filename, unlink_flag, is_temp));
 }
 

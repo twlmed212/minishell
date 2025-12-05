@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 15:34:17 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/05 15:35:35 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/05 17:38:07 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ void herdoc_child(char *fn, char *del)
 		perror("open");
 		close(fd);
 		unlink(fn);
-		free(fn);
 		exit(1);
 	}
 	while (1)
@@ -96,7 +95,6 @@ void herdoc_child(char *fn, char *del)
 				free(input);
 			g_signal = 0;
 			unlink(fn);
-			free(fn);
 			break;
 		}
 		if (write_to_file(input, del, fd))
@@ -123,6 +121,7 @@ void herdoc_parent(pid_t pid, char *fn)
 		else
 			get_and_set_value(NULL, 1);
 		unlink(fn);
+		free(fn);
 		return;
 	}
 	get_and_set_value(NULL, 0);
@@ -141,6 +140,9 @@ char	*read_heredoc(char *delimiter)
 	if (pid == -1)
 	{
 		perror("fork");
+		close(fd);
+		unlink(filename);
+		free(filename); 
 		return (NULL);
 	}
 	if (pid == 0)
@@ -148,6 +150,12 @@ char	*read_heredoc(char *delimiter)
 	else
 		herdoc_parent(pid, filename);
 
+	t_env_and_exit *shell = get_and_set_value(NULL, -1);
+	if (shell->last_exit == 130)
+	{
+		// free(filename);
+		return (NULL);
+	}
 	close(fd);
 	return (filename);
 }
