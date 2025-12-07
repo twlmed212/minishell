@@ -6,34 +6,30 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:52 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/05 14:16:00 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/07 16:42:09 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	builtin_cd(char **args)
+int	builtin_cd(char **args, t_shell *shell)
 {
 	char	*path;
 
 	if (!args[1])
 	{
-		path = getenv("HOME");
+		path = get_env("HOME", shell->env);
 		if (!path)
-			return (ft_perror("cd: HOME not set\n"), 1);
-	}
-	else if (args[2])
-	{
-		printf("cd: too many arguments\n");
-		return (1);
+		{
+			fprintf(stderr, "cd: HOME not set\n");
+			return (1);
+		}
 	}
 	else
 		path = args[1];
 	if (chdir(path) != 0)
 	{
-		ft_perror("minishell: ");
-		ft_perror(path);
-		ft_perror(" : No such file or directory\n");
+		perror("cd");
 		return (1);
 	}
 	return (0);

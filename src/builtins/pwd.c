@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:03 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/01 14:27:58 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/07 16:44:04 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,15 +14,13 @@
 
 int	builtin_pwd(void)
 {
-	char	*path;
+	char	cwd[1024];
 
-	path = getcwd(NULL, 0);
-	if (!path)
+	if (getcwd(cwd, sizeof(cwd)))
 	{
-		perror("pwd");
-		return (1);
+		printf("%s\n", cwd);
+		return (0);
 	}
-	printf("%s\n", path);
-	free(path);
-	return (0);
+	perror("pwd");
+	return (1);
 }

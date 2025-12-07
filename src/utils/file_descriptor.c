@@ -1,34 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   free_utils.c                                       :+:      :+:    :+:   */
+/*   file_descriptor.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/12/02 18:25:21 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/02 18:25:26 by mtawil           ###   ########.fr       */
+/*   Created: 2025/12/07 16:48:26 by mtawil            #+#    #+#             */
+/*   Updated: 2025/12/07 16:48:27 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+
 #include "../../include/minishell.h"
 
-void	free_cmd(t_cmd *cmd)
+int	*save_std_fds(void)
 {
-	t_redir	*redir;
-	t_redir	*next;
+	int	*saved;
 
-	if (!cmd)
+	saved = malloc(sizeof(int) * 2);
+	if (!saved)
+		return (NULL);
+	saved[0] = dup(STDIN_FILENO);
+	saved[1] = dup(STDOUT_FILENO);
+	return (saved);
+}
+
+void	restore_std_fds(int *saved)
+{
+	if (!saved)
 		return ;
-	if (cmd->args)
-		free(cmd->args);
-	redir = cmd->redirs;
-	while (redir)
-	{
-		next = redir->next;
-		if (redir->file)
-			free(redir->file);
-		free(redir);
-		redir = next;
-	}
-	free(cmd);
+	dup2(saved[0], STDIN_FILENO);
+	dup2(saved[1], STDOUT_FILENO);
+	close(saved[0]);
+	close(saved[1]);
+	free(saved);
 }

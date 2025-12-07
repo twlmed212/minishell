@@ -6,18 +6,17 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 14:24:14 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/01 20:38:43 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/07 16:48:21 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static int	p_err(char *arg)
+int	is_var_valid(char c, int is_first)
 {
-	ft_perror("minishell: export: `");
-	ft_perror(arg);
-	ft_perror("': not a valid identifier\n");
-	return (1);
+	if (is_first)
+		return (ft_isalpha(c) || c == '_');
+	return (ft_isalnum(c) || c == '_');
 }
 
 static int	is_name_valid(char *name)
@@ -38,35 +37,14 @@ static int	is_name_valid(char *name)
 	return (1);
 }
 
-int	print_env_sorted(t_env_and_exit *shell)
+static int	p_err(char *arg)
 {
-	int		i;
-	int		j;
-	char	*temp;
-
-	i = 0;
-	while (shell->env[i])
-	{
-		j = i + 1;
-		while (shell->env[j])
-		{
-			if (ft_strcmp(shell->env[i], shell->env[j]) > 0)
-			{
-				temp = shell->env[i];
-				shell->env[i] = shell->env[j];
-				shell->env[j] = temp;
-			}
-			j++;
-		}
-		i++;
-	}
-	i = 0;
-	while (shell->env[i])
-		printf("declare -x %s\n", shell->env[i++]);
-	return (0);
+	ft_perror("minishell: export: `");
+	ft_perror(arg);
+	ft_perror("': not a valid identifier\n");
+	return (1);
 }
-
-char	*get_name(char *arg, t_env_and_exit *shell, int *ret, int *i)
+char	*get_name(char *arg, t_shell *shell, int *ret, int *i)
 {
 	char	*name;
 	char	*equal_sign;
@@ -78,7 +56,7 @@ char	*get_name(char *arg, t_env_and_exit *shell, int *ret, int *i)
 	{
 		if (!is_name_valid(arg))
 			return (p_err(arg), (*ret)++, (*i)++, NULL);
-		shell->err = set_env_value(arg, "", shell);
+		shell->running = set_env(arg, "", shell);
 		return ((*ret)++, (*i)++, NULL);
 	}
 	name = ft_substr(arg, 0, equal_sign - arg);
@@ -110,3 +88,4 @@ char	*get_value(char *arg, char *name, int *ret, int *i)
 	}
 	return (clean_value);
 }
+

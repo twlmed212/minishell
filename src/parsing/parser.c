@@ -6,45 +6,68 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:18 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/01 20:49:15 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/07 16:47:20 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void	free_array(char **arr)
+t_cmd	*new_cmd(void)
 {
-	int	i;
+	t_cmd	*cmd;
 
-	if (!arr)
+	cmd = malloc(sizeof(t_cmd));
+	if (!cmd)
+		return (NULL);
+	cmd->args = NULL;
+	cmd->redirs = NULL;
+	cmd->next = NULL;
+	return (cmd);
+}
+
+t_redir	*new_redir(t_token_type type, char *file)
+{
+	t_redir	*redir;
+
+	redir = malloc(sizeof(t_redir));
+	if (!redir)
+		return (NULL);
+	redir->type = type;
+	redir->file = remove_quotes(file);
+	redir->next = NULL;
+	return (redir);
+}
+
+void	add_redir(t_redir **head, t_redir *new)
+{
+	t_redir	*tmp;
+
+	if (!*head)
+	{
+		*head = new;
 		return ;
-	i = 0;
-	while (arr[i])
-	{
-		free(arr[i]);
-		i++;
 	}
-	free(arr);
+	tmp = *head;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new;
 }
 
-void	free_token_structs(t_tokens *head)
+int	count_args(t_token *tokens)
 {
-	t_tokens	*tmp;
+	int	count;
 
-	while (head)
+	count = 0;
+	while (tokens && tokens->type != T_PIPE)
 	{
-		tmp = head->next;
-		if (head->value)
-			free(head->value);
-		free(head);
-		head = tmp;
+		if (tokens->type == T_WORD)
+			count++;
+		else if (tokens->type >= T_REDIR_IN && tokens->type <= T_HEREDOC)
+		{
+			if (tokens->next)
+				tokens = tokens->next;
+		}
+		tokens = tokens->next;
 	}
-}
-
-int	cleanup_on_error(char **args, int i)
-{
-	while (--i >= 0)
-		free(args[i]);
-	free(args);
-	return (0);
+	return (count);
 }

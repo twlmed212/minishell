@@ -6,84 +6,55 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:59 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/01 20:39:51 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/07 16:43:11 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-void		rl_clear_history(void);
-
-static int	ft_help(char **args, int i, int sign)
-{
-	int	j;
-
-	j = i;
-	while (args[1][i])
-	{
-		if (!isdigit(args[1][i]))
-			return (-1);
-		i++;
-	}
-	if (args[2])
-		return (-2);
-	i = atoi(args[1] + j) * sign;
-	return ((unsigned char)(i));
-}
-
-static int	ft_exit_check(char **args)
+static int	is_numeric(char *str)
 {
 	int	i;
-	int	sign;
-	int	res;
 
 	i = 0;
-	sign = 1;
-	while (args[1][i] == ' ' || (args[1][i] >= 9 && args[1][i] <= 13))
+	if (str[i] == '+' || str[i] == '-')
 		i++;
-	if (args[1][i] == '-' || args[1][i] == '+')
-		if (args[1][i++] == '-')
-			sign = -1;
-	while (args[1][i] == '0')
-		i++;
-	res = strlen(args[1] + i);
-	if (res > 19)
-		return (-1);
-	if (res == 19)
+	if (!str[i])
+		return (0);
+	while (str[i])
 	{
-		if (sign != -1 && ft_strcmp(args[1] + i, MAX_EXIT) > 0)
-			return (-1);
-		if (sign == -1 && ft_strcmp(args[1] + i, MIN_EXIT) > 0)
-			return (-1);
+		if (str[i] < '0' || str[i] > '9')
+			return (0);
+		i++;
 	}
-	return (ft_help(args, i, sign));
+	return (1);
 }
 
-void	builtin_exit(char **args, t_env_and_exit *shell)
+void	builtin_exit(char **args, t_shell *shell, t_cmd *cmd)
 {
-	int	flag;
+	unsigned char	exit_code;
 
 	printf("exit\n");
-	if (!args[1])
-		flag = 0;
-	else
+	exit_code = shell->exit_code;
+	if (args[1])
 	{
-		flag = ft_exit_check(args);
-		if (flag == -1)
+		if (!is_numeric(args[1]))
 		{
-			printf("minishell: %s: numeric argument required\n", args[1]);
-			flag = 2;
+			fprintf(stderr, "exit: %s: numeric argument required\n",
+				args[1]);
+			exit_code = 2;
 		}
-		else if (flag == -2)
+		else if (args[2])
 		{
-			printf("exit: too many arguments\n");
-			free_array(args);
+			fprintf(stderr, "exit: too many arguments\n");
+			shell->exit_code = 1;
 			return ;
 		}
+		else
+			exit_code = atoi(args[1]);
 	}
-	free_array(args);
-	if (shell && shell->env)
-		free_array(shell->env);
-	rl_clear_history();
-	exit(flag);
+	if (cmd)
+		free_cmds(cmd);
+	free_array(shell->env);
+	exit(exit_code);
 }

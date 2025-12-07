@@ -6,28 +6,13 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:05 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/01 20:47:12 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/07 18:16:52 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	builtin_unset(char **args, t_env_and_exit *shell)
-{
-	int	i;
-
-	if (!args[1])
-		return (0);
-	i = 1;
-	while (args[i])
-	{
-		unset_env_value(args[i], shell);
-		i++;
-	}
-	return (0);
-}
-
-int	get_position(char *name, t_env_and_exit *shell)
+int	get_position(char *name, t_shell *shell)
 {
 	int	i;
 	int	len;
@@ -48,7 +33,7 @@ int	get_position(char *name, t_env_and_exit *shell)
 	return (0);
 }
 
-static int	alloc_new_env(t_env_and_exit *shell, char ***new_env)
+static int	alloc_new_env(t_shell *shell, char ***new_env)
 {
 	int	new_size;
 
@@ -61,7 +46,7 @@ static int	alloc_new_env(t_env_and_exit *shell, char ***new_env)
 	return (0);
 }
 
-static void	fill_new_env(t_env_and_exit *shell, char ***new_env, int pos)
+static void	fill_new_env(t_shell *shell, char ***new_env, int pos)
 {
 	int	j;
 	int	k;
@@ -86,7 +71,7 @@ static void	fill_new_env(t_env_and_exit *shell, char ***new_env, int pos)
 	shell->env = *new_env;
 }
 
-int	unset_env_value(char *name, t_env_and_exit *shell)
+int	ft_unset(char *name, t_shell *shell)
 {
 	int		pos;
 	char	**new_env;
@@ -98,5 +83,21 @@ int	unset_env_value(char *name, t_env_and_exit *shell)
 	if (err)
 		return (1);
 	fill_new_env(shell, &new_env, pos);
+	return (0);
+}
+
+
+int	builtin_unset(char **args, t_shell *shell)
+{
+	int	i;
+
+	if (!args[1])
+		return (0);
+	i = 1;
+	while (args[i])
+	{
+		ft_unset(args[i], shell);
+		i++;
+	}
 	return (0);
 }

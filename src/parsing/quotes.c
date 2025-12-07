@@ -6,11 +6,13 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:22 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/30 13:57:14 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/06 22:52:23 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
+
+void ft_perror(char *s);
 
 static int	is_quote(char c)
 {

@@ -1,64 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_utils.c                                        :+:      :+:    :+:   */
+/*   env_set.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:28 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/06 23:05:31 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/07 16:48:11 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-char	**copy_env(char **envp)
-{
-	char	**new_env;
-	int		i;
-	int		count;
-
-	count = 0;
-	while (envp[count])
-		count++;
-	new_env = malloc(sizeof(char *) * (count + 1));
-	if (!new_env)
-		return (NULL);
-	i = 0;
-	while (envp[i])
-	{
-		new_env[i] = ft_strdup(envp[i]);
-		if (!new_env[i])
-		{
-			free_array(new_env);
-			return (NULL);
-		}
-		i++;
-	}
-	new_env[i] = NULL;
-	return (new_env);
-}
-
-char	*get_env_value(char *name, t_env_and_exit *shell)
-{
-	int	i;
-	int	len;
-
-	if (!name || !shell->env)
-		return (NULL);
-	len = ft_strlen(name);
-	i = 0;
-	while (shell->env[i])
-	{
-		if (ft_strncmp(shell->env[i], name, len) == 0
-			&& shell->env[i][len] == '=')
-			return (&shell->env[i][len + 1]);
-		i++;
-	}
-	return (NULL);
-}
-
-static char	*update_the_value(char *temp, char *value, t_env_and_exit *shell,
+static char	*update_the_value(char *temp, char *value, t_shell *shell,
 		char *name)
 {
 	char	*new_var;
@@ -68,7 +22,7 @@ static char	*update_the_value(char *temp, char *value, t_env_and_exit *shell,
 	free(temp);
 	if (!new_var)
 	{
-		shell->err = 1;
+		shell->running = 1;
 		return (NULL);
 	}
 	i = 0;
@@ -80,7 +34,7 @@ static char	*update_the_value(char *temp, char *value, t_env_and_exit *shell,
 		{
 			free(shell->env[i]);
 			shell->env[i] = new_var;
-			shell->err = 0;
+			shell->running = 0;
 			return (NULL);
 		}
 		i++;
@@ -88,7 +42,7 @@ static char	*update_the_value(char *temp, char *value, t_env_and_exit *shell,
 	return (new_var);
 }
 
-static char	**re_create_env(t_env_and_exit *shell, char *new_var)
+static char	**re_create_env(t_shell *shell, char *new_var)
 {
 	int		count;
 	char	**new_env;
@@ -114,7 +68,7 @@ static char	**re_create_env(t_env_and_exit *shell, char *new_var)
 	return (new_env);
 }
 
-int	set_env_value(char *name, char *value, t_env_and_exit *shell)
+int	set_env(char *name, char *value, t_shell *shell)
 {
 	char	*new_var;
 	char	*temp;

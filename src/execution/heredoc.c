@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 15:34:17 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/06 18:17:29 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/07 18:21:03 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,107 +53,75 @@ static int	write_to_file(char *input, char *delimiter, int fd)
 	return (0);
 }
 
-static int	prepare_file(char **filename)
+static int	prepare_file(char **filename, int *fd)
 {
-	int	fd;
 	*filename = generate_unique_tempfile();
 	if (!*filename)
 		return (1);
-	fd = open(*filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd == -1)
-		return (close(fd), perror("heredoc"), free(*filename), 1);
-	close(fd);
+	*fd = open(*filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (*fd == -1)
+		return (perror("heredoc"), free(*filename), 1);
 	return (0);
 }
-int *child_fd(int *fd){
-	static int *new;
-	if (fd)
-		new = fd;
-	return (new);
-}
+
 void	handle_sigint_heredoc(int sig)
 {
+	t_shell	*shell;
+
 	(void)sig;
+	shell = get_and_set_value(NULL, -1);
 	write(1, "\n", 1);
-	close(*child_fd(NULL));
+	free_array(shell->env);
 	exit(130);
 }
-void	herdoc_child(char *filename, char *del)
+static void	heredoc_child(int *fd, char *delimiter, t_to_free *to_fere)
 {
-	char	*input;
-	int		fd;
+	char	*line;
 
-	child_fd(&fd);
 	signal(SIGINT, handle_sigint_heredoc);
 	signal(SIGQUIT, SIG_IGN);
-	fd = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (fd == -1)
-    {
-        perror("heredoc");
-        exit(1);
-    }
 	while (1)
 	{
-		input = readline("> ");
+		line = readline("> ");
 		if (g_signal == SIGINT)
 		{
-			if (input)
-				free(input);
+			if (line)
+				free(line);
 			g_signal = 0;
-			close(fd);
-			exit(130);
+			break ;
 		}
-		if (write_to_file(input, del, fd))
+		if (write_to_file(line, delimiter, *fd))
 			break ;
 	}
-	close(fd);
+	close(*fd);
+	free_array(to_fere->shell->env);
+	free(to_fere->filename);
+	free_cmds(to_fere->cmds);
 	exit(0);
 }
 
-void	herdoc_parent(pid_t pid, char *fn)
+char	*handle_heredoc(char *delimiter)
 {
-	int	wstatus;
-	int	status;
+	char	*filename;
+	pid_t	pid;
+	int   	fd;
+	int		status;
+	t_to_free	to_free;
 
-	signal(SIGINT, SIG_IGN);
-	signal(SIGQUIT, SIG_IGN);
-	waitpid(pid, &wstatus, 0);
-	status = WEXITSTATUS(wstatus);
-	if (status == 130 || status == 1)
-	{
-		if (status == 130)
-			get_and_set_value(NULL, 130);
-		else
-			get_and_set_value(NULL, 1);
-		unlink(fn);
-		free(fn);
-		return ;
-	}
-	get_and_set_value(NULL, 0);
-	return ;
-}
-
-char	*read_heredoc(char *delimiter)
-{
-	char			*filename;
-	pid_t			pid;
-	t_env_and_exit	*shell;
-
-	if (prepare_file(&filename))
+	to_free.shell = get_and_set_value(NULL, -1);
+	to_free.cmds = get_pointer_cmds(NULL);
+	if (prepare_file(&filename, &fd))
 		return (NULL);
+	to_free.filename = filename;
+
 	pid = fork();
-	if (pid == -1)
-	{
-		perror("fork");
-		unlink(filename);
-		return (free(filename), NULL);
-	}
+	if (pid < 0)
+		return (perror("fork"), NULL);
 	if (pid == 0)
-		herdoc_child(filename, delimiter);
-	else
-		herdoc_parent(pid, filename);
-	shell = get_and_set_value(NULL, -1);
-	if (shell->last_exit == 130)
-		return (free(filename), NULL);
+		heredoc_child(&fd, delimiter, &to_free);
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		to_free.shell->exit_code = WEXITSTATUS(status);
+	close(fd);
 	return (filename);
 }

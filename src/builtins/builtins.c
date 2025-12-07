@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:49 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/29 14:44:28 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/07 18:16:28 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,27 +33,21 @@ int	is_builtin(char *cmd)
 	return (0);
 }
 
-int	run_builtin(char **args, t_env_and_exit *shell)
+int	exec_builtin(t_cmd *cmd, t_shell *shell)
 {
-	if (ft_strcmp(args[0], "echo") == 0)
-		return (builtin_echo(args));
-	if (ft_strcmp(args[0], "pwd") == 0)
-	{
-		if (args[1])
-		{
-			printf("pwd: too many arguments\n");
-			return (0);
-		}
+	if (ft_strcmp(cmd->args[0], "echo") == 0)
+		return (builtin_echo(cmd->args, shell));
+	if (ft_strcmp(cmd->args[0], "cd") == 0)
+		return (builtin_cd(cmd->args, shell));
+	if (ft_strcmp(cmd->args[0], "pwd") == 0)
 		return (builtin_pwd());
-	}
-	if (ft_strcmp(args[0], "env") == 0)
-		return (builtin_env(args, shell));
-	if (ft_strcmp(args[0], "cd") == 0)
-		return (builtin_cd(args));
-	if (ft_strcmp(args[0], "export") == 0)
-		return (builtin_export(args, shell));
-	if (ft_strcmp(args[0], "unset") == 0)
-		return (builtin_unset(args, shell));
-	printf("minishell> %s: command not found\n", args[0]);
-	return (0);
+	if (ft_strcmp(cmd->args[0], "export") == 0)
+		return (builtin_export(cmd->args, shell));
+	if (ft_strcmp(cmd->args[0], "unset") == 0)
+		return (builtin_unset(cmd->args, shell));
+	if (ft_strcmp(cmd->args[0], "env") == 0)
+		return (builtin_env(shell));
+	if (ft_strcmp(cmd->args[0], "exit") == 0)
+		builtin_exit(cmd->args, shell, NULL);
+	return (1);
 }

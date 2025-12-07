@@ -1,89 +1,77 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   main.c                                             :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/14 02:45:27 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/06 16:09:42 by mtawil           ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
 #include "../include/minishell.h"
 
-void			rl_clear_history(void);
-
-t_env_and_exit	*get_and_set_value(t_env_and_exit *original, int code)
+t_shell *get_and_set_value(t_shell *original, int code)
 {
-	static t_env_and_exit	*current;
-
+	static t_shell *current;
 	if (original)
 		current = original;
 	if (code != -1)
-		current->last_exit = code;
+		current->exit_code = code;
 	return (current);
 }
 
-static void	init_env_and_signals(t_env_and_exit *shell, char **env)
-{
-	shell->env = copy_env(env);
-	if (!shell->env)
-	{
-		printf("Error: Failed to copy environment\n");
-		exit(1);
-	}
-	get_and_set_value(shell, 0);
+t_cmd *get_pointer_cmds(t_cmd *original){
+	static t_cmd *current;
+	if (original)
+		current = original;
+	return (current);
 }
-
-static int	read_input(char **input, t_env_and_exit *shell)
+static int	process_line(char *line, t_shell *shell)
 {
-	*input = readline("minishell> ");
-	g_signal = 0;
-	if (!*input)
-	{
-		ft_perror("exit\n");
+	t_token	*tokens;
+	t_cmd	*cmds;
+
+	if (!line || !*line)
+		return (0);
+	if (check_unclosed_quotes(line) == -1)
 		return (-1);
-	}
-	if (g_signal == SIGINT)
-	{
-		shell->last_exit = 130;
-		g_signal = 0;
-		free(*input);
-		return (1);
-	}
-	if (!(*input)[0])
-	{
-		free(*input);
-		return (1);
-	}
-	if (check_unclosed_quotes(*input) == -1)
-		return (1);
+	add_history(line);
+	tokens = lexer(line);
+	if (!tokens)
+		return (0);
+	cmds = parser(tokens);
+	get_pointer_cmds(cmds);
+	free_tokens(tokens);
+	if (!cmds)
+		return (0);
+	executor(cmds, shell);
+	free_cmds(cmds);
 	return (0);
 }
 
 int	main(int ac, char **av, char **env)
 {
-	char			*input;
-	int				status;
-	t_env_and_exit	shell;
-
+	t_shell	shell;
+	char	*line;
+	
 	(void)ac;
 	(void)av;
-	init_env_and_signals(&shell, env);
+	shell.env = copy_env(env);
+	get_and_set_value(&shell, -1);
+	shell.exit_code = 0;
+	setup_signals();
 	while (1)
 	{
-		init_signals();
-		status = read_input(&input, &shell);
-		if (status == -1)
+		line = readline(PROMPT);
+		if (!line)
+		{
+			printf("exit\n");
 			break ;
-		else if (status == 1)
+		}
+		if (g_signal == 200 &&line[0] != '\0')
+		{
+			write(2, "Quit\n", 5);
+			exit(131);
+		}
+		if (g_signal == SIGINT)
+		{
+			shell.exit_code = 130;
+		}
+		if (process_line(line, &shell) == -1)
 			continue ;
-		execute_command(input, &shell);
-		add_history(input);
-		free(input);
+		free(line);
+		g_signal = 0;
 	}
 	free_array(shell.env);
-	rl_clear_history();
-	return (0);
+	return (shell.exit_code);
 }
