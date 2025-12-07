@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/03 17:59:24 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/06 17:28:41 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/06 18:12:07 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,11 +25,14 @@ static int	count_cmds(char ****cmds)
 static int	process_single_heredoc(char ***cmds, int i, int j)
 {
 	char	*temp_file;
+	char	*old_delimiter;
 
 	if (ft_strcmp(cmds[i][j], "<<") == 0 && cmds[i][j + 1])
 	{
+		old_delimiter = cmds[i][j + 1];
 		temp_file = read_heredoc(cmds[i][j + 1]);
 		reset_signals();
+		free(old_delimiter);
 		if (!temp_file)
 			return (-1);
 		cmds[i][j + 1] = temp_file;

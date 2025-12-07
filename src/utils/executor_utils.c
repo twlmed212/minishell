@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/30 14:15:00 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/06 17:29:47 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/07 19:34:08 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ int	preprocess_heredocs(char **args)
 {
 	int				i;
 	char			*temp_file;
+	char			*old_delimiter;
 	t_env_and_exit	*shell;
 
 	shell = NULL;
@@ -86,11 +87,12 @@ int	preprocess_heredocs(char **args)
 	{
 		if (ft_strcmp(args[i], "<<") == 0 && args[i + 1])
 		{
-			temp_file = read_heredoc(args[i + 1]);
+			old_delimiter = args[i + 1];
+			temp_file = read_heredoc(old_delimiter);
 			init_signals();
+			free(old_delimiter);
 			if (!temp_file)
 				return (-1);
-			free(args[i + 1]);
 			args[i + 1] = temp_file;
 			if (shell->last_exit == 130)
 				return (-1);
