@@ -41,8 +41,8 @@ char	**copy_env(char **env)
 
 char	*get_env(char *key, char **env)
 {
-	int		i;
-	int		len;
+	int	i;
+	int	len;
 
 	if (!key || !env)
 		return (NULL);

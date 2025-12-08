@@ -22,7 +22,7 @@ int	ft_strcmp(const char *s1, const char *s2)
 	return ((unsigned char)s1[i] - (unsigned char)s2[i]);
 }
 
-void ft_perror(char *s)
+void	ft_perror(char *s)
 {
 	write(2, s, ft_strlen(s));
 }

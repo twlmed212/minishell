@@ -48,8 +48,8 @@ void	close_pipes(int **pipes, int n)
 
 int	**create_pipes(int n)
 {
-	int	**pipes;
-	int	i;
+	int **pipes;
+	int i;
 
 	pipes = malloc(sizeof(int *) * (n - 1));
 	if (!pipes)

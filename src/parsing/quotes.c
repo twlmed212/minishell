@@ -12,7 +12,7 @@
 
 #include "../../include/minishell.h"
 
-void ft_perror(char *s);
+void		ft_perror(char *s);
 
 static int	is_quote(char c)
 {

@@ -40,7 +40,6 @@ int	print_env_sorted(t_shell *shell)
 	return (0);
 }
 
-
 int	builtin_export(char **args, t_shell *shell)
 {
 	char	*clean_value;
@@ -68,4 +67,3 @@ int	builtin_export(char **args, t_shell *shell)
 	}
 	return (ret);
 }
-

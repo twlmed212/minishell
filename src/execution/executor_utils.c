@@ -6,95 +6,91 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/07 16:45:53 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/07 18:34:46 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/07 22:13:09 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static void	exec_single(t_cmd *cmd, t_shell *shell)
+void	exec_cmd(t_cmd *cmd, t_shell *shell, char **env)
 {
-	pid_t	pid;
-	int		status;
+	char	*path;
 
-	if (is_builtin(cmd->args[0]) && !cmd->next && !cmd->redirs)
+	if (is_builtin(cmd->args[0]))
 	{
-		if (ft_strcmp(cmd->args[0], "exit") == 0)
-			builtin_exit(cmd->args, shell, cmd);
 		shell->exit_code = exec_builtin(cmd, shell);
-		return ;
+		exit(shell->exit_code);
 	}
-	pid = fork();
-	if (pid < 0)
+	path = find_path(cmd->args[0], env);
+	if (!path)
 	{
-		perror("fork");
-		return ;
+		fprintf(stderr, "%s: command not found\n", cmd->args[0]);
+		exit(127);
 	}
-	if (pid == 0)
-	{
-		if (handle_redirs(cmd->redirs) < 0)
-			exit(1);
-		exec_cmd(cmd, shell, shell->env);
-	}
-	init_signals_child_exec();
-	waitpid(pid, &status, 0);
-	setup_signals();
-	
-	if (WIFEXITED(status))
-		shell->exit_code = WEXITSTATUS(status);
-	else if (WIFSIGNALED(status))
-		shell->exit_code = 128 + WTERMSIG(status);
-	if (shell->exit_code == 130)
-		write(1, "\n", 1);
+	execve(path, cmd->args, env);
+	perror("execve");
+	exit(1);
 }
 
-static void	exec_pipeline(t_cmd *cmds, t_shell *shell, int **pipes, int n)
+int	execute_output_redir(t_redir *redir)
 {
-	pid_t	pid;
-	int		i;
+	int	fd;
+	int	flags;
 
-	i = 0;
-	while (i < n)
+	if (redir->type == T_REDIR_OUT)
+		flags = O_WRONLY | O_CREAT | O_TRUNC;
+	else
+		flags = O_WRONLY | O_CREAT | O_APPEND;
+	fd = open(redir->file, flags, 0644);
+	if (fd == -1)
 	{
-		pid = fork();
-		if (pid == 0)
+		perror(redir->file);
+		return (-1);
+	}
+	if (dup2(fd, STDOUT_FILENO) == -1)
+	{
+		perror("dup2");
+		close(fd);
+		return (-1);
+	}
+	close(fd);
+	return (0);
+}
+
+int	execute_input_redir(t_redir *r)
+{
+	int	fd;
+
+	fd = open(r->file, O_RDONLY);
+	if (fd == -1)
+	{
+		perror(r->file);
+		return (-1);
+	}
+	if (dup2(fd, STDIN_FILENO) == -1)
+	{
+		perror("dup2");
+		close(fd);
+		return (-1);
+	}
+	close(fd);
+	return (0);
+}
+int	handle_redirs(t_redir *redirs)
+{
+	while (redirs)
+	{
+		if (redirs->type == T_REDIR_OUT || redirs->type == T_APPEND)
 		{
-			setup_pipes(pipes, i, n);
-			close_pipes(pipes, n);
-			if (handle_redirs(cmds->redirs) < 0)
-				exit(1);
-			exec_cmd(cmds, shell, shell->env);
+			if (execute_output_redir(redirs) == -1)
+				return (-1);
 		}
-		cmds = cmds->next;
-		i++;
+		else if (redirs->type == T_REDIR_IN || redirs->type == T_HEREDOC)
+		{
+			if (execute_input_redir(redirs) == -1)
+				return (-1);
+		}
+		redirs = redirs->next;
 	}
-	close_pipes(pipes, n);
-}
-
-void	executor(t_cmd *cmds, t_shell *shell)
-{
-	int		**pipes;
-	int		n;
-	int		i;
-	int		status;
-
-	if ((!cmds || !cmds->args[0]))
-		return ;
-	n = count_cmds(cmds);
-	if (n == 1)
-		return (exec_single(cmds, shell));
-	pipes = create_pipes(n);
-	if (!pipes)
-		return ;
-	exec_pipeline(cmds, shell, pipes, n);
-	i = 0;
-	while (i < n - 1)
-		free(pipes[i++]);
-	free(pipes);
-	while (n--)
-	{
-		wait(&status);
-		if (WIFEXITED(status))
-			shell->exit_code = WEXITSTATUS(status);
-	}
+	return (0);
 }

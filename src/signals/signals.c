@@ -14,7 +14,8 @@
 
 volatile sig_atomic_t	g_signal = 0;
 
-void restore_signals(void){
+void	restore_signals(void)
+{
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 }
@@ -28,8 +29,8 @@ void	handle_sigint(int sig)
 	rl_replace_line("", 0);
 	rl_redisplay();
 }
- void handle_sigquit(int sig)
-  {
+void	handle_sigquit(int sig)
+{
 	(void)sig;
 	g_signal = 200;
 }
@@ -39,7 +40,6 @@ void	setup_signals(void)
 	signal(SIGINT, handle_sigint);
 	signal(SIGQUIT, handle_sigquit);
 }
-
 
 void	init_signals_child_exec(void)
 {

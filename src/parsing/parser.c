@@ -55,7 +55,7 @@ void	add_redir(t_redir **head, t_redir *new)
 
 int	count_args(t_token *tokens)
 {
-	int	count;
+	int count;
 
 	count = 0;
 	while (tokens && tokens->type != T_PIPE)

@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:54 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/07 16:42:00 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/07 22:05:40 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,19 +19,30 @@ static void	print_arg(char *str, t_shell *shell)
 	else
 		printf("%s", str);
 }
+int	skip_and_apply_n_flags(char **args, int *newline)
+{
+	int	i;
+	int	k;
 
+	i = 1;
+	while (args[i] && (ft_strncmp(args[i], "-n", 2) == 0))
+	{
+		k = 2;
+		while (args[i][++k] == 'n')
+			k++;
+		if (args[i][k] == '\0')
+			*newline = 0;
+		i++;
+	}
+	return (i);
+}
 int	builtin_echo(char **args, t_shell *shell)
 {
 	int	i;
 	int	newline;
 
 	newline = 1;
-	i = 1;
-	if (args[1] && ft_strcmp(args[1], "-n") == 0)
-	{
-		newline = 0;
-		i = 2;
-	}
+	i = skip_and_apply_n_flags(args, &newline);
 	while (args[i])
 	{
 		print_arg(args[i], shell);

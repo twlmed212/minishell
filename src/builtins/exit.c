@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:59 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/07 16:43:11 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/07 22:18:49 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,13 +40,14 @@ void	builtin_exit(char **args, t_shell *shell, t_cmd *cmd)
 	{
 		if (!is_numeric(args[1]))
 		{
-			fprintf(stderr, "exit: %s: numeric argument required\n",
-				args[1]);
+			ft_perror("exit: ");
+			ft_perror(args[1]);
+			ft_perror(": numeric argument required\n");
 			exit_code = 2;
 		}
 		else if (args[2])
 		{
-			fprintf(stderr, "exit: too many arguments\n");
+			ft_perror("exit: too many arguments\n");
 			shell->exit_code = 1;
 			return ;
 		}

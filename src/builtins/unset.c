@@ -86,10 +86,9 @@ int	ft_unset(char *name, t_shell *shell)
 	return (0);
 }
 
-
 int	builtin_unset(char **args, t_shell *shell)
 {
-	int	i;
+	int i;
 
 	if (!args[1])
 		return (0);

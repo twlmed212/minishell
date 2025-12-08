@@ -88,4 +88,3 @@ char	*get_value(char *arg, char *name, int *ret, int *i)
 	}
 	return (clean_value);
 }
-

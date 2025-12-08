@@ -12,10 +12,10 @@
 
 #include "../../include/minishell.h"
 
-t_cmd	*new_cmd(void);
-t_redir	*new_redir(t_token_type type, char *file);
-void	add_redir(t_redir **head, t_redir *new);
-int		count_args(t_token *tokens);
+t_cmd			*new_cmd(void);
+t_redir			*new_redir(t_token_type type, char *file);
+void			add_redir(t_redir **head, t_redir *new);
+int				count_args(t_token *tokens);
 
 char	*expand_exit_code(char *cmds)
 {
@@ -92,7 +92,6 @@ static t_token	*fill_cmd(t_cmd *cmd, t_token *tokens, int *err)
 			add_redir(&cmd->redirs, redir);
 			tokens = tokens->next;
 		}
-		
 		tokens = tokens->next;
 	}
 	cmd->args[i] = NULL;

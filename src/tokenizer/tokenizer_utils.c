@@ -12,9 +12,9 @@
 
 #include "../../include/minishell.h"
 
-t_token	*new_token(char *value, t_token_type type);
-void	add_token(t_token **head, t_token *new);
-char	*extract_word(char *line, int *i);
+t_token				*new_token(char *value, t_token_type type);
+void				add_token(t_token **head, t_token *new);
+char				*extract_word(char *line, int *i);
 
 static t_token_type	get_operator_type(char *line, int *i)
 {
@@ -77,9 +77,9 @@ static int	is_special(char c)
 
 t_token	*lexer(char *line)
 {
-	t_token	*tokens;
-	t_token	*new;
-	int		i;
+	t_token *tokens;
+	t_token *new;
+	int i;
 
 	tokens = NULL;
 	i = 0;

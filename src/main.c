@@ -1,8 +1,9 @@
 #include "../include/minishell.h"
 
-t_shell *get_and_set_value(t_shell *original, int code)
+t_shell	*get_and_set_value(t_shell *original, int code)
 {
-	static t_shell *current;
+	static t_shell	*current;
+
 	if (original)
 		current = original;
 	if (code != -1)
@@ -10,8 +11,10 @@ t_shell *get_and_set_value(t_shell *original, int code)
 	return (current);
 }
 
-t_cmd *get_pointer_cmds(t_cmd *original){
-	static t_cmd *current;
+t_cmd	*get_pointer_cmds(t_cmd *original)
+{
+	static t_cmd	*current;
+
 	if (original)
 		current = original;
 	return (current);
@@ -41,9 +44,9 @@ static int	process_line(char *line, t_shell *shell)
 
 int	main(int ac, char **av, char **env)
 {
-	t_shell	shell;
-	char	*line;
-	
+	t_shell shell;
+	char *line;
+
 	(void)ac;
 	(void)av;
 	shell.env = copy_env(env);
@@ -58,7 +61,7 @@ int	main(int ac, char **av, char **env)
 			printf("exit\n");
 			break ;
 		}
-		if (g_signal == 200 &&line[0] != '\0')
+		if (g_signal == 200 && line[0] != '\0')
 		{
 			write(2, "Quit\n", 5);
 			exit(131);

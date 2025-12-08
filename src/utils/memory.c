@@ -52,10 +52,10 @@ static void	free_redirs(t_redir *redirs)
 		redirs = tmp;
 	}
 }
-	
+
 void	free_cmds(t_cmd *cmds)
 {
-	t_cmd	*tmp;
+	t_cmd *tmp;
 
 	while (cmds)
 	{

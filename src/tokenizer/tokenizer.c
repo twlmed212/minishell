@@ -52,15 +52,15 @@ static int	is_special(char c)
 
 char	*extract_word(char *line, int *i)
 {
-	int		start;
-	int		len;
-	char	*word;
-	char	quote;
+	int start;
+	int len;
+	char *word;
+	char quote;
 
 	start = *i;
 	quote = 0;
-	while (line[*i] && (quote || (!is_space(line[*i]) 
-		&& !is_special(line[*i]))))
+	while (line[*i] && (quote || (!is_space(line[*i])
+				&& !is_special(line[*i]))))
 	{
 		if (!quote && (line[*i] == '\'' || line[*i] == '"'))
 			quote = line[*i];

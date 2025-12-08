@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 15:34:17 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/07 18:21:03 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/07 19:41:57 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,10 +102,10 @@ static void	heredoc_child(int *fd, char *delimiter, t_to_free *to_fere)
 
 char	*handle_heredoc(char *delimiter)
 {
-	char	*filename;
-	pid_t	pid;
-	int   	fd;
-	int		status;
+	char		*filename;
+	pid_t		pid;
+	int			fd;
+	int			status;
 	t_to_free	to_free;
 
 	to_free.shell = get_and_set_value(NULL, -1);
@@ -113,13 +113,14 @@ char	*handle_heredoc(char *delimiter)
 	if (prepare_file(&filename, &fd))
 		return (NULL);
 	to_free.filename = filename;
-
 	pid = fork();
 	if (pid < 0)
 		return (perror("fork"), NULL);
 	if (pid == 0)
 		heredoc_child(&fd, delimiter, &to_free);
+	signal(SIGINT, SIG_IGN);
 	waitpid(pid, &status, 0);
+	setup_signals();
 	if (WIFEXITED(status))
 		to_free.shell->exit_code = WEXITSTATUS(status);
 	close(fd);
