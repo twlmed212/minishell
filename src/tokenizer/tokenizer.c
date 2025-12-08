@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 20:45:36 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/07 16:47:48 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/08 12:06:16 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,10 @@ static int	is_special(char c)
 
 char	*extract_word(char *line, int *i)
 {
-	int start;
-	int len;
-	char *word;
-	char quote;
+	int		start;
+	int		len;
+	char	*word;
+	char	quote;
 
 	start = *i;
 	quote = 0;

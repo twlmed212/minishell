@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 17:59:24 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/07 16:47:05 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/08 12:10:45 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,12 @@ static int	check_syntax(t_token *token)
 {
 	if ((!token->next || token->next->type != T_WORD))
 	{
-		printf("minishell: syntax error near unexpected token `%s'\n",
-			token->next ? token->next->value : "newline");
+		ft_perror("minishell: syntax error near unexpected token `");
+		if (token->next)
+			ft_perror(token->next->value);
+		else
+			printf("`newline");
+		ft_perror("'\n");
 		return (0);
 	}
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:52 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/07 16:42:09 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/08 13:42:24 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	builtin_cd(char **args, t_shell *shell)
 		path = get_env("HOME", shell->env);
 		if (!path)
 		{
-			fprintf(stderr, "cd: HOME not set\n");
+			ft_perror("cd: HOME not set\n");
 			return (1);
 		}
 	}

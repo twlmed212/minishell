@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 14:24:14 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/07 16:48:21 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/08 12:06:50 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ static int	p_err(char *arg)
 	ft_perror("': not a valid identifier\n");
 	return (1);
 }
+
 char	*get_name(char *arg, t_shell *shell, int *ret, int *i)
 {
 	char	*name;

@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:24 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/07 19:12:20 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/08 12:07:10 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,7 @@ void	handle_sigint(int sig)
 	rl_replace_line("", 0);
 	rl_redisplay();
 }
+
 void	handle_sigquit(int sig)
 {
 	(void)sig;

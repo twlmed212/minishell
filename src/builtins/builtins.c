@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:49 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/07 18:16:28 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/08 13:46:28 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ int	is_builtin(char *cmd)
 int	exec_builtin(t_cmd *cmd, t_shell *shell)
 {
 	if (ft_strcmp(cmd->args[0], "echo") == 0)
-		return (builtin_echo(cmd->args, shell));
+		return (builtin_echo(cmd->args));
 	if (ft_strcmp(cmd->args[0], "cd") == 0)
 		return (builtin_cd(cmd->args, shell));
 	if (ft_strcmp(cmd->args[0], "pwd") == 0)

@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 15:34:17 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/07 19:41:57 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/08 12:20:15 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,16 +64,6 @@ static int	prepare_file(char **filename, int *fd)
 	return (0);
 }
 
-void	handle_sigint_heredoc(int sig)
-{
-	t_shell	*shell;
-
-	(void)sig;
-	shell = get_and_set_value(NULL, -1);
-	write(1, "\n", 1);
-	free_array(shell->env);
-	exit(130);
-}
 static void	heredoc_child(int *fd, char *delimiter, t_to_free *to_fere)
 {
 	char	*line;

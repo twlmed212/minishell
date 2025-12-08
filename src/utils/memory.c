@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/07 16:48:48 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/07 16:49:00 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/08 12:06:30 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ static void	free_redirs(t_redir *redirs)
 
 void	free_cmds(t_cmd *cmds)
 {
-	t_cmd *tmp;
+	t_cmd	*tmp;
 
 	while (cmds)
 	{

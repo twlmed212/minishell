@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:18 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/07 16:47:20 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/08 12:12:27 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ void	add_redir(t_redir **head, t_redir *new)
 
 int	count_args(t_token *tokens)
 {
-	int count;
+	int	count;
 
 	count = 0;
 	while (tokens && tokens->type != T_PIPE)

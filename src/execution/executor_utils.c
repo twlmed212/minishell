@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/07 16:45:53 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/07 22:13:09 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/08 14:37:06 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,8 @@ void	exec_cmd(t_cmd *cmd, t_shell *shell, char **env)
 	path = find_path(cmd->args[0], env);
 	if (!path)
 	{
-		fprintf(stderr, "%s: command not found\n", cmd->args[0]);
+		ft_perror(cmd->args[0]);
+		ft_perror(": command not found\n");
 		exit(127);
 	}
 	execve(path, cmd->args, env);
@@ -76,6 +77,7 @@ int	execute_input_redir(t_redir *r)
 	close(fd);
 	return (0);
 }
+
 int	handle_redirs(t_redir *redirs)
 {
 	while (redirs)

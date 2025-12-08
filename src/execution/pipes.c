@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:10 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/07 16:46:33 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/08 15:17:26 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,8 +48,8 @@ void	close_pipes(int **pipes, int n)
 
 int	**create_pipes(int n)
 {
-	int **pipes;
-	int i;
+	int	**pipes;
+	int	i;
 
 	pipes = malloc(sizeof(int *) * (n - 1));
 	if (!pipes)

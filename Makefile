@@ -22,11 +22,13 @@ SRC = src/main.c \
        src/builtins/export.c \
        src/builtins/unset.c \
        src/signals/signals.c \
+       src/signals/heredoc_signals.c \
        src/utils/ft_funcs.c \
        src/utils/export_utils.c \
        src/utils/memory.c \
        src/utils/file_descriptor.c \
-       src/utils/env_set.c
+       src/utils/env_set.c \
+       src/utils/env_get.c
 
 OBJ = ${SRC:.c=.o}
 

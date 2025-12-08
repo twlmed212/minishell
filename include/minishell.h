@@ -97,7 +97,7 @@ char							*find_path(char *cmd, char **env);
 /* ============= BUILTINS ============= */
 int								is_builtin(char *cmd);
 int								exec_builtin(t_cmd *cmd, t_shell *shell);
-int								builtin_echo(char **args, t_shell *shell);
+int								builtin_echo(char **args);
 int								builtin_cd(char **args, t_shell *shell);
 int								builtin_pwd(void);
 int								builtin_export(char **args, t_shell *shell);
@@ -108,6 +108,7 @@ void							builtin_exit(char **args, t_shell *shell,
 /* ============= SIGNALS ============= */
 void							setup_signals(void);
 void							handle_sigint(int sig);
+void							handle_sigint_heredoc(int sig);
 
 /* ============= UTILS ============= */
 char							**copy_env(char **env);

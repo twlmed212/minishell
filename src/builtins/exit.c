@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:59 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/07 22:18:49 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/08 13:36:00 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	builtin_exit(char **args, t_shell *shell, t_cmd *cmd)
 			return ;
 		}
 		else
-			exit_code = atoi(args[1]);
+			exit_code = ft_atoi(args[1]);
 	}
 	if (cmd)
 		free_cmds(cmd);

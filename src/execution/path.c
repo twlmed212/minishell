@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/07 16:45:35 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/07 16:45:49 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/08 12:19:35 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,16 +30,12 @@ static char	*try_path(char *dir, char *cmd)
 	return (NULL);
 }
 
-char	*find_path(char *cmd, char **env)
+static char	*look_for_path(char *cmd, char **env)
 {
 	char	**paths;
 	char	*path;
 	int		i;
 
-	if (!cmd)
-		return (NULL);
-	if (strchr(cmd, '/'))
-		return (access(cmd, X_OK) == 0 ? ft_strdup(cmd) : NULL);
 	path = get_env("PATH", env);
 	if (!path)
 		return (NULL);
@@ -59,4 +55,18 @@ char	*find_path(char *cmd, char **env)
 	}
 	free_array(paths);
 	return (NULL);
+}
+
+char	*find_path(char *cmd, char **env)
+{
+	if (!cmd)
+		return (NULL);
+	if (strchr(cmd, '/'))
+	{
+		if (access(cmd, X_OK) == 0)
+			return (ft_strdup(cmd));
+		else
+			return (NULL);
+	}
+	return (look_for_path(cmd, env));
 }
