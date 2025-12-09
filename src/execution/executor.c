@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:07 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/08 15:48:35 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/09 02:09:10 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ static void	handle_parent(pid_t	pid, t_shell *shell)
 static void	exec_single(t_cmd *cmd, t_shell *shell)
 {
 	pid_t	pid;
-
+	
 	if (is_builtin(cmd->args[0]) && !cmd->next && !cmd->redirs)
 	{
 		shell->exit_code = exec_builtin(cmd, shell);
@@ -70,13 +70,31 @@ static void	exec_pipeline(t_cmd *cmds, t_shell *shell, int **pipes, int n)
 	}
 	close_pipes(pipes, n);
 }
+static void wait_all_process(int n, t_shell *shell)
+{
+	int		status;
+	int		newline;
 
+	newline = 0;
+	while (n--)
+	{
+		wait(&status);
+		if (WIFEXITED(status))
+			shell->exit_code = WEXITSTATUS(status);
+		if (WIFSIGNALED(status))
+		{
+			shell->exit_code = 128 + WTERMSIG(status);
+			if (newline == 0)
+				write(2, "\n", 1);
+			newline = 1;
+		}
+	}
+}
 void	executor(t_cmd *cmds, t_shell *shell)
 {
 	int		**pipes;
 	int		n;
 	int		i;
-	int		status;
 
 	if ((!cmds || !cmds->args[0]))
 		return ;
@@ -91,17 +109,8 @@ void	executor(t_cmd *cmds, t_shell *shell)
 	while (i < n - 1)
 		free(pipes[i++]);
 	free(pipes);
-	while (n--)
-	{
-		signal(SIGINT, SIG_IGN);
-		wait(&status);
-		setup_signals();
-		if (WIFEXITED(status))
-			shell->exit_code = WEXITSTATUS(status);
-		if (WIFSIGNALED(status))
-		{
-			shell->exit_code = 128 + WTERMSIG(status);
-			break;
-		}
-	}
+
+	init_signals_child_exec();
+	wait_all_process(n, shell);
+	setup_signals();
 }

@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 15:34:17 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/08 12:20:15 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/09 02:12:24 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,8 +111,14 @@ char	*handle_heredoc(char *delimiter)
 	signal(SIGINT, SIG_IGN);
 	waitpid(pid, &status, 0);
 	setup_signals();
-	if (WIFEXITED(status))
-		to_free.shell->exit_code = WEXITSTATUS(status);
 	close(fd);
+
+	if (WIFEXITED(status))
+	{
+		free(filename);
+		to_free.shell->exit_code = WEXITSTATUS(status);
+		return (NULL);
+	}
+	
 	return (filename);
 }

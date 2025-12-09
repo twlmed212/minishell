@@ -13,8 +13,6 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-/* ============= CONSTANTS ============= */
-# define PROMPT "minishell> "
 
 /* ============= ENUMS ============= */
 typedef enum e_token_type
@@ -103,8 +101,7 @@ int								builtin_pwd(void);
 int								builtin_export(char **args, t_shell *shell);
 int								builtin_unset(char **args, t_shell *shell);
 int								builtin_env(t_shell *shell);
-void							builtin_exit(char **args, t_shell *shell,
-									t_cmd *cmd);
+void							builtin_exit(t_cmd *cmd, t_shell *shell);
 /* ============= SIGNALS ============= */
 void							setup_signals(void);
 void							handle_sigint(int sig);

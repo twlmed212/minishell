@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/07 16:45:53 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/08 14:37:06 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/08 22:55:26 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,8 @@ void	exec_cmd(t_cmd *cmd, t_shell *shell, char **env)
 	{
 		ft_perror(cmd->args[0]);
 		ft_perror(": command not found\n");
+		free_cmds(cmd);
+		free_array(shell->env);
 		exit(127);
 	}
 	execve(path, cmd->args, env);

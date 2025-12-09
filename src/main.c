@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 02:45:27 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/08 13:34:03 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/09 02:05:27 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,18 @@ static int	process_line(char *line, t_shell *shell)
 	return (0);
 }
 
+char *get_prompt(void)
+{
+	t_shell *shell;
+	char	*prompt;
+	
+	shell = get_and_set_value(NULL, -1);
+	if (shell->exit_code != 0)
+		prompt = "\001\033[31m\002minishell> \001\033[0m\002";
+	else
+		prompt = "\001\033[34m\002minishell> \001\033[0m\002";
+	return prompt;
+}
 int	main(int ac, char **av, char **env)
 {
 	t_shell shell;
@@ -67,7 +79,7 @@ int	main(int ac, char **av, char **env)
 	setup_signals();
 	while (1)
 	{
-		line = readline(PROMPT);
+		line = readline(get_prompt());
 		if (!line)
 		{
 			printf("exit\n");

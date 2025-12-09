@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:59 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/08 13:36:00 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/08 22:13:11 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,29 +30,29 @@ static int	is_numeric(char *str)
 	return (1);
 }
 
-void	builtin_exit(char **args, t_shell *shell, t_cmd *cmd)
+void	builtin_exit(t_cmd *cmd, t_shell *shell)
 {
 	unsigned char	exit_code;
 
 	printf("exit\n");
 	exit_code = shell->exit_code;
-	if (args[1])
+	if (cmd->args[1])
 	{
-		if (!is_numeric(args[1]))
+		if (!is_numeric(cmd->args[1]))
 		{
 			ft_perror("exit: ");
-			ft_perror(args[1]);
+			ft_perror(cmd->args[1]);
 			ft_perror(": numeric argument required\n");
 			exit_code = 2;
 		}
-		else if (args[2])
+		else if (cmd->args[2])
 		{
 			ft_perror("exit: too many arguments\n");
 			shell->exit_code = 1;
 			return ;
 		}
 		else
-			exit_code = ft_atoi(args[1]);
+			exit_code = ft_atoi(cmd->args[1]);
 	}
 	if (cmd)
 		free_cmds(cmd);
