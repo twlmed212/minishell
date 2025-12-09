@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/16 02:45:45 by mtawil            #+#    #+#             */
+/*   Updated: 2025/12/09 15:12:20 by mtawil           ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -13,7 +25,7 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-/* ============= ENUMS ============= */
+// ============= ENUMS =============
 typedef enum e_token_type
 {
 	T_WORD,
@@ -24,7 +36,7 @@ typedef enum e_token_type
 	T_HEREDOC
 }								t_token_type;
 
-/* ============= STRUCTURES ============= */
+// ============= STRUCTURES =============
 typedef struct s_token
 {
 	char						*value;
@@ -68,30 +80,41 @@ typedef struct s_to_free
 	t_cmd						*cmds;
 }								t_to_free;
 
-/* ============= GLOBALS ============= */
+// ============= GLOBALS =============
 extern volatile sig_atomic_t	g_signal;
 
-// File Discriptor Utils
-int								*save_std_fds(void);
-void							restore_std_fds(int *saved);
-// hererdoc
+// ============= Main Utils =============
+t_cmd							*get_pointer_cmds(t_cmd *original);
+t_shell							*get_and_set_value(t_shell *original, int code);
+int								process_line(char *line, t_shell *shell);
+char							*get_prompt(void);
+int								check_signals(char *line, t_shell *shell);
+
+// ============= Hererdoc Utils =============
 char							*handle_heredoc(char *delimiter);
 char							*expand_exit_code(char *cmds);
-t_shell							*get_and_set_value(t_shell *original, int code);
+int								write_to_file(char *input, char *delimiter,
+									int fd);
 t_cmd							*get_pointer_cmds(t_cmd *original);
-/* ============= LEXER ============= */
+int								prepare_file(char **filename, int *fd);
+
+// ============= File Discriptor Utils =============
+//
+int								*save_std_fds(void);
+void							restore_std_fds(int *saved);
+// ============= LEXER =============
 t_token							*lexer(char *line);
 void							free_tokens(t_token *tokens);
 
-/* ============= PARSER ============= */
+// ============= PARSER =============
 t_cmd							*parser(t_token *tokens);
 void							free_cmds(t_cmd *cmds);
 
-/* ============= EXECUTOR ============= */
+// ============= EXECUTOR =============
 void							executor(t_cmd *cmds, t_shell *shell);
 char							*find_path(char *cmd, char **env);
 
-/* ============= BUILTINS ============= */
+// ============= BUILTINS =============
 int								is_builtin(char *cmd);
 int								exec_builtin(t_cmd *cmd, t_shell *shell);
 int								builtin_echo(char **args);
@@ -101,12 +124,12 @@ int								builtin_export(char **args, t_shell *shell);
 int								builtin_unset(char **args, t_shell *shell);
 int								builtin_env(t_shell *shell);
 void							builtin_exit(t_cmd *cmd, t_shell *shell);
-/* ============= SIGNALS ============= */
+// ============= SIGNALS =============
 void							setup_signals(void);
 void							handle_sigint(int sig);
 void							handle_sigint_heredoc(int sig);
 
-/* ============= UTILS ============= */
+// ============= UTILS =============
 char							**copy_env(char **env);
 char							*get_env(char *key, char **env);
 int								set_env(char *key, char *value, t_shell *shell);

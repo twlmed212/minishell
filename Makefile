@@ -3,6 +3,7 @@
 NAME = minishell
 
 SRC = src/main.c \
+       src/utils/main_utils.c \
        src/tokenizer/tokenizer.c \
        src/tokenizer/tokenizer_utils.c \
        src/parsing/parser.c \
@@ -13,6 +14,7 @@ SRC = src/main.c \
        src/execution/pipes.c \
        src/execution/path.c \
        src/execution/heredoc.c \
+       src/execution/heredoc_utils.c \
        src/builtins/builtins.c \
        src/builtins/echo.c \
        src/builtins/pwd.c \

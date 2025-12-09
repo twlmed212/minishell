@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:59 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/08 22:13:11 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/09 15:00:24 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,10 +32,7 @@ static int	is_numeric(char *str)
 
 void	builtin_exit(t_cmd *cmd, t_shell *shell)
 {
-	unsigned char	exit_code;
-
 	printf("exit\n");
-	exit_code = shell->exit_code;
 	if (cmd->args[1])
 	{
 		if (!is_numeric(cmd->args[1]))
@@ -43,7 +40,7 @@ void	builtin_exit(t_cmd *cmd, t_shell *shell)
 			ft_perror("exit: ");
 			ft_perror(cmd->args[1]);
 			ft_perror(": numeric argument required\n");
-			exit_code = 2;
+			shell->exit_code = 2;
 		}
 		else if (cmd->args[2])
 		{
@@ -52,10 +49,10 @@ void	builtin_exit(t_cmd *cmd, t_shell *shell)
 			return ;
 		}
 		else
-			exit_code = ft_atoi(cmd->args[1]);
+			shell->exit_code = ft_atoi(cmd->args[1]);
 	}
 	if (cmd)
 		free_cmds(cmd);
 	free_array(shell->env);
-	exit(exit_code);
+	exit(shell->exit_code);
 }

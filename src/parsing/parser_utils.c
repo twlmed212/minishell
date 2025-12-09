@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 17:59:24 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/09 14:50:32 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/09 15:07:53 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,7 @@ static t_token	*fill_cmd(t_cmd *cmd, t_token *tokens, int *err)
 	cmd->args[i] = NULL;
 	return (tokens);
 }
+
 static int	handle_pipe_token(t_token **tokens)
 {
 	if (!(*tokens)->next)
@@ -120,8 +121,8 @@ static t_cmd	*handle_parse_error(t_cmd *cmds, t_cmd *new)
 	return (NULL);
 }
 
-static t_cmd	*process_single_cmd(t_token **tokens, t_cmd *cmds, 
-									t_cmd **current)
+static t_cmd	*process_single_cmd(t_token **tokens, t_cmd *cmds,
+		t_cmd **current)
 {
 	t_cmd	*new;
 	int		err;
@@ -142,8 +143,8 @@ static t_cmd	*process_single_cmd(t_token **tokens, t_cmd *cmds,
 
 t_cmd	*parser(t_token *tokens)
 {
-	t_cmd	*cmds;
-	t_cmd	*current;
+	t_cmd *cmds;
+	t_cmd *current;
 
 	cmds = NULL;
 	current = NULL;
