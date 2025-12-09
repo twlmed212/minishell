@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 20:45:36 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/08 12:06:16 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/09 11:42:15 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,7 @@ char	*extract_word(char *line, int *i)
 	word = malloc(len + 1);
 	if (!word)
 		return (NULL);
-	strncpy(word, line + start, len);
+	ft_strlcpy(word, line + start, len + 1);
 	word[len] = '\0';
 	return (word);
 }

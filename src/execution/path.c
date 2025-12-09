@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/07 16:45:35 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/08 12:19:35 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/09 11:34:49 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,9 @@ static char	*try_path(char *dir, char *cmd)
 	path = malloc(len);
 	if (!path)
 		return (NULL);
-	strcpy(path, dir);
-	strcat(path, "/");
-	strcat(path, cmd);
+	ft_strlcpy(path, dir, len);
+	ft_strlcat(path, "/", len);
+	ft_strlcat(path, cmd, len);
 	if (access(path, X_OK) == 0)
 		return (path);
 	free(path);
@@ -61,7 +61,7 @@ char	*find_path(char *cmd, char **env)
 {
 	if (!cmd)
 		return (NULL);
-	if (strchr(cmd, '/'))
+	if (ft_strchr(cmd, '/'))
 	{
 		if (access(cmd, X_OK) == 0)
 			return (ft_strdup(cmd));

@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 13:47:31 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/08 13:47:40 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/09 12:25:12 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ char	*get_env(char *key, char **env)
 	i = 0;
 	while (env[i])
 	{
-		if (strncmp(env[i], key, len) == 0 && env[i][len] == '=')
+		if (ft_strncmp(env[i], key, len) == 0 && env[i][len] == '=')
 			return (env[i] + len + 1);
 		i++;
 	}

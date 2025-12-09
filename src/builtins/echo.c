@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:54 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/08 13:46:32 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/09 11:48:38 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	skip_and_apply_n_flags(char **args, int *newline)
 	while (args[i] && (ft_strncmp(args[i], "-n", 2) == 0))
 	{
 		k = 2;
-		while (args[i][++k] == 'n')
+		while (args[i][k] == 'n')
 			k++;
 		if (args[i][k] == '\0')
 			*newline = 0;

@@ -1,11 +1,1 @@
-a
-docker-compose.yml
-Dockerfile
-docker.sh
-include
-libft
-Makefile
-minishell
-r.supp
-run.sh
-src
+salam

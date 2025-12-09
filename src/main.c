@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 02:45:27 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/09 02:05:27 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/09 11:40:20 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ int	main(int ac, char **av, char **env)
 		}
 		if (g_signal == 200 && line[0] != '\0')
 		{
-			write(2, "Quit\n", 5);
+			ft_perror("Quit\n");
 			exit(131);
 		}
 		if (g_signal == SIGINT)

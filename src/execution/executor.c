@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:07 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/09 02:09:10 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/09 11:58:41 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,11 @@ static void	exec_single(t_cmd *cmd, t_shell *shell)
 	if (pid == 0)
 	{
 		if (handle_redirs(cmd->redirs) < 0)
+		{
+			free_array(shell->env);
+			free_cmds(cmd);
 			exit(1);
+		}
 		exec_cmd(cmd, shell, shell->env);
 	}
 	handle_parent(pid, shell);
@@ -85,7 +89,7 @@ static void wait_all_process(int n, t_shell *shell)
 		{
 			shell->exit_code = 128 + WTERMSIG(status);
 			if (newline == 0)
-				write(2, "\n", 1);
+				ft_perror("\n");
 			newline = 1;
 		}
 	}
