@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 17:59:24 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/09 15:07:53 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/09 20:50:04 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,8 +43,8 @@ static int	check_syntax(t_token *token)
 		if (token->next)
 			ft_perror(token->next->value);
 		else
-			printf("`newline");
-		ft_perror("'\n");
+			ft_perror("newline");
+		ft_perror("`\n");
 		return (0);
 	}
 	return (1);
