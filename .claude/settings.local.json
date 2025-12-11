@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(for f in /Users/twlmed212/Desktop/1337-Return/mini-shell-branch/src/utils/*.c)",
+      "Bash(done)",
+      "Bash(sort:*)",
+      "Bash(for f in /Users/twlmed212/Desktop/1337-Return/mini-shell-branch/src/builtins/*.c)",
+      "Bash(for f in /Users/twlmed212/Desktop/1337-Return/mini-shell-branch/src/parsing/*.c)",
+      "Bash(sed:*)",
+      "Bash(make:*)",
+      "Bash(timeout 2 bash -c './minishell <<< \"\"\"\"cat | cat | cat\"\"\"\" || true')",
+      "Bash(for file in src/execution/pipes.c src/utils/executor_utils.c src/parsing/tokenizer.c src/parsing/parse_pipe.c)",
+      "Bash(do echo \"=== $file ===\" grep -E \"^[a-z_]+\\s+\\**[a-z_]+\\(\" \"$file\")"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

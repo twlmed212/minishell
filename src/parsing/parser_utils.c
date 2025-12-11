@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 17:59:24 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/09 20:50:04 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/11 18:31:22 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,9 @@ static t_redir	*process_redir(t_token *token)
 	{
 		file = handle_heredoc(token->next->value);
 		if (!file)
+		{
 			return (NULL);
+		}
 		redir = new_redir(token->type, file);
 		free(file);
 		return (redir);
