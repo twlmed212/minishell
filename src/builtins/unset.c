@@ -6,13 +6,13 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:05 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/09 14:49:01 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 00:20:44 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	get_position(char *name, t_shell *shell)
+static int	get_position(char *name, t_shell *shell)
 {
 	int	i;
 	int	len;
@@ -71,7 +71,7 @@ static void	fill_new_env(t_shell *shell, char ***new_env, int pos)
 	shell->env = *new_env;
 }
 
-int	ft_unset(char *name, t_shell *shell)
+static int	ft_unset(char *name, t_shell *shell)
 {
 	int		pos;
 	char	**new_env;

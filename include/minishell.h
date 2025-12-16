@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:45 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/11 15:53:36 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 00:18:17 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -108,7 +108,11 @@ void							free_tokens(t_token *tokens);
 // ============= PARSER =============
 t_cmd							*parser(t_token *tokens);
 void							free_cmds(t_cmd *cmds);
-
+t_redir							*process_redir(t_token *token);
+char							*expand_exit_code(char *cmds);
+int								handle_pipe_token(t_token **tokens, int flag);
+t_cmd							*handle_parse_error(t_cmd *cmds, t_cmd *new);
+int								check_syntax(t_token *token);
 // ============= EXECUTOR =============
 void							executor(t_cmd *cmds, t_shell *shell);
 char							*find_path(char *cmd, char **env);

@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/07 16:45:53 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/16 11:41:36 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 00:21:12 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ void	exec_cmd(t_cmd *cmd, t_shell *shell, char **env)
 	exit(1);
 }
 
-int	execute_output_redir(t_redir *redir)
+static int	execute_output_redir(t_redir *redir)
 {
 	int	fd;
 	int	flags;
@@ -62,7 +62,7 @@ int	execute_output_redir(t_redir *redir)
 	return (0);
 }
 
-int	execute_input_redir(t_redir *r)
+static int	execute_input_redir(t_redir *r)
 {
 	int	fd;
 

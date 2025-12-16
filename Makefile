@@ -8,6 +8,7 @@ SRC = src/main.c \
        src/tokenizer/tokenizer_utils.c \
        src/parsing/parser.c \
        src/parsing/parser_utils.c \
+       src/parsing/parser_utils_2.c \
        src/parsing/quotes.c \
        src/execution/executor.c \
        src/execution/executor_utils.c \

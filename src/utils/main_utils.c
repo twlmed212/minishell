@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 15:10:53 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/16 12:48:30 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/16 17:33:40 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ int	check_signals(char *line, t_shell *shell)
 {
 	if (!line)
 	{
-		printf("exit\n");
+		ft_perror("exit\n");
 		return (-1);
 	}
 	if (g_signal == 200 && line[0] != '\0')
