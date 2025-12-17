@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:45 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/17 15:39:15 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 16:42:22 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,16 @@ typedef struct s_to_free
 	t_shell						*shell;
 	t_cmd						*cmds;
 }								t_to_free;
+
+
+typedef struct s_gc
+{
+	void				*data;
+	struct s_gc			*next;
+}						t_gc;
+
+void							*ft_malloc(size_t size);
+void							free_grabage(void);
 
 // ============= GLOBALS =============
 extern volatile sig_atomic_t	g_signal;
