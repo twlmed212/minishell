@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:24 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/17 15:52:49 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/18 00:14:58 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,17 +45,14 @@ void	setup_signals(void)
 	signal(SIGQUIT, handle_sigquit);
 }
 
-void	init_signals_child_exec(void)
+void	disable_parent_signals(void)
 {
-	struct sigaction	sa_int;
+	struct sigaction	sa_sign;
 	struct sigaction	sa_quit;
 
-	sa_int.sa_handler = SIG_IGN;
-	sigemptyset(&sa_int.sa_mask);
-	sa_int.sa_flags = 0;
-	sigaction(SIGINT, &sa_int, NULL);
-	sa_quit.sa_handler = SIG_IGN;
-	sigemptyset(&sa_quit.sa_mask);
-	sa_quit.sa_flags = 0;
-	sigaction(SIGQUIT, &sa_quit, NULL);
+	sa_sign.sa_handler = SIG_IGN;
+	sigemptyset(&sa_sign.sa_mask);
+	sa_sign.sa_flags = 0;
+	sigaction(SIGINT, &sa_sign, NULL);
+	sigaction(SIGQUIT, &sa_sign, NULL);
 }

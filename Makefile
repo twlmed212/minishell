@@ -27,13 +27,13 @@ SRC = src/main.c \
        src/signals/heredoc_signals.c \
        src/utils/ft_funcs.c \
        src/utils/export_utils.c \
-       src/utils/memory.c \
        src/utils/file_descriptor.c \
        src/utils/env_set.c \
        src/cleaner/cleanup.c \
        src/utils/env_get.c
 
-OBJ = ${SRC:.c=.o}
+OBJ_DIR = obj
+OBJ = ${SRC:src/%.c=${OBJ_DIR}/%.o}
 
 CC = cc
 CFLAGS = -Wall -Wextra  -Werror 
@@ -49,9 +49,16 @@ ${LIBFT}:
 $(NAME): $(OBJ) ${LIBFT}
 	@$(CC) $(CFLAGS) $(OBJ) -o $(NAME)  ${LIBFT} -lreadline
 
+$(OBJ_DIR)/%.o: src/%.c
+	@mkdir -p $(OBJ_DIR)/utils $(OBJ_DIR)/tokenizer $(OBJ_DIR)/parsing \
+			$(OBJ_DIR)/execution $(OBJ_DIR)/builtins $(OBJ_DIR)/signals \
+			$(OBJ_DIR)/cleaner
+	@$(CC) $(CFLAGS) -c $< -o $@
+
 clean:
 	@${MAKE} clean -C ${LIBFT_DIR}
 	rm -f $(OBJ)
+	rm -rf $(OBJ_DIR)
 
 fclean: clean
 	${MAKE} fclean -C ${LIBFT_DIR}

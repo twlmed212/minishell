@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:01 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/07 16:43:42 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 20:47:53 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,5 +63,7 @@ int	builtin_export(char **args, t_shell *shell)
 			ret = 1;
 		i++;
 	}
+	if (ret)
+		ret = 1;
 	return (ret);
 }

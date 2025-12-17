@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:41:11 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/17 16:48:36 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 23:20:10 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void	*ft_malloc(size_t size)
 	ptr = malloc(size);
 	if (!ptr)
 	{
-		perror("Minishell: Memory allocation failed!");
+		perror("minishell: Memory allocation failed!");
 		free_grabage();
 		exit(2);
 	}

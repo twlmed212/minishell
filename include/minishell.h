@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:45 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/17 16:46:35 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 23:43:55 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ typedef struct s_to_free
 	t_cmd						*cmds;
 }								t_to_free;
 
-
 typedef struct s_gc
 {
 	void				*data;
@@ -114,11 +113,9 @@ int								*save_std_fds(void);
 void							restore_std_fds(int *saved);
 // ============= LEXER =============
 t_token							*toknizer(char *line);
-void							free_tokens(t_token *tokens);
 
 // ============= PARSER =============
 t_cmd							*parser(t_token *tokens);
-void							free_cmds(t_cmd *cmds);
 t_redir							*process_redir(t_token *token);
 char							*expand_exit_code(char *cmds);
 int								handle_pipe_token(t_token **tokens, int flag);
@@ -140,6 +137,7 @@ int								builtin_env(t_shell *shell);
 void							builtin_exit(t_cmd *cmd, t_shell *shell);
 // ============= SIGNALS =============
 void							setup_signals(void);
+void							restore_signals(void);
 void							handle_sigint(int sig);
 void							handle_sigint_heredoc(int sig);
 
@@ -147,13 +145,10 @@ void							handle_sigint_heredoc(int sig);
 char							**copy_env(char **env);
 char							*get_env(char *key, char **env);
 int								set_env(char *key, char *value, t_shell *shell);
-void							free_array(char **arr);
 int								ft_strcmp(const char *s1, const char *s2);
 
 int								set_env(char *key, char *value, t_shell *shell);
 char							*get_name(char *arg, t_shell *shell, int *ret,
-									int *i);
-char							*get_value(char *arg, char *name, int *ret,
 									int *i);
 char							*get_value(char *arg, char *name, int *ret,
 									int *i);
@@ -163,12 +158,13 @@ void							ft_perror(char *s);
 
 int								count_cmds(t_cmd *cmds);
 void							setup_pipes(int **pipes, int i, int n);
+void							free_pipes(int **pipes, int n, int flag);
 void							close_pipes(int **pipes, int n);
 int								**create_pipes(int n);
 void							exec_cmd(t_cmd *cmd, t_shell *shell,
 									char **env);
 int								handle_redirs(t_redir *redirs);
-void							init_signals_child_exec(void);
+void							disable_parent_signals(void);
 void							exec_cmd(t_cmd *cmd, t_shell *shell,
 									char **env);
 int								handle_redirs(t_redir *redirs);

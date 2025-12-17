@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:07 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/17 15:54:09 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 23:43:55 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ static void	handle_parent(pid_t pid, t_shell *shell)
 {
 	int	status;
 
-	init_signals_child_exec();
+	disable_parent_signals();
 	waitpid(pid, &status, 0);
 	setup_signals();
 	if (WIFEXITED(status))
@@ -55,7 +55,6 @@ static void	exec_pipeline(t_cmd *cmds, t_shell *shell, int **pipes, int n)
 {
 	pid_t	pid;
 	int		i;
-	int		j;
 
 	i = 0;
 	while (i < n)
@@ -67,17 +66,10 @@ static void	exec_pipeline(t_cmd *cmds, t_shell *shell, int **pipes, int n)
 			close_pipes(pipes, n);
 			if (handle_redirs(cmds->redirs) < 0)
 			{
-				j = 0;
-				while (j < n - 1)
-					free(pipes[j++]);
-				free(pipes);
-				free_grabage();
+				free_pipes(pipes, n, 1);
 				exit(1);
 			}
-			j = 0;
-			while (j < n - 1)
-				free(pipes[j++]);
-			free(pipes);
+			free_pipes(pipes, n, 0);
 			exec_cmd(cmds, shell, shell->env);
 		}
 		cmds = cmds->next;
@@ -126,7 +118,7 @@ void	executor(t_cmd *cmds, t_shell *shell)
 	while (i < n - 1)
 		free(pipes[i++]);
 	free(pipes);
-	init_signals_child_exec();
+	disable_parent_signals();
 	wait_all_process(n, shell);
 	setup_signals();
 }

@@ -6,16 +6,18 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/07 16:45:53 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/17 12:27:04 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 23:40:51 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
+
 void	exec_cmd(t_cmd *cmd, t_shell *shell, char **env)
 {
 	char	*path;
 
+	restore_signals();
 	if (is_builtin(cmd->args[0]))
 	{
 		shell->exit_code = exec_builtin(cmd, shell);
@@ -98,4 +100,16 @@ int	handle_redirs(t_redir *redirs)
 		redirs = redirs->next;
 	}
 	return (0);
+}
+
+void	free_pipes(int **pipes, int n, int flag)
+{
+	int	j;
+
+	j = 0;
+	while (j < n - 1)
+		free(pipes[j++]);
+	free(pipes);
+	if (flag)
+		free_grabage();
 }
