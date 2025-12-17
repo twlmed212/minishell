@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:05 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/17 16:43:21 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 16:45:46 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ static int	alloc_new_env(t_shell *shell, char ***new_env)
 	new_size = 0;
 	while (shell->env[new_size])
 		new_size++;
-	*new_env = malloc(sizeof(char *) * new_size);
+	*new_env = ft_malloc(sizeof(char *) * new_size);
 	if (!*new_env)
 		return (1);
 	return (0);

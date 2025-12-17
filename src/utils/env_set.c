@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:28 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/09 14:48:38 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 16:45:46 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ static char	**re_create_env(t_shell *shell, char *new_var)
 	count = 0;
 	while (shell->env[count])
 		count++;
-	new_env = malloc(sizeof(char *) * (count + 2));
+	new_env = ft_malloc(sizeof(char *) * (count + 2));
 	if (!new_env)
 	{
 		free(new_var);

@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 17:59:24 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/17 00:16:02 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 16:45:46 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static t_token	*fill_cmd(t_cmd *cmd, t_token *tokens, int *err)
 
 	*err = 0;
 	argc = count_args(tokens);
-	cmd->args = malloc(sizeof(char *) * (argc + 1));
+	cmd->args = ft_malloc(sizeof(char *) * (argc + 1));
 	if (!cmd->args)
 		return (NULL);
 	i = 0;

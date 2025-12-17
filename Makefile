@@ -30,6 +30,7 @@ SRC = src/main.c \
        src/utils/memory.c \
        src/utils/file_descriptor.c \
        src/utils/env_set.c \
+       src/cleaner/cleanup.c \
        src/utils/env_get.c
 
 OBJ = ${SRC:.c=.o}

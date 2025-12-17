@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 13:47:31 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/09 12:25:12 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 16:49:34 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ char	**copy_env(char **env)
 	count = 0;
 	while (env[count])
 		count++;
-	new_env = malloc(sizeof(char *) * (count + 1));
+	new_env = ft_malloc(sizeof(char *) * (count + 1));
 	if (!new_env)
 		return (NULL);
 	i = 0;

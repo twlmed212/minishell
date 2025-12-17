@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:10 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/17 11:53:14 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 16:45:46 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,13 +51,13 @@ int	**create_pipes(int n)
 	int	**pipes;
 	int	i;
 
-	pipes = malloc(sizeof(int *) * (n - 1));
+	pipes = ft_malloc(sizeof(int *) * (n - 1));
 	if (!pipes)
 		return (NULL);
 	i = 0;
 	while (i < n - 1)
 	{
-		pipes[i] = malloc(sizeof(int) * 2);
+		pipes[i] = ft_malloc(sizeof(int) * 2);
 		if (!pipes[i] || pipe(pipes[i]) < 0)
 		{
 			perror("pipe");

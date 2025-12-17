@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/07 16:45:35 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/17 12:29:37 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 16:45:46 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ static char	*try_path(char *dir, char *cmd)
 	int		len;
 
 	len = ft_strlen(dir) + ft_strlen(cmd) + 2;
-	path = malloc(len);
+	path = ft_malloc(len);
 	if (!path)
 		return (NULL);
 	ft_strlcpy(path, dir, len);

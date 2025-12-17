@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtawil <mtawil@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 09:35:51 by mtawil            #+#    #+#             */
-/*   Updated: 2024/11/18 18:16:03 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 16:45:46 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ char	**ft_split(char const *s, char c)
 	if (!s)
 		return (NULL);
 	rows = total_words(s, c);
-	my_array = malloc((rows + 1) * sizeof(char *));
+	my_array = ft_malloc((rows + 1) * sizeof(char *));
 	if (!my_array)
 		return (NULL);
 	my_array = fill_array(my_array, s, rows, c);

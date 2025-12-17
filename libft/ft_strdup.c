@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/15 16:34:02 by mtawil            #+#    #+#             */
-/*   Updated: 2025/11/30 10:23:51 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 16:45:46 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ char	*ft_strdup(const char *s)
 	int		i;
 
 	i = 0;
-	copy = malloc((ft_strlen(s) + 1) * sizeof(char));
+	copy = ft_malloc((ft_strlen(s) + 1) * sizeof(char));
 	if (copy == NULL)
 		return (NULL);
 	while (s[i])

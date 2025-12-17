@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/07 16:48:26 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/08 12:06:42 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 16:45:46 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ int	*save_std_fds(void)
 {
 	int	*saved;
 
-	saved = malloc(sizeof(int) * 2);
+	saved = ft_malloc(sizeof(int) * 2);
 	if (!saved)
 		return (NULL);
 	saved[0] = dup(STDIN_FILENO);

@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:41:11 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/17 16:42:05 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 16:48:36 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_gc	*create_node(void *data)
 {
 	t_gc	*new_node;
 
-	new_node = malloc(sizeof(t_gc));
+	new_node = ft_malloc(sizeof(t_gc));
 	if (!new_node)
 		return (NULL);
 	new_node->data = data;
@@ -52,7 +52,7 @@ void	*ft_malloc(size_t size)
 {
 	void	*ptr;
 
-	ptr = malloc(size);
+	ptr = ft_malloc(size);
 	if (!ptr)
 	{
 		perror("Minishell: Memory allocation failed!");

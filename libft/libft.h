@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/18 17:16:34 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/09 15:13:31 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 16:47:21 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,9 @@
 # include <stdlib.h>
 # include <unistd.h>
 # include "../libft/libft.h"
+
+void							*ft_malloc(size_t size);
+void							free_grabage(void);
 
 int		ft_atoi(const char *nptr);
 void	ft_bzero(void *s, int n);

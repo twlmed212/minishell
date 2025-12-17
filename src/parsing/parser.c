@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:18 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/17 00:23:44 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 16:45:46 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_cmd	*new_cmd(void)
 {
 	t_cmd	*cmd;
 
-	cmd = malloc(sizeof(t_cmd));
+	cmd = ft_malloc(sizeof(t_cmd));
 	if (!cmd)
 		return (NULL);
 	cmd->args = NULL;
@@ -29,7 +29,7 @@ t_redir	*new_redir(t_token_type type, char *file)
 {
 	t_redir	*redir;
 
-	redir = malloc(sizeof(t_redir));
+	redir = ft_malloc(sizeof(t_redir));
 	if (!redir)
 		return (NULL);
 	redir->type = type;

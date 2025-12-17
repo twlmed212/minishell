@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 20:45:36 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/17 12:09:14 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 16:45:46 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@ t_token	*new_token(char *value, t_token_type type)
 {
 	t_token	*token;
 
-	token = malloc(sizeof(t_token));
+	token = ft_malloc(sizeof(t_token));
 	if (!token)
 		return (NULL);
 	token->value = value;
@@ -69,7 +69,7 @@ char	*extract_word(char *line, int *i)
 		(*i)++;
 	}
 	len = *i - start;
-	word = malloc(len + 1);
+	word = ft_malloc(len + 1);
 	if (!word)
 		return (NULL);
 	ft_strlcpy(word, line + start, len + 1);

@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:22 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/06 22:52:23 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 16:45:46 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ char	*remove_quotes(char *str)
 
 	if (!str)
 		return (ft_strdup(""));
-	data.result = malloc(ft_strlen(str) + 1);
+	data.result = ft_malloc(ft_strlen(str) + 1);
 	if (!data.result)
 		return (NULL);
 	data.i = 0;

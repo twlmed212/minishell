@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mtawil <mtawil@student.42.fr>              +#+  +:+       +#+        */
+/*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 11:49:15 by mtawil            #+#    #+#             */
-/*   Updated: 2024/11/18 17:22:58 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 16:45:46 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ char	*ft_itoa(int n)
 
 	int_max = 0;
 	nmbr_length = string_size(n);
-	result = malloc((nmbr_length + 1) * sizeof(char));
+	result = ft_malloc((nmbr_length + 1) * sizeof(char));
 	if (!result)
 		return (NULL);
 	if (n == 0)
