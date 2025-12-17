@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:05 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/17 00:20:44 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 11:56:16 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,8 +76,12 @@ static int	ft_unset(char *name, t_shell *shell)
 	int		pos;
 	char	**new_env;
 	int		err;
+	char	*str;
 
 	new_env = NULL;
+	str = ft_strchr(name, '=');
+	if (str)
+		return (1);
 	pos = get_position(name, shell);
 	err = alloc_new_env(shell, &new_env);
 	if (err)

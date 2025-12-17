@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:45 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/17 00:18:17 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 00:28:02 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,8 +146,6 @@ char							*get_value(char *arg, char *name, int *ret,
 									int *i);
 char							*get_value(char *arg, char *name, int *ret,
 									int *i);
-int								is_var_valid(char c, int is_first);
-
 char							*remove_quotes(char *str);
 int								check_unclosed_quotes(char *line);
 void							ft_perror(char *s);

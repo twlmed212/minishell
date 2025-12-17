@@ -6,13 +6,13 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 14:16:00 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/09 14:57:10 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 00:22:08 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-char	*generate_unique_tempfile(void)
+static char	*generate_unique_tempfile(void)
 {
 	static int	counter = 0;
 	char		*num_str;

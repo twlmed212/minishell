@@ -6,13 +6,13 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 14:24:14 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/08 12:06:50 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 00:27:57 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-int	is_var_valid(char c, int is_first)
+static int	is_var_valid(char c, int is_first)
 {
 	if (is_first)
 		return (ft_isalpha(c) || c == '_');
