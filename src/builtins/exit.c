@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:59 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/09 15:00:24 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 15:37:45 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,12 @@
 
 static int	is_numeric(char *str)
 {
-	int	i;
+	int			i;
+	int			digit;
+	long long	result;
 
 	i = 0;
+	result = 0;
 	if (str[i] == '+' || str[i] == '-')
 		i++;
 	if (!str[i])
@@ -24,6 +27,10 @@ static int	is_numeric(char *str)
 	while (str[i])
 	{
 		if (str[i] < '0' || str[i] > '9')
+			return (0);
+		digit = str[i] - '0';
+		result = result * 10 + digit;
+		if (result > (LLONG_MAX - digit) / 10)
 			return (0);
 		i++;
 	}

@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:07 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/17 12:26:41 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 15:54:09 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	handle_parent(pid_t pid, t_shell *shell)
 		shell->exit_code = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
 		shell->exit_code = 128 + WTERMSIG(status);
-	if (shell->exit_code == 130)
+	if (shell->exit_code >= 130)
 		write(1, "\n", 1);
 }
 

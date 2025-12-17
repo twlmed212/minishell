@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:45 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/17 00:28:02 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/17 15:39:15 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,8 @@ typedef struct s_to_free
 
 // ============= GLOBALS =============
 extern volatile sig_atomic_t	g_signal;
-
+# define LLONG_MAX 9223372036854775807LL
+# define LLONG_MIN -9223372036854775808LL
 // ============= Main Utils =============
 t_cmd							*get_pointer_cmds(t_cmd *original);
 t_shell							*get_and_set_value(t_shell *original, int code);

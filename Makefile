@@ -1,5 +1,4 @@
 
-
 NAME = minishell
 
 SRC = src/main.c \
@@ -47,7 +46,7 @@ ${LIBFT}:
 	@${MAKE} -C ${LIBFT_DIR}
 
 $(NAME): $(OBJ) ${LIBFT}
-	@$(CC) $(CFLAGS) $(OBJ) -o $(NAME)  ${LIBFT} -I/opt/homebrew/opt/readline/include -L/opt/homebrew/opt/readline/lib -lreadline
+	@$(CC) $(CFLAGS) $(OBJ) -o $(NAME)  ${LIBFT} -lreadline
 
 clean:
 	@${MAKE} clean -C ${LIBFT_DIR}
