@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/05 17:59:24 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/18 01:16:47 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/18 03:48:25 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,10 +31,9 @@ t_redir	*process_redir(t_token *token)
 	}
 	if (token->type == T_REDIR_IN && token->next)
 	{
-		if (access(token->next->value, X_OK) != 0)
+		if (access(token->next->value, F_OK) != 0)
 		{
-			ft_perror(token->next->value);
-			ft_perror(": No such file or directory\n");
+			get_and_set_value(NULL, 1);
 		}
 	}
 	return (new_redir(token->type, token->next->value));

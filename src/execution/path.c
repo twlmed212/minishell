@@ -6,13 +6,13 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/07 16:45:35 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/17 16:45:46 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/18 03:01:29 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../include/minishell.h"
 
-static char	*try_path(char *dir, char *cmd)
+static char	*try_path(char *dir, char *cmd, char **first_file)
 {
 	char	*path;
 	int		len;
@@ -24,6 +24,8 @@ static char	*try_path(char *dir, char *cmd)
 	ft_strlcpy(path, dir, len);
 	ft_strlcat(path, "/", len);
 	ft_strlcat(path, cmd, len);
+	if (access(path, F_OK) == 0 && !*first_file)
+		*first_file = path;
 	if (access(path, X_OK) == 0)
 		return (path);
 	return (NULL);
@@ -33,6 +35,7 @@ static char	*look_for_path(char *cmd, char **env)
 {
 	char	**paths;
 	char	*path;
+	char	*first_file;
 	int		i;
 
 	path = get_env("PATH", env);
@@ -42,14 +45,15 @@ static char	*look_for_path(char *cmd, char **env)
 	if (!paths)
 		return (NULL);
 	i = 0;
+	first_file = NULL;
 	while (paths[i])
 	{
-		path = try_path(paths[i], cmd);
+		path = try_path(paths[i], cmd, &first_file);
 		if (path)
 			return (path);
 		i++;
 	}
-	return (NULL);
+	return (first_file);
 }
 
 char	*find_path(char *cmd, char **env)
@@ -58,10 +62,7 @@ char	*find_path(char *cmd, char **env)
 		return (NULL);
 	if (ft_strchr(cmd, '/'))
 	{
-		if (access(cmd, X_OK) == 0)
-			return (ft_strdup(cmd));
-		else
-			return (NULL);
+		return (ft_strdup(cmd));
 	}
 	return (look_for_path(cmd, env));
 }

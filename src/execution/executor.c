@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:07 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/18 00:27:53 by mtawil           ###   ########.fr       */
+/*   Updated: 2025/12/18 03:54:26 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ void	executor(t_cmd *cmds, t_shell *shell)
 	int	n;
 	int	i;
 
-	if ((!cmds || !cmds->args[0]))
+	if ((!cmds || (!cmds->args[0] && !cmds->redirs)))
 		return ;
 	n = count_cmds(cmds);
 	if (n == 1)
