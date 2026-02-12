@@ -6,11 +6,11 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:52 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/08 13:42:24 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/12 15:53:44 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "minishell.h"
 
 int	builtin_cd(char **args, t_shell *shell)
 {

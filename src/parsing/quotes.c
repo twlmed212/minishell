@@ -6,83 +6,106 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:22 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/17 16:45:46 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/12 20:38:39 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "minishell.h"
 
-void		ft_perror(char *s);
-
-static int	is_quote(char c)
+static int	length_without_qoutes(char *str)
 {
-	return (c == '\'' || c == '"');
+	int		len;
+	int		i;
+	char	qoute_found;
+
+	len = 0;
+	i = -1;
+	qoute_found = 0;
+	while (str[--i])
+	{
+		if (qoute_found == 0)
+		{
+			if (str[i] == '\'' || str[i] == '"')
+				qoute_found = str[i];
+			else
+				len++;
+		}
+		else
+		{
+			if (str[i] == qoute_found)
+				qoute_found = 0;
+			else
+				len++;
+		}
+	}
+	return (len);
 }
 
-static void	remove_helper_util(char c, t_quotes *data)
-{
-	if (is_quote(c) && !data->quote)
-	{
-		data->quote = c;
-		(data->i)++;
-	}
-	else if (c == data->quote)
-	{
-		data->quote = 0;
-		(data->i)++;
-	}
-	else
-	{
-		data->result[data->j] = c;
-		(data->j)++;
-		(data->i)++;
-	}
-}
-
-char	*remove_quotes(char *str)
-{
-	t_quotes	data;
-
-	if (!str)
-		return (ft_strdup(""));
-	data.result = ft_malloc(ft_strlen(str) + 1);
-	if (!data.result)
-		return (NULL);
-	data.i = 0;
-	data.j = 0;
-	data.quote = 0;
-	while (str[data.i])
-	{
-		remove_helper_util(str[data.i], &data);
-	}
-	data.result[data.j] = '\0';
-	return (data.result);
-}
-
-int	check_unclosed_quotes(char *line)
+static void	copy_without_qoutes(char *str, char *result)
 {
 	int		i;
-	char	c;
+	int		j;
+	char	qoute_found;
+
+	i = -1;
+	j = 0;
+	qoute_found = 0;
+	while (str[++i])
+	{
+		if (qoute_found == 0)
+		{
+			if (str[i] == '\'' || str[i] == '"')
+				qoute_found = str[i];
+			else
+				result[j++] = str[i];
+		}
+		else
+		{
+			if (str[i] == qoute_found)
+				qoute_found = 0;
+			else
+				result[j++] = str[i];
+		}
+	}
+	result[j] = '\0';
+}
+
+char	*remove_qoutes(char *str)
+{
+	char	*result;
+	int		len;
+
+	if (!str)
+		return (NULL);
+	len = length_without_qoutes(str);
+	result = ft_malloc(sizeof(char) * (len + 1));
+	if (!result)
+		return (NULL);
+	copy_without_qoutes(str, result);
+	return (result);
+}
+
+int	check_unclosed_qoutes(char *line)
+{
+	int		i;
+	char	qoutes;
 
 	i = 0;
 	while (line[i])
 	{
-		if (line[i] == '\'' || line[i] == '\"')
+		if (line[i] == '\'' || line[i] == '"')
 		{
-			c = line[i];
+			qoutes = line[i];
 			i++;
-			while (line[i] != c && line[i])
+			while (line[i] && line[i] != qoutes)
 				i++;
 			if (!line[i])
 			{
-				ft_perror("error: unclosed quotes\n");
-				free(line);
-				return (-1);
+				ft_perror("minishell: error: unclosed quotes\n");
+				return (1);
 			}
-			i++;
 		}
-		else
-			i++;
+		i++;
 	}
-	return (1);
+	return (0);
 }

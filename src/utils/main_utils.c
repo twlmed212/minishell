@@ -6,11 +6,11 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 15:10:53 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/18 01:15:47 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/12 20:33:48 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "minishell.h"
 
 t_shell	*get_and_set_value(t_shell *original, int code)
 {
@@ -25,18 +25,23 @@ t_shell	*get_and_set_value(t_shell *original, int code)
 
 int	process_line(char *line, t_shell *shell)
 {
-	t_token	*tokens;
 	t_cmd	*cmds;
+	t_cmd	*cmd_list;
+	t_cmd	*current;
+
+	cmd_list = NULL;
 
 	if (!line || !*line)
 		return (0);
-	if (check_unclosed_quotes(line) == -1)
+	if (check_unclosed_qoutes(line) == -1)
 		return (-1);
 	add_history(line);
-	tokens = toknizer(line);
-	if (!tokens)
-		return (0);
-	cmds = parser(tokens);
+	if (check_syntax_error(line))
+		return (-1);
+	current = alloc_cmd();
+	if (!current)
+		return (-1);
+	cmds = parser(line, &cmd_list, &current);
 	if (!cmds)
 		return (0);
 	executor(cmds, shell);

@@ -6,11 +6,11 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/01 14:24:14 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/17 20:47:32 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/12 20:20:19 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "minishell.h"
 
 static int	is_var_valid(char c, int is_first)
 {
@@ -77,7 +77,7 @@ char	*get_value(char *arg, char *name, int *ret, int *i)
 	value = ft_strdup(arg + ft_strlen(name) + 1);
 	if (!value)
 		return ((*ret)++, (*i)++, NULL);
-	clean_value = remove_quotes(value);
+	clean_value = remove_qoutes(value);
 	if (!clean_value)
 		return ((*ret)++, (*i)++, NULL);
 	return (clean_value);

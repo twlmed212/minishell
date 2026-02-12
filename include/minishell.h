@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:45 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/18 01:16:42 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/12 20:33:17 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,31 +25,22 @@
 # include <sys/wait.h>
 # include <unistd.h>
 
-// ============= ENUMS =============
-typedef enum e_token_type
+// ============= Enums =============
+typedef enum e_redir_type
 {
-	T_WORD,
-	T_PIPE,
 	T_REDIR_IN,
 	T_REDIR_OUT,
 	T_APPEND,
 	T_HEREDOC
-}								t_token_type;
+}	t_redir_type;
 
-// ============= STRUCTURES =============
-typedef struct s_token
-{
-	char						*value;
-	t_token_type				type;
-	struct s_token				*next;
-}								t_token;
-
+// ============= Structures =============
 typedef struct s_redir
 {
-	t_token_type				type;
+	t_redir_type				type;
 	char						*file;
 	struct s_redir				*next;
-}								t_redir;
+}	t_redir;
 
 typedef struct s_cmd
 {
@@ -65,47 +56,44 @@ typedef struct s_shell
 	int							running;
 }								t_shell;
 
-typedef struct s_quotes
-{
-	char						*result;
-	int							i;
-	int							j;
-	char						quote;
-}								t_quotes;
+// ============= Garbeg Collectors =============
 
 typedef struct s_gc
 {
-	void				*data;
-	struct s_gc			*next;
-}						t_gc;
+	void						*data;
+	struct s_gc					*next;
+}								t_gc;
 
 void							*ft_malloc(size_t size);
 void							free_grabage(void);
 
-// ============= GLOBALS =============
+// ============= Globals =============
 extern volatile sig_atomic_t	g_signal;
 # define LLONG_MAX 9223372036854775807LL
 # define LLONG_MIN -9223372036854775808LL
+
 // ============= Main Utils =============
 t_shell							*get_and_set_value(t_shell *original, int code);
 int								process_line(char *line, t_shell *shell);
 int								check_signals(char *line, t_shell *shell);
 
+// ============= Parser =============
+t_cmd	*parser(char *str, t_cmd **cmd_list, t_cmd **current);
+char							*extract_word(char *str, int *i);
+void							skip_spaces(char *str, int *i);
+int								check_syntax_error(char *str);
+t_redir_type					get_redir_type(char *str, int *i);
+t_cmd							*alloc_cmd(void);
+// ============= Qoutes =============
+char							*remove_qoutes(char *str);
+int								check_unclosed_qoutes(char *line);
+
 // ============= Hererdoc Utils =============
 char							*handle_heredoc(char *delimiter);
-char							*expand_exit_code(char *cmds);
 int								write_to_file(char *input, char *delimiter,
 									int fd);
 int								prepare_file(char **filename, int *fd);
-// ============= LEXER =============
-t_token							*toknizer(char *line);
 
-// ============= PARSER =============
-t_cmd							*parser(t_token *tokens);
-t_redir							*process_redir(t_token *token);
-char							*expand_exit_code(char *cmds);
-int								handle_pipe_token(t_token **tokens, int flag);
-int								check_syntax(t_token *token);
 // ============= EXECUTOR =============
 void							executor(t_cmd *cmds, t_shell *shell);
 char							*find_path(char *cmd, char **env);
@@ -120,6 +108,7 @@ int								builtin_export(char **args, t_shell *shell);
 int								builtin_unset(char **args, t_shell *shell);
 int								builtin_env(t_shell *shell);
 void							builtin_exit(t_cmd *cmd, t_shell *shell);
+
 // ============= SIGNALS =============
 void							setup_signals(void);
 void							restore_signals(void);
@@ -132,27 +121,27 @@ char							**copy_env(char **env);
 char							*get_env(char *key, char **env);
 int								set_env(char *key, char *value, t_shell *shell);
 int								ft_strcmp(const char *s1, const char *s2);
-
-int								set_env(char *key, char *value, t_shell *shell);
 char							*get_name(char *arg, t_shell *shell, int *ret,
 									int *i);
 char							*get_value(char *arg, char *name, int *ret,
 									int *i);
-char							*remove_quotes(char *str);
-int								check_unclosed_quotes(char *line);
 void							ft_perror(char *s);
 
+// ============= PIPES =============
 int								count_cmds(t_cmd *cmds);
 void							setup_pipes(int **pipes, int i, int n);
 void							free_pipes(int **pipes, int n, int flag);
 void							close_pipes(int **pipes, int n);
 int								**create_pipes(int n);
+
+// ============= EXECUTOR UTILS =============
 void							exec_cmd(t_cmd *cmd, t_shell *shell,
 									char **env);
 int								handle_redirs(t_redir *redirs);
 void							disable_parent_signals(void);
-void							exec_cmd(t_cmd *cmd, t_shell *shell,
-									char **env);
-int								handle_redirs(t_redir *redirs);
+
+// ============= EXPAND =============
+char							*expand(char *cmds);
+int ft_isspace(char ch);
 
 #endif

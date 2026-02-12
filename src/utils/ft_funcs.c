@@ -6,11 +6,11 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/24 13:53:23 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/08 12:06:35 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/12 15:53:44 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "minishell.h"
 
 int	ft_strcmp(const char *s1, const char *s2)
 {

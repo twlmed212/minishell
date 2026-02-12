@@ -3,12 +3,11 @@ NAME = minishell
 
 SRC = src/main.c \
        src/utils/main_utils.c \
-       src/tokenizer/tokenizer.c \
-       src/tokenizer/tokenizer_utils.c \
        src/parsing/parser.c \
-       src/parsing/parser_utils.c \
-       src/parsing/parser_utils_2.c \
        src/parsing/quotes.c \
+       src/parsing/syntax.c \
+       src/parsing/expand.c \
+       src/parsing/helper_functinos.c \
        src/execution/executor.c \
        src/execution/executor_utils.c \
        src/execution/pipes.c \
@@ -35,7 +34,7 @@ OBJ_DIR = obj
 OBJ = ${SRC:src/%.c=${OBJ_DIR}/%.o}
 
 CC = cc
-CFLAGS = -Wall -Wextra  -Werror 
+CFLAGS = -Wall -Wextra  -Werror -Iinclude
 
 LIBFT_DIR = ./libft
 LIBFT = ${LIBFT_DIR}/libft.a
@@ -49,7 +48,7 @@ $(NAME): $(OBJ) ${LIBFT}
 	@$(CC) $(CFLAGS) $(OBJ) -o $(NAME)  ${LIBFT} -lreadline
 
 $(OBJ_DIR)/%.o: src/%.c
-	@mkdir -p $(OBJ_DIR)/utils $(OBJ_DIR)/tokenizer $(OBJ_DIR)/parsing \
+	@mkdir -p $(OBJ_DIR)/utils $(OBJ_DIR)/parsing \
 			$(OBJ_DIR)/execution $(OBJ_DIR)/builtins $(OBJ_DIR)/signals \
 			$(OBJ_DIR)/cleaner
 	$(CC) $(CFLAGS) -c $< -o $@

@@ -5,14 +5,14 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/16 02:46:18 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/17 16:45:46 by mtawil           ###   ########.fr       */
+/*   Created: 2026/02/09 15:26:27 by mtawil            #+#    #+#             */
+/*   Updated: 2026/02/12 20:38:48 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../include/minishell.h"
+#include "minishell.h"
 
-t_cmd	*new_cmd(void)
+t_cmd	*alloc_cmd(void)
 {
 	t_cmd	*cmd;
 
@@ -25,7 +25,46 @@ t_cmd	*new_cmd(void)
 	return (cmd);
 }
 
-t_redir	*new_redir(t_token_type type, char *file)
+static void	add_cmd(t_cmd **cmd_list, t_cmd *new_cmd)
+{
+	t_cmd	*tmp;
+
+	if (!*cmd_list)
+	{
+		*cmd_list = new_cmd;
+		return ;
+	}
+	tmp = *cmd_list;
+	while (tmp->next)
+		tmp = tmp->next;
+	tmp->next = new_cmd;
+}
+
+static int	add_arg(t_cmd *cmd, char *arg)
+{
+	char	**new_args;
+	int		count;
+	int		i;
+
+	count = 0;
+	while (cmd->args && cmd->args[count])
+		count++;
+	new_args = ft_malloc(sizeof(char *) * (count + 2));
+	if (!new_args)
+		return (0);
+	i = 0;
+	while (i < count)
+	{
+		new_args[i] = cmd->args[i];
+		i++;
+	}
+	new_args[count] = arg;
+	new_args[count + 1] = NULL;
+	cmd->args = new_args;
+	return (1);
+}
+
+static t_redir	*create_redir(t_redir_type type, char *file)
 {
 	t_redir	*redir;
 
@@ -33,41 +72,89 @@ t_redir	*new_redir(t_token_type type, char *file)
 	if (!redir)
 		return (NULL);
 	redir->type = type;
-	redir->file = remove_quotes(file);
+	redir->file = file;
 	redir->next = NULL;
 	return (redir);
 }
 
-void	add_redir(t_redir **head, t_redir *new)
+static void	add_redir(t_cmd *cmd, t_redir *new_redir)
 {
 	t_redir	*tmp;
 
-	if (!*head)
+	if (!cmd->redirs)
 	{
-		*head = new;
+		cmd->redirs = new_redir;
 		return ;
 	}
-	tmp = *head;
+	tmp = cmd->redirs;
 	while (tmp->next)
 		tmp = tmp->next;
-	tmp->next = new;
+	tmp->next = new_redir;
 }
 
-int	count_args(t_token *tokens)
+static int	handle_redir(char *str, int *i, t_cmd *cmd)
 {
-	int	count;
+	t_redir_type	type;
+	char			*filename;
+	char			*delimiter;
+	t_redir			*redir;
 
-	count = 0;
-	while (tokens && tokens->type != T_PIPE)
+	type = get_redir_type(str, i);
+	skip_spaces(str, i);
+	filename = extract_word(str, i);
+	if (!filename)
+		return (1);
+	if (type == T_HEREDOC)
 	{
-		if (tokens->type == T_WORD)
-			count++;
-		else if (tokens->type >= T_REDIR_IN && tokens->type <= T_HEREDOC)
-		{
-			if (tokens->next)
-				tokens = tokens->next;
-		}
-		tokens = tokens->next;
+		delimiter = filename;
+		filename = handle_heredoc(delimiter);
+		if (!filename)
+			return (1);
 	}
-	return (count);
+	redir = create_redir(type, filename);
+	if (!redir)
+		return (1);
+	add_redir(cmd, redir);
+	return (0);
+}
+
+static int	handle_pipe(t_cmd **cmd_list, t_cmd **current, int *i)
+{
+	add_cmd(cmd_list, *current);
+	*current = alloc_cmd();
+	if (!*current)
+		return (1);
+	(*i)++;
+	return (0);
+}
+
+t_cmd	*parser(char *str, t_cmd **cmd_list, t_cmd **current)
+{
+	char	*word;
+	int		i;
+
+	i = 0;
+	while (str[i])
+	{
+		skip_spaces(str, &i);
+		if (!str[i])
+			break ;
+		if (str[i] == '|')
+		{
+			if (handle_pipe(cmd_list, current, &i))
+				return (NULL);
+		}
+		else if (str[i] == '<' || str[i] == '>')
+		{
+			if (handle_redir(str, &i, *current))
+				return (NULL);
+		}
+		else
+		{
+			word = extract_word(str, &i);
+			if (word && !add_arg(*current, word))
+				return (NULL);
+		}
+	}
+	return (add_cmd(cmd_list, *current), *cmd_list);
 }
