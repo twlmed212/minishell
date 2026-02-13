@@ -7,6 +7,7 @@ SRC = src/main.c \
        src/parsing/quotes.c \
        src/parsing/syntax.c \
        src/parsing/expand.c \
+       src/parsing/check_for_errors.c \
        src/parsing/helper_functinos.c \
        src/execution/executor.c \
        src/execution/executor_utils.c \
@@ -45,7 +46,8 @@ ${LIBFT}:
 	@${MAKE} -C ${LIBFT_DIR}
 
 $(NAME): $(OBJ) ${LIBFT}
-	@$(CC) $(CFLAGS) $(OBJ) -o $(NAME)  ${LIBFT} -lreadline
+	@$(CC) $(CFLAGS) $(OBJ) -o $(NAME)  ${LIBFT} -I/opt/homebrew/opt/readline/include -L/opt/homebrew/opt/readline/lib -lreadline
+# 	@$(CC) $(CFLAGS) $(OBJ) -o $(NAME)  ${LIBFT} -lreadline
 
 $(OBJ_DIR)/%.o: src/%.c
 	@mkdir -p $(OBJ_DIR)/utils $(OBJ_DIR)/parsing \

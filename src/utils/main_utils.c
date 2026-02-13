@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 15:10:53 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/12 20:33:48 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/13 01:32:35 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,15 +32,15 @@ int	process_line(char *line, t_shell *shell)
 	cmd_list = NULL;
 
 	if (!line || !*line)
+		return (1);
+	if (check_unclosed_qoutes(line) == 1)
 		return (0);
-	if (check_unclosed_qoutes(line) == -1)
-		return (-1);
 	add_history(line);
 	if (check_syntax_error(line))
-		return (-1);
+		return (0);
 	current = alloc_cmd();
 	if (!current)
-		return (-1);
+		return (0);
 	cmds = parser(line, &cmd_list, &current);
 	if (!cmds)
 		return (0);
@@ -55,12 +55,10 @@ int	check_signals(char *line, t_shell *shell)
 		ft_perror("exit\n");
 		return (-1);
 	}
-	if (g_signal == 200 && line[0] != '\0')
+	if (g_signal == SIGQUIT)
 	{
-		ft_perror("Quit\n");
-		exit(131);
-	}
-	if (g_signal == SIGINT)
+		shell->exit_code = 131;
+	}else if (g_signal == SIGINT)
 	{
 		shell->exit_code = 130;
 	}

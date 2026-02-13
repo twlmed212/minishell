@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 13:48:32 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/12 20:50:51 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/13 01:16:46 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,10 +56,9 @@ int	check_syntax_error(char *str)
 	{
 		if (check_pipe(str, &i))
 			return (1);
-		else if (check_redir(str, &i))
+		if (check_redir(str, &i))
 			return (1);
-		else 
-			i++;
+		i++;
 	}
 	return (0);
 }

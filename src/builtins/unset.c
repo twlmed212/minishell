@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:05 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/12 15:53:44 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/13 00:19:20 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,7 @@ static int	get_position(char *name, t_shell *shell)
 		}
 		i++;
 	}
-	if (!shell->env[i])
-		return (0);
-	return (0);
+	return (-1);
 }
 
 static int	alloc_new_env(t_shell *shell, char ***new_env)
@@ -83,6 +81,8 @@ static int	ft_unset(char *name, t_shell *shell)
 	if (str)
 		return (1);
 	pos = get_position(name, shell);
+	if (pos == -1)
+		return (1);
 	err = alloc_new_env(shell, &new_env);
 	if (err)
 		return (1);

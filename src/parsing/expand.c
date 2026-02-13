@@ -6,14 +6,14 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 15:10:53 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/12 20:38:34 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/13 00:14:01 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 static int skp_untl_spc_dllr(char *str, int i){
-	while(str[i] && !ft_isspace(str[i] && str[i] != '$'))
+	while(str[i] && (!ft_isspace(str[i]) && str[i] != '$'))
 		i++;
 	return (i);
 }

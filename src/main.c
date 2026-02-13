@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 02:45:27 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/17 16:49:17 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/13 01:33:10 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,13 +22,15 @@ int	main(int ac, char **av, char **env)
 	shell.env = copy_env(env);
 	get_and_set_value(&shell, -1);
 	shell.exit_code = 0;
+	setup_signals();
 	while (1)
 	{
-		setup_signals();
+		// signal(SIGINT, handle_sigint);
+		// signal(SIGQUIT, SIG_IGN );
 		line = readline("minishell> ");
 		if (check_signals(line, &shell) == -1)
 			break ;
-		if (process_line(line, &shell) == -1)
+		if (process_line(line, &shell))
 			continue ;
 		free(line);
 		g_signal = 0;

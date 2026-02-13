@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:22 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/12 20:38:39 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/13 00:11:29 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static int	length_without_qoutes(char *str)
 	len = 0;
 	i = -1;
 	qoute_found = 0;
-	while (str[--i])
+	while (str[++i])
 	{
 		if (qoute_found == 0)
 		{
