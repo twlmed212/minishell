@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:05 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/13 00:19:20 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/13 16:58:55 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,14 +58,9 @@ static void	fill_new_env(t_shell *shell, char ***new_env, int pos)
 			(*new_env)[k] = shell->env[j];
 			k++;
 		}
-		else
-		{
-			free(shell->env[j]);
-		}
 		j++;
 	}
 	(*new_env)[k] = NULL;
-	free(shell->env);
 	shell->env = *new_env;
 }
 

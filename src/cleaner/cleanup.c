@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:41:11 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/12 15:53:44 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/13 16:55:41 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ void	*ft_malloc(size_t size)
 	return (ptr);
 }
 
-void	free_grabage(void)
+void		free_grabage(void)
 {
 	t_gc	*gc;
 	t_gc	*tmp;

@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/16 09:35:51 by mtawil            #+#    #+#             */
-/*   Updated: 2025/12/17 16:45:46 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/13 17:01:47 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,13 +34,6 @@ static int	total_words(char const *s, char c)
 		i++;
 	}
 	return (words);
-}
-
-static void	free_memory(char **my_array, int i)
-{
-	while (i > 0)
-		free(my_array[--i]);
-	free(my_array);
 }
 
 static char	*get_next_word(const char **s, char c, int *start)
@@ -71,10 +64,7 @@ static char	**fill_array(char **my_array, char const *s, int rows, char c)
 		word = get_next_word(&s, c, &start);
 		my_array[i] = word;
 		if (!my_array[i])
-		{
-			free_memory(my_array, i);
 			return (NULL);
-		}
 		i++;
 	}
 	return (my_array);
@@ -89,8 +79,6 @@ char	**ft_split(char const *s, char c)
 		return (NULL);
 	rows = total_words(s, c);
 	my_array = ft_malloc((rows + 1) * sizeof(char *));
-	if (!my_array)
-		return (NULL);
 	my_array = fill_array(my_array, s, rows, c);
 	if (my_array)
 		my_array[rows] = NULL;
