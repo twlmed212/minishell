@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:07 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/12 15:53:44 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/13 01:41:49 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,35 @@ static void	handle_parent(pid_t pid, t_shell *shell)
 		write(1, "\n", 1);
 }
 
+static void	exec_redir_only(t_cmd *cmd, t_shell *shell)
+{
+	pid_t	pid;
+
+	pid = fork();
+	if (pid < 0)
+		return ((void)perror("fork"));
+	if (pid == 0)
+	{
+		if (handle_redirs(cmd->redirs) < 0)
+		{
+			free_grabage();
+			exit(1);
+		}
+		free_grabage();
+		exit(0);
+	}
+	handle_parent(pid, shell);
+}
+
 static void	exec_single(t_cmd *cmd, t_shell *shell)
 {
 	pid_t	pid;
 
+	if (!cmd->args || !cmd->args[0])
+	{
+		exec_redir_only(cmd, shell);
+		return ;
+	}
 	if (is_builtin(cmd->args[0]) && !cmd->next && !cmd->redirs)
 	{
 		shell->exit_code = exec_builtin(cmd, shell);
@@ -70,6 +95,11 @@ static void	exec_pipeline(t_cmd *cmds, t_shell *shell, int **pipes, int n)
 				exit(1);
 			}
 			free_pipes(pipes, n, 0);
+			if (!cmds->args || !cmds->args[0])
+			{
+				free_grabage();
+				exit(0);
+			}
 			exec_cmd(cmds, shell, shell->env);
 		}
 		cmds = cmds->next;
@@ -105,7 +135,11 @@ void	executor(t_cmd *cmds, t_shell *shell)
 	int	n;
 	int	i;
 
-	if ((!cmds || (!cmds->args[0] && !cmds->redirs)))
+	if (!cmds)
+		return ;
+	if (!cmds->args && !cmds->redirs)
+		return ;
+	if (cmds->args && !cmds->args[0] && !cmds->redirs)
 		return ;
 	n = count_cmds(cmds);
 	if (n == 1)
