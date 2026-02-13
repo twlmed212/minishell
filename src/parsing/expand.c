@@ -6,92 +6,118 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 15:10:53 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/13 00:14:01 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/13 15:44:25 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int skp_untl_spc_dllr(char *str, int i){
-	while(str[i] && (!ft_isspace(str[i]) && str[i] != '$'))
-		i++;
-	return (i);
-}
-
-static int	calc_new_length(char *str, int expand_len)
+static int	var_name_len(char *str)
 {
 	int	len;
-	int	i;
 
+	if (!str || !str[0])
+		return (0);
+	if (str[0] == '?')
+		return (1);
 	len = 0;
-	i = 0;
-	while (str[i])
-	{
-		if (str[i] == '$')
-		{
-			len += expand_len;
-			i += skp_untl_spc_dllr(str+i, i);
-		}
-		else
-		{
-			len++;
-			i++;
-		}
-	}
+	while (str[len] && (ft_isalnum(str[len]) || str[len] == '_'))
+		len++;
 	return (len);
 }
 
-static void	fill_expanded(char *str, char *result, char *expanded)
+static char	*var_value(char *after_dollar, int len, t_shell *shell)
 {
-	int	i_str;
-	int	i_result;
-	int	i_expanded;
+	char	*key;
+	char	*val;
+
+	if (len == 1 && after_dollar[0] == '?')
+		return (ft_itoa(shell->exit_code));
+	key = ft_malloc(len + 1);
+	if (!key)
+		return (ft_strdup(""));
+	ft_strlcpy(key, after_dollar, len + 1);
+	val = get_env(key, shell->env);
+	return (ft_strdup(val ? val : ""));
+}
+
+static int	count_expanded_len(char *str, t_shell *shell)
+{
+	int		i_str;
+	int		res_len;
+	int		name_len;
+	char	quote;
 
 	i_str = 0;
-	i_result = 0;
-	int found = 1;
+	res_len = 0;
+	quote = 0;
 	while (str[i_str])
 	{
-		if (str[i_str] == '$' && found)
+		if (!quote && (str[i_str] == '\'' || str[i_str] == '"'))
+			quote = str[i_str];
+		else if (quote && str[i_str] == quote)
+			quote = 0;
+		if (str[i_str] == '$' && quote != '\'' && var_name_len(str + i_str + 1))
 		{
-			i_expanded = 0;
-			while (expanded[i_expanded])
-				result[i_result++] = expanded[i_expanded++];
-			if (str[i_str + 1] == '?')
-				i_str += 2;
-			else
-				i_str += skp_untl_spc_dllr(str+i_str, 0);
-			found = 0;
-		}else
-			result[i_result++] = str[i_str++];
+			name_len = var_name_len(str + i_str + 1);
+			res_len += ft_strlen(var_value(str + i_str + 1, name_len, shell));
+			i_str += 1 + name_len;
+			continue ;
+		}
+		res_len++;
+		i_str++;
 	}
-	result[i_result] = '\0';
+	return (res_len);
+}
+
+static int	write_var(char *str, char *res, t_shell *shell)
+{
+	int		name_len;
+	char	*val;
+
+	name_len = var_name_len(str + 1);
+	val = var_value(str + 1, name_len, shell);
+	ft_strlcpy(res, val, ft_strlen(val) + 1);
+	return (ft_strlen(val));
+}
+
+static void	fill_expanded(char *str, char *res, t_shell *shell)
+{
+	int		i_str;
+	int		i_res;
+	char	qoute;
+
+	i_str = 0;
+	i_res = 0;
+	qoute = 0;
+	while (str[i_str])
+	{
+		if (!qoute && (str[i_str] == '\'' || str[i_str] == '"'))
+			qoute = str[i_str];
+		else if (qoute && str[i_str] == qoute)
+			qoute = 0;
+		if (str[i_str] == '$' && qoute != '\'' && var_name_len(str + i_str + 1))
+		{
+			i_res += write_var(str + i_str, res + i_res, shell);
+			i_str += 1 + var_name_len(str + i_str + 1);
+			continue ;
+		}
+		res[i_res++] = str[i_str++];
+	}
+	res[i_res] = '\0';
 }
 
 char	*expand(char *str)
 {
-	char	*expanded;
 	char	*result;
-	int		result_len;
 	t_shell	*shell;
-    char *expand_start;
-	
-    expand_start = ft_strchr(str, '$');
-	if (!expand_start)
+
+	if (!ft_strchr(str, '$'))
 		return (str);
 	shell = get_and_set_value(NULL, -1);
-
-	if (*(expand_start + 1) == '?'){
-		expanded = ft_itoa(shell->exit_code);
-	}else{
-		expanded = get_env(expand_start + 1, shell->env);
-	}
-	if (!expanded)
-		return (str);
-	result_len = calc_new_length(str, ft_strlen(expanded));
-	result = ft_malloc(sizeof(char) * (result_len + 1));
+	result = ft_malloc(count_expanded_len(str, shell) + 1);
 	if (!result)
 		return (str);
-    fill_expanded(str, result, expanded);
-	return (expand(result));
+	fill_expanded(str, result, shell);
+	return (result);
 }
