@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:01 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/12 15:53:44 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/14 13:34:52 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,13 @@ int	print_env_sorted(t_shell *shell)
 	}
 	i = 0;
 	while (shell->env[i])
-		printf("declare -x %s\n", shell->env[i++]);
+	{
+		char **x = ft_split(shell->env[i++], '=');
+		printf("declare -x %s", x[0]);
+		if (x[1])
+			printf("=\"%s\"", x[1]);
+		printf("\n");
+	}
 	return (0);
 }
 

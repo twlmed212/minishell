@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/08 13:47:31 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/12 15:53:44 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/14 11:11:27 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ char	**copy_env(char **env)
 		i++;
 	}
 	new_env[i] = NULL;
-	return (new_env);
+	return (env);
 }
 
 char	*get_env(char *key, char **env)

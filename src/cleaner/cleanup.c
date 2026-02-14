@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/17 16:41:11 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/13 16:55:41 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/14 15:44:17 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,5 +83,6 @@ void		free_grabage(void)
 		free(tmp);
 		tmp = NULL;
 	}
+	rl_clear_history();
 	get_garbage_collecter((void *)-1);
 }

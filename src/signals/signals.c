@@ -6,12 +6,12 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:24 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/13 16:41:34 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/14 14:26:02 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-void rl_replace_line(const char *text, int clear_undo);
+
 volatile sig_atomic_t	g_signal = 0;
 
 void	restore_signals(void)

@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/14 02:45:27 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/13 15:45:13 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/14 13:39:42 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ int	main(int ac, char **av, char **env)
 	setup_signals();
 	while (1)
 	{
-		signal(SIGINT, handle_sigint);
 		signal(SIGQUIT, SIG_IGN );
 		line = readline("minishell> ");
 		if (check_signals(line, &shell) == -1)
