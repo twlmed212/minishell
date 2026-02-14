@@ -7,8 +7,11 @@ SRC = src/main.c \
        src/parsing/quotes.c \
        src/parsing/syntax.c \
        src/parsing/expand.c \
+       src/parsing/cmd.c \
+       src/parsing/expand_helpers.c \
        src/parsing/check_for_errors.c \
        src/parsing/helper_functinos.c \
+       src/parsing/helper_functinos_two.c \
        src/execution/executor.c \
        src/execution/executor_utils.c \
        src/execution/pipes.c \

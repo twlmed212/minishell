@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:10 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/14 18:13:51 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/14 18:18:40 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,6 @@ void	exec_pipeline(t_cmd *cmds, t_shell *shell, int **pipes, int n)
 			free_pipes(pipes, n, 0);
 			if (!cmds->args || !cmds->args[0])
 			{
-				printf("here");
 				free_grabage();
 				exit(0);
 			}
