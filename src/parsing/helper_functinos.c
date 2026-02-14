@@ -6,28 +6,11 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 13:01:13 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/14 16:33:27 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/14 17:58:49 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
-
-int ft_isspace(char ch)
-{
-    return (ch == ' ' || ch == '\t' || ch == '\n');
-}
-
-void	skip_spaces(char *str, int *i)
-{
-	while (str[*i] && ft_isspace(str[*i]))
-		(*i)++;
-}
-
-
-static int	is_special_char(char c)
-{
-	return (c == '|' || c == '<' || c == '>');
-}
 
 static int	word_size(char *str)
 {
@@ -65,17 +48,16 @@ char	*extract_word(char *str, int *i)
 	len = word_size(str + *i);
 	if (len == 0)
 		return (NULL);
-
 	word = ft_malloc(sizeof(char) * (len + 1));
 	if (!word)
 		return (NULL);
 	ft_strlcpy(word, str + *i, len + 1);
-
 	*i += len;
 	expanded_word = expand(word);
-
 	without_qoutes = remove_qoutes(expanded_word);
-	return (without_qoutes ? without_qoutes : NULL);
+	if (without_qoutes)
+		return (without_qoutes);
+	return (NULL);
 }
 
 t_redir_type	get_redir_type(char *str, int *i)

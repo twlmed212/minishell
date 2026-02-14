@@ -6,17 +6,17 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:01 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/14 13:34:52 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/14 17:23:31 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	print_env_sorted(t_shell *shell)
+static void	sort_env(t_shell *shell)
 {
+	char	*temp;
 	int		i;
 	int		j;
-	char	*temp;
 
 	i = 0;
 	while (shell->env[i])
@@ -34,10 +34,18 @@ int	print_env_sorted(t_shell *shell)
 		}
 		i++;
 	}
+}
+
+static int	print_env_sorted(t_shell *shell)
+{
+	int		i;
+	char	**x;
+
 	i = 0;
+	sort_env(shell);
 	while (shell->env[i])
 	{
-		char **x = ft_split(shell->env[i++], '=');
+		x = ft_split(shell->env[i++], '=');
 		printf("declare -x %s", x[0]);
 		if (x[1])
 			printf("=\"%s\"", x[1]);

@@ -65,9 +65,9 @@ static char	*wait_parent(pid_t pid, int fd, char *file)
 
 char	*handle_heredoc(char *delimiter)
 {
-	char		*filename;
-	pid_t		pid;
-	int			fd;
+	char	*filename;
+	pid_t	pid;
+	int		fd;
 
 	if (prepare_file(&filename, &fd))
 		return (NULL);

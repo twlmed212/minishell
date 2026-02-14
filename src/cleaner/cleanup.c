@@ -68,7 +68,7 @@ void	*ft_malloc(size_t size)
 	return (ptr);
 }
 
-void		free_grabage(void)
+void	free_grabage(void)
 {
 	t_gc	*gc;
 	t_gc	*tmp;

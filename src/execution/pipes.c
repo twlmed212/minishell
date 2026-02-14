@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:10 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/12 15:53:44 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/14 18:13:51 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,39 @@ void	close_pipes(int **pipes, int n)
 		close(pipes[i][1]);
 		i++;
 	}
+}
+
+void	exec_pipeline(t_cmd *cmds, t_shell *shell, int **pipes, int n)
+{
+	pid_t	pid;
+	int		i;
+
+	i = 0;
+	while (i < n)
+	{
+		pid = fork();
+		if (pid == 0)
+		{
+			setup_pipes(pipes, i, n);
+			close_pipes(pipes, n);
+			if (handle_redirs(cmds->redirs) < 0)
+			{
+				free_pipes(pipes, n, 1);
+				exit(1);
+			}
+			free_pipes(pipes, n, 0);
+			if (!cmds->args || !cmds->args[0])
+			{
+				printf("here");
+				free_grabage();
+				exit(0);
+			}
+			exec_cmd(cmds, shell, shell->env);
+		}
+		cmds = cmds->next;
+		i++;
+	}
+	close_pipes(pipes, n);
 }
 
 int	**create_pipes(int n)

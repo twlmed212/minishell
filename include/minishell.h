@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:45 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/14 15:36:22 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/14 18:03:27 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 # include "../libft/libft.h"
 # include <errno.h>
 # include <fcntl.h>
-# include <stdio.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
+# include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/wait.h>
@@ -32,7 +32,7 @@ typedef enum e_redir_type
 	T_REDIR_OUT,
 	T_APPEND,
 	T_HEREDOC
-}	t_redir_type;
+}								t_redir_type;
 
 // ============= Structures =============
 typedef struct s_redir
@@ -40,7 +40,7 @@ typedef struct s_redir
 	t_redir_type				type;
 	char						*file;
 	struct s_redir				*next;
-}	t_redir;
+}								t_redir;
 
 typedef struct s_cmd
 {
@@ -78,12 +78,18 @@ int								process_line(char *line, t_shell *shell);
 int								check_signals(char *line, t_shell *shell);
 
 // ============= Parser =============
-t_cmd	*parser(char *str, t_cmd **cmd_list, t_cmd **current);
+t_cmd							*parser(char *str, t_cmd **cmd_list,
+									t_cmd **current);
 char							*extract_word(char *str, int *i);
 void							skip_spaces(char *str, int *i);
+int								is_special_char(char c);
 int								check_syntax_error(char *str);
 t_redir_type					get_redir_type(char *str, int *i);
 t_cmd							*alloc_cmd(void);
+t_cmd							*alloc_cmd(void);
+void							add_cmd(t_cmd **cmd_list, t_cmd *new_cmd);
+int								add_arg(t_cmd *cmd, char *arg);
+
 // ============= Qoutes =============
 char							*remove_qoutes(char *str);
 int								check_unclosed_qoutes(char *line);
@@ -97,7 +103,8 @@ int								prepare_file(char **filename, int *fd);
 // ============= EXECUTOR =============
 void							executor(t_cmd *cmds, t_shell *shell);
 char							*find_path(char *cmd, char **env);
-
+void							exec_pipeline(t_cmd *cmds, t_shell *shell,
+									int **pipes, int n);
 // ============= BUILTINS =============
 int								is_builtin(char *cmd);
 int								exec_builtin(t_cmd *cmd, t_shell *shell);
@@ -142,6 +149,10 @@ void							disable_parent_signals(void);
 
 // ============= EXPAND =============
 char							*expand(char *cmds);
-int ft_isspace(char ch);
+int								ft_isspace(char ch);
+int								var_name_len(char *str);
+char							*var_value(char *after_dollar, int len,
+									t_shell *shell);
+int								count_expanded_len(char *str, t_shell *shell);
 
 #endif

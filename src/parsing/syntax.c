@@ -6,13 +6,14 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/12 13:48:32 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/13 01:16:46 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/14 17:23:59 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int check_pipe(char *str, int *i){
+static int	check_pipe(char *str, int *i)
+{
 	if (str[*i] == '|')
 	{
 		(*i)++;
@@ -26,7 +27,8 @@ static int check_pipe(char *str, int *i){
 	return (0);
 }
 
-static int check_redir(char *str, int *i){
+static int	check_redir(char *str, int *i)
+{
 	if (str[*i] == '<' || str[*i] == '>')
 	{
 		(*i)++;
@@ -35,12 +37,14 @@ static int check_redir(char *str, int *i){
 		skip_spaces(str, i);
 		if (!str[*i] || str[*i] == '|' || str[*i] == '<' || str[*i] == '>')
 		{
-			ft_perror("minishell: syntax error near unexpected token `newline'\n");
+			ft_perror("minishell: syntax error near ");
+			ft_perror("unexpected token `newline'\n");
 			return (1);
 		}
 	}
 	return (0);
 }
+
 int	check_syntax_error(char *str)
 {
 	int	i;

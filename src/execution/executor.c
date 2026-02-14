@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:07 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/14 13:50:41 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/14 18:03:54 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,38 +76,6 @@ static void	exec_single(t_cmd *cmd, t_shell *shell)
 	handle_parent(pid, shell);
 }
 
-static void	exec_pipeline(t_cmd *cmds, t_shell *shell, int **pipes, int n)
-{
-	pid_t	pid;
-	int		i;
-
-	i = 0;
-	while (i < n)
-	{
-		pid = fork();
-		if (pid == 0)
-		{
-			setup_pipes(pipes, i, n);
-			close_pipes(pipes, n);
-			if (handle_redirs(cmds->redirs) < 0)
-			{
-				free_pipes(pipes, n, 1);
-				exit(1);
-			}
-			free_pipes(pipes, n, 0);
-			if (!cmds->args || !cmds->args[0])
-			{
-				free_grabage();
-				exit(0);
-			}
-			exec_cmd(cmds, shell, shell->env);
-		}
-		cmds = cmds->next;
-		i++;
-	}
-	close_pipes(pipes, n);
-}
-
 static void	wait_all_process(int n, t_shell *shell)
 {
 	int	status;
@@ -131,9 +99,9 @@ static void	wait_all_process(int n, t_shell *shell)
 
 void	executor(t_cmd *cmds, t_shell *shell)
 {
-	int	**pipes;
-	int	n;
-	int	i;
+	int		**pipes;
+	int		n;
+	int		i;
 
 	if (!cmds)
 		return ;
