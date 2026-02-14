@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 15:26:27 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/12 20:38:48 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/14 16:44:36 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,10 @@ t_cmd	*parser(char *str, t_cmd **cmd_list, t_cmd **current)
 {
 	char	*word;
 	int		i;
+	t_shell	*shell;
 
+
+	shell = get_and_set_value(NULL, -1);
 	i = 0;
 	while (str[i])
 	{
@@ -152,6 +155,12 @@ t_cmd	*parser(char *str, t_cmd **cmd_list, t_cmd **current)
 		else
 		{
 			word = extract_word(str, &i);
+			if (!word || (word && word[0] == '\0'))
+			{
+				ft_perror("Command not found\n");
+				shell->exit_code = 127;
+				continue;;
+			}
 			if (word && !add_arg(*current, word))
 				return (NULL);
 		}

@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/09 15:10:53 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/13 01:32:35 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/14 16:30:02 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,6 +44,7 @@ int	process_line(char *line, t_shell *shell)
 	cmds = parser(line, &cmd_list, &current);
 	if (!cmds)
 		return (0);
+	
 	executor(cmds, shell);
 	return (0);
 }

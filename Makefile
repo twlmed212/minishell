@@ -46,8 +46,8 @@ ${LIBFT}:
 	@${MAKE} -C ${LIBFT_DIR}
 
 $(NAME): $(OBJ) ${LIBFT}
-	@$(CC) $(CFLAGS) $(OBJ) -o $(NAME)  ${LIBFT} -I/opt/homebrew/opt/readline/include -L/opt/homebrew/opt/readline/lib -lreadline
-# 	@$(CC) $(CFLAGS) $(OBJ) -o $(NAME)  ${LIBFT} -lreadline
+# 	@$(CC) $(CFLAGS) $(OBJ) -o $(NAME)  ${LIBFT} -I/opt/homebrew/opt/readline/include -L/opt/homebrew/opt/readline/lib -lreadline
+	@$(CC) $(CFLAGS) $(OBJ) -o $(NAME)  ${LIBFT} -lreadline
 
 $(OBJ_DIR)/%.o: src/%.c
 	@mkdir -p $(OBJ_DIR)/utils $(OBJ_DIR)/parsing \

@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:24 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/14 14:26:02 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/14 17:11:50 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,16 +29,11 @@ void	handle_sigint(int sig)
 	rl_replace_line("", 0);
 	rl_redisplay();
 }
-void	handle_sigquit(int sig)
-{
-	(void)sig;
-	g_signal = SIGQUIT;
-	rl_redisplay();
-}
+
 void	setup_signals(void)
 {
 	signal(SIGINT, handle_sigint);
-	signal(SIGQUIT, handle_sigquit);
+	signal(SIGQUIT, SIG_IGN);
 }
 
 void	disable_parent_signals(void)

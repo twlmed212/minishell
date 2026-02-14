@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 13:01:13 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/12 20:42:35 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/14 16:33:27 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ char	*extract_word(char *str, int *i)
 	expanded_word = expand(word);
 
 	without_qoutes = remove_qoutes(expanded_word);
-	return (without_qoutes);
+	return (without_qoutes ? without_qoutes : NULL);
 }
 
 t_redir_type	get_redir_type(char *str, int *i)
