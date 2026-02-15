@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 15:26:27 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/14 18:32:04 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/15 17:10:33 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,11 +80,11 @@ t_cmd	*parser(char *str, t_cmd **cmd_list, t_cmd **current)
 {
 	char	*word;
 	int		i;
-	t_shell	*shell;
+	// t_shell	*shell;
 
-	shell = get_and_set_value(NULL, -1);
+	// shell = get_and_set_value(NULL, -1);
 	i = 0;
-	while (str[i])
+	while (str[i])//echo "hello $USER" | cat -e > out.txt
 	{
 		skip_spaces(str, &i);
 		if (!str[i])

@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/07 16:45:53 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/14 15:40:33 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/15 21:13:16 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,11 @@ void	exec_cmd(t_cmd *cmd, t_shell *shell, char **env)
 		shell->exit_code = exec_builtin(cmd, shell);
 		free_grabage();
 		exit(shell->exit_code);
+	}
+	if (ft_strlen(cmd->args[0]) == 0){
+		ft_perror("minishell: Command not found\n");
+		free_grabage();
+		exit(127);
 	}
 	path = find_path(cmd->args[0], env);
 	if (!path)
@@ -99,16 +104,4 @@ int	handle_redirs(t_redir *redirs)
 		redirs = redirs->next;
 	}
 	return (0);
-}
-
-void	free_pipes(int **pipes, int n, int flag)
-{
-	int	j;
-
-	j = 0;
-	while (j < n - 1)
-		free(pipes[j++]);
-	free(pipes);
-	if (flag)
-		free_grabage();
 }

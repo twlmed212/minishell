@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/14 17:26:02 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/14 17:56:19 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/15 09:17:06 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,17 +26,17 @@ int	var_name_len(char *str)
 	return (len);
 }
 
-char	*var_value(char *after_dollar, int len, t_shell *shell)
+char	*var_value(char *after_dollar, int key_len, t_shell *shell)
 {
 	char	*key;
 	char	*val;
 
-	if (len == 1 && after_dollar[0] == '?')
+	if (key_len == 1 && after_dollar[0] == '?')
 		return (ft_itoa(shell->exit_code));
-	key = ft_malloc(len + 1);
+	key = ft_malloc(key_len + 1);
 	if (!key)
 		return (ft_strdup(""));
-	ft_strlcpy(key, after_dollar, len + 1);
+	ft_strlcpy(key, after_dollar, key_len + 1);
 	val = get_env(key, shell->env);
 	if (val)
 		return (ft_strdup(val));

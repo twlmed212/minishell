@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:07 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/14 18:03:54 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/15 17:42:54 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,23 +76,27 @@ static void	exec_single(t_cmd *cmd, t_shell *shell)
 	handle_parent(pid, shell);
 }
 
-static void	wait_all_process(int n, t_shell *shell)
+static void	wait_all_process(int n, t_shell *shell, pid_t last_pid)
 {
-	int	status;
-	int	newline;
+	int		status;
+	pid_t	pid;
+	int		newline;
 
 	newline = 0;
 	while (n--)
 	{
-		wait(&status);
-		if (WIFEXITED(status))
-			shell->exit_code = WEXITSTATUS(status);
-		if (WIFSIGNALED(status))
+		pid = wait(&status);
+		if (pid == last_pid)
 		{
-			shell->exit_code = 128 + WTERMSIG(status);
-			if (newline == 0)
-				ft_perror("\n");
-			newline = 1;
+			if (WIFEXITED(status))
+				shell->exit_code = WEXITSTATUS(status);
+			else if (WIFSIGNALED(status))
+			{
+				shell->exit_code = 128 + WTERMSIG(status);
+				if (newline == 0)
+					ft_perror("\n");
+				newline = 1;
+			}
 		}
 	}
 }
@@ -102,6 +106,7 @@ void	executor(t_cmd *cmds, t_shell *shell)
 	int		**pipes;
 	int		n;
 	int		i;
+	pid_t	last_pid;
 
 	if (!cmds)
 		return ;
@@ -115,12 +120,12 @@ void	executor(t_cmd *cmds, t_shell *shell)
 	pipes = create_pipes(n);
 	if (!pipes)
 		return ;
-	exec_pipeline(cmds, shell, pipes, n);
+	last_pid = exec_pipeline(cmds, shell, pipes, n);
 	i = 0;
 	while (i < n - 1)
 		free(pipes[i++]);
 	free(pipes);
 	disable_parent_signals();
-	wait_all_process(n, shell);
+	wait_all_process(n, shell, last_pid);
 	setup_signals();
 }

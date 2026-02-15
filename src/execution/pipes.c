@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:10 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/14 18:18:40 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/15 21:14:23 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,7 +46,7 @@ void	close_pipes(int **pipes, int n)
 	}
 }
 
-void	exec_pipeline(t_cmd *cmds, t_shell *shell, int **pipes, int n)
+pid_t	exec_pipeline(t_cmd *cmds, t_shell *shell, int **pipes, int n)
 {
 	pid_t	pid;
 	int		i;
@@ -61,10 +61,9 @@ void	exec_pipeline(t_cmd *cmds, t_shell *shell, int **pipes, int n)
 			close_pipes(pipes, n);
 			if (handle_redirs(cmds->redirs) < 0)
 			{
-				free_pipes(pipes, n, 1);
+				free_grabage();
 				exit(1);
 			}
-			free_pipes(pipes, n, 0);
 			if (!cmds->args || !cmds->args[0])
 			{
 				free_grabage();
@@ -76,6 +75,7 @@ void	exec_pipeline(t_cmd *cmds, t_shell *shell, int **pipes, int n)
 		i++;
 	}
 	close_pipes(pipes, n);
+	return (pid);
 }
 
 int	**create_pipes(int n)
@@ -83,21 +83,13 @@ int	**create_pipes(int n)
 	int	**pipes;
 	int	i;
 
-	pipes = malloc(sizeof(int *) * (n - 1));
-	if (!pipes)
-		return (NULL);
+	pipes = ft_malloc(sizeof(int *) * (n - 1));
 	i = 0;
 	while (i < n - 1)
 	{
-		pipes[i] = malloc(sizeof(int) * 2);
-		if (!pipes[i] || pipe(pipes[i]) < 0)
-		{
-			perror("pipe");
-			while (--i >= 0)
-				free(pipes[i]);
-			free(pipes);
-			return (NULL);
-		}
+		pipes[i] = ft_malloc(sizeof(int) * 2);
+		if (pipe(pipes[i]) < 0)
+			return (perror("pipe"), NULL);
 		i++;
 	}
 	return (pipes);
