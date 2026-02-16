@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:07 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/16 09:29:15 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/16 17:28:06 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,6 @@ void	executor(t_cmd *cmds, t_shell *shell)
 {
 	int		**pipes;
 	int		n;
-	int		i;
 	pid_t	last_pid;
 
 	if (!cmds)
@@ -121,10 +120,6 @@ void	executor(t_cmd *cmds, t_shell *shell)
 	if (!pipes)
 		return ;
 	last_pid = exec_pipeline(cmds, shell, pipes, n);
-	i = 0;
-	while (i < n - 1)
-		free(pipes[i++]);
-	free(pipes);
 	disable_parent_signals();
 	wait_all_process(n, shell, last_pid);
 	setup_signals();
