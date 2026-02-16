@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:45:45 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/14 18:03:27 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/16 14:04:58 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,10 @@
 # include "../libft/libft.h"
 # include <errno.h>
 # include <fcntl.h>
+# include <stdio.h>
 # include <readline/history.h>
 # include <readline/readline.h>
 # include <signal.h>
-# include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
 # include <sys/wait.h>
@@ -81,7 +81,7 @@ int								check_signals(char *line, t_shell *shell);
 t_cmd							*parser(char *str, t_cmd **cmd_list,
 									t_cmd **current);
 char							*extract_word(char *str, int *i);
-void							skip_spaces(char *str, int *i);
+int								skip_spaces(char *str, int *i);
 int								is_special_char(char c);
 int								check_syntax_error(char *str);
 t_redir_type					get_redir_type(char *str, int *i);
@@ -103,7 +103,7 @@ int								prepare_file(char **filename, int *fd);
 // ============= EXECUTOR =============
 void							executor(t_cmd *cmds, t_shell *shell);
 char							*find_path(char *cmd, char **env);
-void							exec_pipeline(t_cmd *cmds, t_shell *shell,
+pid_t							exec_pipeline(t_cmd *cmds, t_shell *shell,
 									int **pipes, int n);
 // ============= BUILTINS =============
 int								is_builtin(char *cmd);
@@ -137,7 +137,6 @@ void							ft_perror(char *s);
 // ============= PIPES =============
 int								count_cmds(t_cmd *cmds);
 void							setup_pipes(int **pipes, int i, int n);
-void							free_pipes(int **pipes, int n, int flag);
 void							close_pipes(int **pipes, int n);
 int								**create_pipes(int n);
 

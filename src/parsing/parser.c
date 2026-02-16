@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 15:26:27 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/15 17:10:33 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/16 09:59:49 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,20 +80,14 @@ t_cmd	*parser(char *str, t_cmd **cmd_list, t_cmd **current)
 {
 	char	*word;
 	int		i;
-	// t_shell	*shell;
 
-	// shell = get_and_set_value(NULL, -1);
 	i = 0;
-	while (str[i])//echo "hello $USER" | cat -e > out.txt
+	while (str[i])
 	{
-		skip_spaces(str, &i);
-		if (!str[i])
+		if (!skip_spaces(str, &i))
 			break ;
-		if (str[i] == '|')
-		{
-			if (handle_pipe(cmd_list, current, &i))
-				return (NULL);
-		}
+		if (str[i] == '|' && handle_pipe(cmd_list, current, &i))
+			return (NULL);
 		else if (str[i] == '<' || str[i] == '>')
 		{
 			if (handle_redir(str, &i, *current))
@@ -102,12 +96,6 @@ t_cmd	*parser(char *str, t_cmd **cmd_list, t_cmd **current)
 		else
 		{
 			word = extract_word(str, &i);
-			//TODO if (!word || (word && word[0] == '\0'))
-			// {
-			// 	ft_perror("Command not found\n");
-			// 	shell->exit_code = 127;
-			// 	continue ;
-			// }
 			if (word && !add_arg(*current, word))
 				return (NULL);
 		}

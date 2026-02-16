@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/16 02:46:10 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/15 21:14:23 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/16 09:45:10 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,15 +60,9 @@ pid_t	exec_pipeline(t_cmd *cmds, t_shell *shell, int **pipes, int n)
 			setup_pipes(pipes, i, n);
 			close_pipes(pipes, n);
 			if (handle_redirs(cmds->redirs) < 0)
-			{
-				free_grabage();
-				exit(1);
-			}
+				return (free_grabage(), exit(1), pid);
 			if (!cmds->args || !cmds->args[0])
-			{
-				free_grabage();
-				exit(0);
-			}
+				return (free_grabage(), exit(0), pid);
 			exec_cmd(cmds, shell, shell->env);
 		}
 		cmds = cmds->next;

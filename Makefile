@@ -16,6 +16,7 @@ SRC = src/main.c \
        src/execution/executor_utils.c \
        src/execution/pipes.c \
        src/execution/path.c \
+       src/execution/redirection.c \
        src/execution/heredoc.c \
        src/execution/heredoc_utils.c \
        src/builtins/builtins.c \

@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/02/09 13:01:13 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/14 17:58:49 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/02/16 09:52:12 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,8 +49,6 @@ char	*extract_word(char *str, int *i)
 	if (len == 0)
 		return (NULL);
 	word = ft_malloc(sizeof(char) * (len + 1));
-	if (!word)
-		return (NULL);
 	ft_strlcpy(word, str + *i, len + 1);
 	*i += len;
 	expanded_word = expand(word);
