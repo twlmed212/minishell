@@ -6,7 +6,7 @@
 /*   By: mtawil <mtawil@student.1337.ma>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/07 16:45:53 by mtawil            #+#    #+#             */
-/*   Updated: 2026/02/16 14:21:59 by mtawil           ###   ########.fr       */
+/*   Updated: 2026/10/08 12:42:28 by mtawil           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,6 @@ void	exec_cmd(t_cmd *cmd, t_shell *shell, char **env)
 	path = find_path(cmd->args[0], env);
 	if (!path)
 		handle_errors(cmd->args[0], 1);
-	printf("path = %s\n", path);
-	printf("args= %s\n", cmd->args[0]);
 	execve(path, cmd->args, env);
 	if (path)
 		handle_errors(path, 0);
